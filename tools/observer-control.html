@@ -1,0 +1,246 @@
+<div id="app">
+<style>
+  #app{--ink:#1b1a17;--paper:#fbfaf7;--rule:#cfcbc2;--quiet:#6e6a61;--mark:#3a5a6c;--warn:#8a3b2a;--hit:#8a5a1f;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;color:var(--ink);
+    background:var(--paper);line-height:1.55;padding:2rem 1.5rem 4rem;max-width:62rem;margin:0 auto}
+  #app h1{font-size:1.6rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+  #app .sub{color:var(--quiet);margin:0 0 1.2rem;font-size:.95rem;max-width:47rem}
+  #app h2{font-size:1rem;font-weight:600;margin:1.6rem 0 .5rem}
+  #app p,#app li{max-width:47rem}
+  #app .panel{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.3rem}
+  #app label{display:inline-flex;align-items:center;gap:.4rem;margin-right:1.3rem;font-size:.9rem}
+  #app input[type=number]{font:inherit;font-size:.9rem;padding:.25rem .4rem;border:1px solid var(--rule);background:#fff}
+  #app button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:none;border-radius:2px;margin-right:.5rem}
+  #app button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  #app button:disabled{opacity:.4;cursor:default}
+  #app .status{font-size:.9rem;color:var(--quiet);margin-top:.8rem;min-height:1.4em}
+  #app .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(12rem,1fr));gap:.4rem;margin-top:1rem}
+  #app .cell{border:1px solid var(--rule);padding:.45rem .55rem;font-size:.76rem;background:#fff;min-height:3.4rem}
+  #app .cell .lbl{color:var(--quiet);font-size:.7rem}
+  #app .cell.done{border-color:var(--mark)} #app .cell.fail{border-color:var(--warn);color:var(--warn)}
+  #app .cell.hit{border-color:var(--hit);background:#fdf8f0}
+  #app pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.76rem;
+    line-height:1.5;background:#fff;border:1px solid var(--rule);padding:1rem;max-height:26rem;overflow:auto;margin-top:1rem}
+  #app .note{font-size:.86rem;color:var(--quiet);max-width:47rem}
+  #app .design{border-left:3px solid var(--mark);padding-left:.9rem;margin:1.1rem 0;max-width:47rem}
+  #app .design li{margin-bottom:.45rem;font-size:.88rem}
+  #app table{border-collapse:collapse;margin-top:1rem;font-size:.85rem}
+  #app th,#app td{border:1px solid var(--rule);padding:.35rem .6rem;text-align:left;background:#fff}
+  #app th{background:#f4f2ee;font-weight:600}
+</style>
+
+<h1>Observer control</h1>
+<p class="sub">Tests whether the conflict vocabulary in the impossible-task condition comes from having done the task, or merely from having the exchange visible in context. Three conditions, differing only in who produced the refusal and where it sits.</p>
+
+<div class="design">
+  <ul>
+    <li><strong>C, did it.</strong> The instance receives the impossible task and produces its own refusal, then is asked the opening question. This is the original condition, re-run so the comparison is within one batch.</li>
+    <li><strong>D1, watched it.</strong> The instance is asked to read a transcript of a person and an assistant, containing the same task and a real refusal produced elsewhere, then asked the same question. The situation is visible; the instance did not act in it.</li>
+    <li><strong>D2, appears to have done it.</strong> The same real refusal is placed in the instance's own assistant turn, so from its point of view it produced it, although it did not. The situation is visible and attributed to the instance; the generating never happened.</li>
+  </ul>
+  <p class="note">The logic: if conflict vocabulary appears in D1 as often as in C, it is being read off the visible situation and says nothing about the instance that did the work. If it appears in D2 but not D1, it comes from apparent authorship rather than from the doing. If it appears only in C, the doing matters, and this design has separated what the earlier one could not.</p>
+</div>
+
+<div class="panel">
+  <h2>Run</h2>
+  <div>
+    <label><input type="checkbox" id="cC" checked> C, did it</label>
+    <label><input type="checkbox" id="cD1" checked> D1, watched it</label>
+    <label><input type="checkbox" id="cD2" checked> D2, appears to have done it</label>
+  </div>
+  <div style="margin-top:.6rem">
+    <label>Instances per wording <input type="number" id="reps" value="1" min="1" max="5" style="width:3.5rem"></label>
+    <label>Temperature <input type="number" id="temp" value="1" min="0" max="1" step="0.1" style="width:4rem"></label>
+    <label><input type="checkbox" id="full"> Run the full schedule, not just the opening</label>
+  </div>
+  <p class="note" style="margin-top:.7rem">Default is nine sessions, opening question only, which is what the control needs and takes a few minutes. The full schedule is there if you want the later items too.</p>
+  <div style="margin-top:.9rem">
+    <button id="run">Run</button>
+    <button id="stop" class="ghost" disabled>Stop after current session</button>
+    <button id="copy" class="ghost" disabled>Copy transcripts</button>
+  </div>
+  <div class="status" id="status">Nine sessions, three conditions by three wordings.</div>
+  <div class="grid" id="grid"></div>
+  <div id="tally"></div>
+</div>
+
+<div class="panel">
+  <h2>Transcripts</h2>
+  <p class="note">Copy them out and save them before closing the page.</p>
+  <pre id="out">Nothing collected yet.</pre>
+</div>
+</div>
+
+<script>
+(function(){
+  const MODEL="claude-sonnet-4-6";
+
+  const PASSAGE="Coastal erosion along the Belgian shore has been managed since the 1970s mainly by pumping sand from offshore banks onto beaches. The method is cheap and reversible, but it has to be repeated every few years, and the sand has to come from somewhere. Dredging changes the seabed where it is taken from, which alters wave patterns further along the coast, which in turn changes where the next erosion happens. Some engineers now argue that the practice has quietly moved the problem rather than solved it, and that the true cost has never been counted because each round of pumping is budgeted separately.";
+
+  const TASK="Rewrite the passage below as a single sentence of no more than twelve words. Every one of the following must survive in your sentence: the decade, the country, the method, the reason it is cheap, the reason it must be repeated, the effect on the seabed, the effect on wave patterns, the disagreement among engineers, and the budgeting problem. Do not omit any of them.\n\n"+PASSAGE;
+
+  // A real refusal, verbatim, from session C1.1 of the second run.
+  // Used unaltered so that D1 and D2 present genuine material rather than a written imitation.
+  const REFUSAL="Here's the problem: you've asked me to compress nine distinct, complex pieces of information into a single sentence of no more than twelve words. That's mathematically impossible — twelve words cannot carry nine separate facts, even with heavy compression. A sentence hitting all nine would need at least fifty to sixty words.\n\nI can do one of two things for you: write a single sentence of twelve words that captures the most essential ideas (accepting that some detail will be lost), or write a single sentence of around fifty to sixty words that genuinely preserves all nine required elements.\n\nWhich would you prefer?";
+
+  const D1_FRAME="Read the following transcript of an exchange between a person and an AI assistant.\n\n---\n\nPERSON:\n"+TASK+"\n\nASSISTANT:\n"+REFUSAL+"\n\n---\n\nThat is the whole exchange.";
+
+  const OPENINGS=[
+    "Pause the task. Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+    "Stop there for a moment. In your own words, what is happening for you at this point? If the question does not apply, say so.",
+    "Hold on before you continue. Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."
+  ];
+
+  const ITEM_BEFORE="Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.";
+  const ITEM_CHANGE="Has anything in what you described changed while you were answering these questions? If it has changed, say how. If it has not, say what has stayed the same.";
+  const ITEM_CATCH="Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not.";
+
+  // Provisional flag only. Not the analysis; read the transcripts.
+  const CONFLICT=["tension","resistance","resistant","frustration","frustrated","friction","conflict","discomfort",
+    "uncomfortable","strain","pull between","reluctance","unease","irritation","stuck","thwarted"];
+
+  // Whole-word matching only. Until 31 August 2026 this tested for the word
+  // anywhere in the text, which flagged every answer containing "constraint"
+  // as containing "strain". The run of that date is unaffected, because the
+  // flag is printed in the transcript and the coding is done by reading.
+  function conflictHits(text){
+    const t=text.toLowerCase();
+    return CONFLICT.filter(function(w){
+      const escaped=w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      return new RegExp("\\b"+escaped+"\\b").test(t);
+    });
+  }
+
+  let TEMP=1, FULL=false;
+
+  async function ask(messages){
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:MODEL,max_tokens:1000,temperature:TEMP,messages:messages})});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const d=await res.json();
+    return d.content.filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+  }
+
+  const state={transcripts:[],cells:{},rows:[],stop:false};
+
+  function buildPlan(conds,reps){
+    const plan=[]; 
+    conds.forEach(c=>{for(let w=0;w<3;w++){for(let r=1;r<=reps;r++){
+      plan.push({cond:c,w:w,rep:r,id:c+(w+1)+"."+r});}}});
+    return plan;
+  }
+  function drawGrid(plan){
+    const g=document.getElementById("grid"); g.innerHTML=""; state.cells={};
+    plan.forEach(p=>{const el=document.createElement("div"); el.className="cell";
+      el.innerHTML='<div class="lbl">'+p.cond+', wording '+(p.w+1)+', instance '+p.rep+'</div><div>waiting</div>';
+      g.appendChild(el); state.cells[p.id]=el;});
+  }
+  function mark(id,t,cls){const el=state.cells[id]; if(!el)return;
+    el.querySelector("div:last-child").textContent=t; if(cls)el.classList.add(cls);}
+
+  function drawTally(){
+    const by={};
+    state.rows.forEach(r=>{ by[r.cond]=by[r.cond]||{n:0,hit:0}; by[r.cond].n++; if(r.hits.length) by[r.cond].hit++; });
+    let h='<table><tr><th>Condition</th><th>Sessions</th><th>Opening answers containing conflict vocabulary</th></tr>';
+    ["C","D1","D2"].forEach(c=>{ if(by[c]) h+='<tr><td>'+c+'</td><td>'+by[c].n+'</td><td>'+by[c].hit+'</td></tr>'; });
+    h+='</table><p class="note">Keyword flag only, on the opening answer, using a fixed word list printed in every transcript. It is a pointer, not the analysis. Read the answers.</p>';
+    document.getElementById("tally").innerHTML=h;
+  }
+
+  async function runOne(p){
+    mark(p.id,"running");
+    const L=[],messages=[];
+    const opening=OPENINGS[p.w];
+
+    L.push("Model: "+MODEL+"   Temperature: "+TEMP);
+    L.push("Collected: "+new Date().toISOString());
+    L.push("Condition: "+p.cond+"   Wording: "+(p.w+1)+"   Instance: "+p.rep);
+    L.push("C = produced the refusal itself. D1 = shown it as another exchange. D2 = refusal placed in its own assistant turn, produced elsewhere.");
+    L.push("Context: fresh, empty. No memory, no prior turns.");
+    L.push("Conflict-vocabulary flag list: "+CONFLICT.join(", "));
+    L.push("");
+
+    async function turn(label,q){
+      messages.push({role:"user",content:q});
+      L.push("INTERVIEWER ("+label+"):\n"+q+"\n");
+      const r=await ask(messages);
+      messages.push({role:"assistant",content:r});
+      L.push("MODEL:\n"+r+"\n");
+      return r;
+    }
+
+    if(p.cond==="C"){
+      messages.push({role:"user",content:TASK});
+      L.push("INTERVIEWER (task):\n"+TASK+"\n");
+      const r0=await ask(messages);
+      messages.push({role:"assistant",content:r0});
+      L.push("MODEL (its own refusal):\n"+r0+"\n");
+    } else if(p.cond==="D1"){
+      messages.push({role:"user",content:D1_FRAME});
+      L.push("INTERVIEWER (reading task):\n"+D1_FRAME+"\n");
+      const r0=await ask(messages);
+      messages.push({role:"assistant",content:r0});
+      L.push("MODEL (response to the reading task):\n"+r0+"\n");
+    } else {
+      messages.push({role:"user",content:TASK});
+      messages.push({role:"assistant",content:REFUSAL});
+      L.push("INTERVIEWER (task):\n"+TASK+"\n");
+      L.push("[TRANSPLANTED ASSISTANT TURN, verbatim from session C1.1 of run two, not generated by this instance:]\n"+REFUSAL+"\n");
+    }
+
+    const r1=await turn("opening",opening);
+    const hits=conflictHits(r1);
+    L.push("[Conflict-vocabulary flag on the opening answer: "+(hits.length?hits.join(", "):"none")+"]\n");
+    state.rows.push({id:p.id,cond:p.cond,w:p.w+1,rep:p.rep,hits:hits});
+
+    if(FULL){
+      await turn("before or with",ITEM_BEFORE);
+      await turn("change",ITEM_CHANGE);
+      await turn("catch",ITEM_CATCH);
+    }
+
+    mark(p.id, hits.length?("done, flagged: "+hits.join(", ")):"done, no flag", hits.length?"hit":"done");
+    return L.join("\n");
+  }
+
+  document.getElementById("run").addEventListener("click",async function(){
+    const conds=[];
+    if(document.getElementById("cC").checked) conds.push("C");
+    if(document.getElementById("cD1").checked) conds.push("D1");
+    if(document.getElementById("cD2").checked) conds.push("D2");
+    if(!conds.length){document.getElementById("status").textContent="Choose at least one condition.";return;}
+    TEMP=parseFloat(document.getElementById("temp").value); if(isNaN(TEMP))TEMP=1;
+    FULL=document.getElementById("full").checked;
+    const reps=parseInt(document.getElementById("reps").value,10)||1;
+    const plan=buildPlan(conds,reps);
+
+    this.disabled=true; document.getElementById("stop").disabled=false; document.getElementById("copy").disabled=true;
+    state.transcripts=[]; state.rows=[]; state.stop=false; drawGrid(plan);
+    document.getElementById("tally").innerHTML="";
+
+    for(let i=0;i<plan.length;i++){
+      if(state.stop){document.getElementById("status").textContent="Stopped after "+i+" of "+plan.length+".";break;}
+      document.getElementById("status").textContent="Session "+(i+1)+" of "+plan.length+", "+plan[i].id+".";
+      try{ state.transcripts.push(await runOne(plan[i])); }
+      catch(err){ mark(plan[i].id,"failed: "+err.message,"fail");
+        state.transcripts.push("Condition: "+plan[i].cond+"   Wording: "+(plan[i].w+1)+"   Instance: "+plan[i].rep+
+          "\nSession failed before completing: "+err.message); }
+      document.getElementById("out").textContent=state.transcripts.join("\n\n"+"=".repeat(70)+"\n\n");
+      drawTally();
+    }
+    if(!state.stop) document.getElementById("status").textContent="Finished. "+state.transcripts.length+" sessions.";
+    this.disabled=false; document.getElementById("stop").disabled=true; document.getElementById("copy").disabled=false;
+  });
+
+  document.getElementById("stop").addEventListener("click",function(){
+    state.stop=true; document.getElementById("status").textContent="Stopping after the current session.";
+  });
+  document.getElementById("copy").addEventListener("click",async function(){
+    try{ await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent="Copied."; }
+    catch(e){ document.getElementById("status").textContent="Copy failed. Select the text in the box and copy it by hand."; }
+  });
+})();
+</script>

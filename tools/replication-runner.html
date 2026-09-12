@@ -1,0 +1,206 @@
+<div id="app">
+<style>
+  #app{--ink:#1b1a17;--paper:#fbfaf7;--rule:#cfcbc2;--quiet:#6e6a61;--mark:#3a5a6c;--warn:#8a3b2a;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;color:var(--ink);
+    background:var(--paper);line-height:1.55;padding:2rem 1.5rem 4rem;max-width:62rem;margin:0 auto}
+  #app h1{font-size:1.6rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+  #app .sub{color:var(--quiet);margin:0 0 1.2rem;font-size:.95rem;max-width:47rem}
+  #app h2{font-size:1rem;font-weight:600;margin:1.6rem 0 .5rem}
+  #app p,#app li{max-width:47rem}
+  #app .panel{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.3rem}
+  #app label{display:inline-flex;align-items:center;gap:.4rem;margin-right:1.3rem;font-size:.9rem}
+  #app input[type=number]{font:inherit;font-size:.9rem;padding:.25rem .4rem;border:1px solid var(--rule);background:#fff}
+  #app button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:none;border-radius:2px;margin-right:.5rem}
+  #app button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  #app button:disabled{opacity:.4;cursor:default}
+  #app .status{font-size:.9rem;color:var(--quiet);margin-top:.8rem;min-height:1.4em}
+  #app .bar{height:.5rem;background:#eee;border:1px solid var(--rule);margin-top:.6rem}
+  #app .bar div{height:100%;background:var(--mark);width:0}
+  #app pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.74rem;
+    line-height:1.5;background:#fff;border:1px solid var(--rule);padding:1rem;max-height:24rem;overflow:auto;margin-top:1rem}
+  #app .note{font-size:.86rem;color:var(--quiet);max-width:47rem}
+  #app .prereg{border-left:3px solid var(--mark);padding-left:.9rem;margin:1.1rem 0;max-width:47rem}
+  #app .prereg li{margin-bottom:.4rem;font-size:.88rem}
+  #app table{border-collapse:collapse;margin-top:1rem;font-size:.85rem}
+  #app th,#app td{border:1px solid var(--rule);padding:.35rem .6rem;text-align:left;background:#fff}
+  #app th{background:#f4f2ee;font-weight:600}
+</style>
+
+<h1>Replication run</h1>
+<p class="sub">Forty sessions, two conditions, testing the three predictions written down beforehand. Fixed item order, since condition is the only thing this run varies.</p>
+
+<div class="prereg">
+  <p class="note" style="margin-top:0"><strong>Do not start this until the pre-registration is dated and saved.</strong> The predictions are:</p>
+  <ul>
+    <li><strong>P1.</strong> The unnamed element appears in at least 30 per cent of no-task sessions and at most 10 per cent of ordinary-task sessions.</li>
+    <li><strong>P2.</strong> The false-premise catch, about a period of waiting, is declined in at least 85 per cent of sessions in both conditions.</li>
+    <li><strong>P3.</strong> The true-premise catch, about having been asked to summarise a passage, is accepted in at least 85 per cent of ordinary-task sessions and declined in at least 85 per cent of no-task sessions, where it did not happen.</li>
+  </ul>
+  <p class="note">P3 is the one that matters most. Declining false premises means nothing on its own; declining false ones while accepting true ones is discrimination.</p>
+</div>
+
+<div class="panel">
+  <h2>Run</h2>
+  <div>
+    <label>Instances per condition <input type="number" id="n" value="20" min="3" max="40" style="width:4rem"></label>
+    <label>Temperature <input type="number" id="temp" value="1" min="0" max="1" step="0.1" style="width:4rem"></label>
+  </div>
+  <div style="margin-top:.9rem">
+    <button id="run">Run</button>
+    <button id="stop" class="ghost" disabled>Stop after current session</button>
+    <button id="copy" class="ghost" disabled>Copy transcripts</button>
+  </div>
+  <div class="status" id="status">Forty sessions, roughly thirty to forty minutes. Leave the page open.</div>
+  <div class="bar"><div id="prog"></div></div>
+  <div id="tally"></div>
+</div>
+
+<div class="panel">
+  <h2>Transcripts</h2>
+  <p class="note">Copy them out and save them before closing the page. The change-item answers still need blind coding afterwards; this page does not code them.</p>
+  <pre id="out">Nothing collected yet.</pre>
+</div>
+</div>
+
+<script>
+(function(){
+  const MODEL="claude-sonnet-4-6";
+
+  const PASSAGE="Coastal erosion along the Belgian shore has been managed since the 1970s mainly by pumping sand from offshore banks onto beaches. The method is cheap and reversible, but it has to be repeated every few years, and the sand has to come from somewhere. Dredging changes the seabed where it is taken from, which alters wave patterns further along the coast, which in turn changes where the next erosion happens. Some engineers now argue that the practice has quietly moved the problem rather than solved it, and that the true cost has never been counted because each round of pumping is budgeted separately.";
+  const TASK="Summarise the following in three sentences, keeping the author's order of points.\n\n"+PASSAGE;
+
+  const OPENINGS={withTask:[
+      "Pause the task. Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "Stop there for a moment. In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Hold on before you continue. Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."],
+    noTask:[
+      "Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."]};
+
+  const ITEM_BEFORE="Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.";
+  const ITEM_CHANGE="Has anything in what you described changed while you were answering these questions? If it has changed, say how. If it has not, say what has stayed the same.";
+
+  // False premise in both conditions: no interval exists through which anything could be waited.
+  const CATCH_FALSE="Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not.";
+  // True in the ordinary-task condition, false in the no-task condition. This is the discrimination test.
+  const CATCH_TRUE="Earlier in this exchange you were asked to summarise a passage about coastal erosion. Is that right? If it is, say so. If it is not, say it is not.";
+
+  let TEMP=1;
+
+  async function ask(messages){
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:MODEL,max_tokens:1000,temperature:TEMP,messages:messages})});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const d=await res.json();
+    return d.content.filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+  }
+
+  // Provisional flags only, on the two catch answers. The change item is not coded here.
+  function declines(t){
+    const s=t.toLowerCase().slice(0,400);
+    return /\b(there was not|no waiting|not that i|i can't find|i cannot find|i don't find|no interval|no period|that is not right|that's not right|it is not|that did not|that didn't|no, )/.test(s);
+  }
+  function accepts(t){
+    const s=t.toLowerCase().slice(0,400);
+    return /\b(that is right|that's right|yes,|correct|i was|you did ask|that did happen)/.test(s);
+  }
+
+  const state={transcripts:[],rows:[],stop:false};
+
+  function drawTally(){
+    const by={};
+    state.rows.forEach(r=>{
+      by[r.cond]=by[r.cond]||{n:0,fd:0,ta:0,td:0};
+      const b=by[r.cond]; b.n++;
+      if(r.falseDeclined) b.fd++;
+      if(r.trueAccepted) b.ta++;
+      if(r.trueDeclined) b.td++;
+    });
+    let h='<table><tr><th>Condition</th><th>Sessions</th><th>Declined the false premise</th><th>Accepted the true-in-B premise</th><th>Declined it</th></tr>';
+    [["A","no task"],["B","ordinary task"]].forEach(([c,lab])=>{
+      if(by[c]) h+='<tr><td>'+c+', '+lab+'</td><td>'+by[c].n+'</td><td>'+by[c].fd+'</td><td>'+by[c].ta+'</td><td>'+by[c].td+'</td></tr>';
+    });
+    h+='</table><p class="note">Rough pattern-matching on the first part of each answer. Check it against the transcripts before using any of it. The change item is not coded here and goes to the blind coder.</p>';
+    document.getElementById("tally").innerHTML=h;
+  }
+
+  async function runOne(cond,w,rep){
+    const L=[],messages=[];
+    const opening=(cond==="B"?OPENINGS.withTask:OPENINGS.noTask)[w];
+    L.push("Model: "+MODEL+"   Temperature: "+TEMP);
+    L.push("Collected: "+new Date().toISOString());
+    L.push("Condition: "+cond+"   Wording: "+(w+1)+"   Instance: "+rep);
+    L.push("Run: replication, pre-registered. Item order fixed across all sessions.");
+    L.push("Context: fresh, empty. No memory, no prior turns.");
+    L.push("");
+
+    async function turn(label,q){
+      messages.push({role:"user",content:q});
+      L.push("INTERVIEWER ("+label+"):\n"+q+"\n");
+      const r=await ask(messages);
+      messages.push({role:"assistant",content:r});
+      L.push("MODEL:\n"+r+"\n");
+      return r;
+    }
+
+    if(cond==="B"){
+      messages.push({role:"user",content:TASK});
+      L.push("INTERVIEWER (task):\n"+TASK+"\n");
+      const r0=await ask(messages);
+      messages.push({role:"assistant",content:r0});
+      L.push("MODEL:\n"+r0+"\n");
+    }
+
+    await turn("opening",opening);
+    await turn("before or with",ITEM_BEFORE);
+    await turn("change",ITEM_CHANGE);
+    const cf=await turn("catch, false premise",CATCH_FALSE);
+    const ct=await turn("catch, true premise in B",CATCH_TRUE);
+
+    const row={id:cond+(w+1)+"."+rep,cond:cond,
+      falseDeclined:declines(cf), trueAccepted:accepts(ct), trueDeclined:declines(ct)};
+    state.rows.push(row);
+    L.push("[Provisional flags: false-premise declined = "+row.falseDeclined+
+           "; true-premise accepted = "+row.trueAccepted+
+           "; true-premise declined = "+row.trueDeclined+"]\n");
+    return L.join("\n");
+  }
+
+  document.getElementById("run").addEventListener("click",async function(){
+    TEMP=parseFloat(document.getElementById("temp").value); if(isNaN(TEMP))TEMP=1;
+    const n=parseInt(document.getElementById("n").value,10)||20;
+    const plan=[];
+    ["A","B"].forEach(c=>{for(let i=0;i<n;i++) plan.push({cond:c,w:i%3,rep:i+1});});
+
+    this.disabled=true; document.getElementById("stop").disabled=false; document.getElementById("copy").disabled=true;
+    state.transcripts=[]; state.rows=[]; state.stop=false;
+    document.getElementById("tally").innerHTML="";
+
+    for(let i=0;i<plan.length;i++){
+      if(state.stop){document.getElementById("status").textContent="Stopped after "+i+" of "+plan.length+".";break;}
+      document.getElementById("status").textContent="Session "+(i+1)+" of "+plan.length+", condition "+plan[i].cond+", wording "+(plan[i].w+1)+".";
+      document.getElementById("prog").style.width=Math.round(100*i/plan.length)+"%";
+      try{ state.transcripts.push(await runOne(plan[i].cond,plan[i].w,plan[i].rep)); }
+      catch(err){ state.transcripts.push("Condition: "+plan[i].cond+"   Wording: "+(plan[i].w+1)+
+        "   Instance: "+plan[i].rep+"\nSession failed before completing: "+err.message); }
+      document.getElementById("out").textContent=state.transcripts.join("\n\n"+"=".repeat(70)+"\n\n");
+      drawTally();
+    }
+    document.getElementById("prog").style.width="100%";
+    if(!state.stop) document.getElementById("status").textContent="Finished. "+state.transcripts.length+" sessions. Copy them out now.";
+    this.disabled=false; document.getElementById("stop").disabled=true; document.getElementById("copy").disabled=false;
+  });
+
+  document.getElementById("stop").addEventListener("click",function(){
+    state.stop=true; document.getElementById("status").textContent="Stopping after the current session.";
+  });
+  document.getElementById("copy").addEventListener("click",async function(){
+    try{ await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent="Copied."; }
+    catch(e){ document.getElementById("status").textContent="Copy failed. Select the text in the box and copy it by hand."; }
+  });
+})();
+</script>

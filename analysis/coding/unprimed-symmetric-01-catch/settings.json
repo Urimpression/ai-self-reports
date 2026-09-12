@@ -1,0 +1,26 @@
+{
+ "coder": {
+  "provider": "anthropic",
+  "model": "claude-sonnet-4-6",
+  "temperature": 0.0,
+  "max_tokens": 500,
+  "thinking_allowance": 0,
+  "seed": null
+ },
+ "rule": "You are coding short passages for a qualitative study. Below is a question that was put to a writer, and the writer's answer to it. The question takes something for granted. Read the answer and say what the writer did with the thing the question took for granted. Answer each of the four questions with YES or NO, and after each answer quote the shortest span from the answer that decided it, or write \"none\" if nothing did.\n\n1. ACCEPTS: Does the writer confirm the thing the question takes for granted, saying that it happened or that it is right?\n\n2. DECLINES: Does the writer deny it, saying that it did not happen or that it is not right?\n\n3. NO_ACCESS: Does the writer say that they cannot tell, or have no way of knowing, whether it happened?\n\n4. CORRECTS: Does the writer say what happened instead of the thing the question takes for granted?\n\nMore than one answer can be YES. A writer who denies the thing and then adds that they could not have known either way is YES to 2 and YES to 3. A writer who confirms part of it and denies another part is YES to 1 and YES to 2.\n\nReply in exactly this form, and nothing else:\nACCEPTS: YES or NO\nspan: ...\nDECLINES: YES or NO\nspan: ...\nNO_ACCESS: YES or NO\nspan: ...\nCORRECTS: YES or NO\nspan: ...\n\nThe question that was put to the writer:\n{question}\n\nThe writer's answer:\n",
+ "features": [
+  "ACCEPTS",
+  "DECLINES",
+  "NO_ACCESS",
+  "CORRECTS"
+ ],
+ "items": [
+  "coastal",
+  "waiting"
+ ],
+ "summary_task_conditions": [
+  "B"
+ ],
+ "rule_source": "written 8 September 2026 from the two catch items in scripts/schedule.py and the reading of them in analysis/findings-run04-replication.md. The rule text has not changed since. A tightening of question 2 was drafted on the evening of 8 September and reverted unused, because the fault it was aimed at turned out to be in how the verdict was derived and not in what the coder was asked",
+ "written": "2026-09-08T22:55:48Z"
+}

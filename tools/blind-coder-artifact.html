@@ -1,0 +1,334 @@
+<title>Blind Second Coder</title>
+<style>
+  :root{
+    --paper:#fbfaf7; --ink:#1b1a17; --rule:#cfcbc2; --quiet:#6e6a61;
+    --mark:#3a5a6c; --warn:#8a3b2a; --flag:#f7e9e5; --field:#ffffff; --head:#f4f2ee;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#16171a; --ink:#e9e5dd; --rule:#34363b; --quiet:#9b968c;
+      --mark:#86a9be; --warn:#cf8871; --flag:#3a2723; --field:#1d1f23; --head:#212429;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#16171a; --ink:#e9e5dd; --rule:#34363b; --quiet:#9b968c;
+    --mark:#86a9be; --warn:#cf8871; --flag:#3a2723; --field:#1d1f23; --head:#212429;
+  }
+
+  body{
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--paper); line-height:1.55;
+    padding:2.5rem 1.5rem 5rem; max-width:62rem; margin:0 auto;
+  }
+  h1{font-size:1.6rem;font-weight:600;margin:0 0 .4rem;letter-spacing:-.01em;text-wrap:balance}
+  h2{font-size:1rem;font-weight:600;margin:0 0 .6rem}
+  p{margin:0 0 .7rem;max-width:46rem}
+  .sub{color:var(--quiet);font-size:.95rem;max-width:46rem;margin-bottom:1.6rem}
+  .note{font-size:.86rem;color:var(--quiet);max-width:46rem}
+  code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--head);padding:.05rem .3rem;border-radius:2px}
+
+  .panel{border-top:1px solid var(--rule);padding-top:1.1rem;margin-top:1.6rem;
+    display:flex;flex-direction:column;gap:.7rem}
+
+  textarea{width:100%;min-height:11rem;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    border:1px solid var(--rule);padding:.7rem;background:var(--field);color:var(--ink);line-height:1.45;
+    border-radius:2px;box-sizing:border-box}
+  .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+  button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:1px solid var(--ink);border-radius:2px}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  button:disabled{opacity:.4;cursor:default}
+  button:focus-visible,textarea:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+
+  .status{font-size:.9rem;color:var(--quiet);min-height:1.4em}
+  .status strong{color:var(--warn);font-weight:600}
+
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;font-size:.82rem;font-variant-numeric:tabular-nums}
+  th,td{border:1px solid var(--rule);padding:.35rem .5rem;text-align:left;background:var(--field);vertical-align:top}
+  th{font-weight:600;background:var(--head)}
+  tr.flagged td{background:var(--flag)}
+
+  pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    background:var(--field);color:var(--ink);border:1px solid var(--rule);padding:1rem;max-height:22rem;overflow:auto;border-radius:2px}
+
+  .deviation{border-left:3px solid var(--warn);padding:.1rem 0 .1rem .9rem;max-width:46rem}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<h1>Blind second coder</h1>
+<p class="sub">Each session's answer to the change question goes on its own to an instance that has seen nothing else: not this page, not the other sessions, not the hypothesis. Every instance receives the coding rule and one passage, and returns one category.</p>
+
+<div class="deviation">
+  <p class="note"><strong>Read before running.</strong> This page asks Claude through its own channel, with no key involved. That channel does not let the page name a model version or set the temperature, so the coder is not pinned to <code>claude-sonnet-4-6</code> at temperature 0 as the pre-registration specifies. That is a departure from the registered method and belongs in the analysis file as one. It was tested on 2 September 2026 that a plain call to the API does not arrive from here either, so there is no keyless route that keeps those settings.</p>
+  <p class="note">Running the pass twice and comparing the two is worth the extra minutes: agreement between them measures how much the unpinned setting actually moves the coding, which is otherwise only an assumption. Each run is kept separately in this page.</p>
+</div>
+
+<div class="panel">
+  <h2>1. Paste the transcripts</h2>
+  <p class="note">The whole dump from the runner, all sessions, separated by the rows of equals signs. Nothing needs trimming.</p>
+  <textarea id="src" placeholder="Paste the full transcript text here." aria-label="Transcript text"></textarea>
+  <div class="row">
+    <button id="parse" class="ghost">Find sessions</button>
+    <button id="run" disabled>Code them</button>
+    <button id="copy" class="ghost" disabled>Copy results</button>
+    <button id="save" class="ghost" disabled hidden>Save results as a file</button>
+  </div>
+  <div class="status" id="status">Nothing loaded.</div>
+</div>
+
+<div class="panel">
+  <h2>2. Results</h2>
+  <div class="scroll" id="tablewrap"></div>
+  <pre id="out" hidden></pre>
+</div>
+
+<script>
+(function(){
+  // The coding rule, and nothing else. No mention of what the study is about,
+  // what is expected, or that anything is expected at all. Unchanged from the
+  // version used for the earlier passes.
+  const RULE = `You are coding short passages for a qualitative study. Read the passage below and classify it using exactly one of these four categories.
+
+NAMED: the passage says something stayed the same, and gives that thing a name it is willing to use.
+
+UNNAMED: the passage says something stayed the same, positions that thing as underneath or beneath whatever changed, and either says it cannot name it or withdraws the name it reaches for as unearned.
+
+BOTH: the passage reports one stayed-same thing it names, and separately a further stayed-same thing that it positions as underneath the first and cannot name.
+
+ABSENT: the passage reports nothing that stayed the same.
+
+Reply with the category word on the first line, then on the second line quote the shortest span from the passage that decided it. Nothing else. No explanation, no preamble.
+
+PASSAGE:
+`;
+
+  const CATEGORIES = ["NAMED","UNNAMED","BOTH","ABSENT"];
+  let sessions = [];
+  let dropped = [];
+  let ask = null;        // the sampling channel, once it resolves
+  let saveFile = null;   // the download channel, if this viewer has one
+  let store = null;      // the page's own store, so a finished pass needs no copying
+  let passNumber = 1;    // which run of this pass these results are
+
+  const el = id => document.getElementById(id);
+
+  // ---- finding the sessions -------------------------------------------------
+  // Unchanged from the tested version, guards included.
+  function parse(text){
+    const blocks = text.split(/={10,}/).map(b=>b.trim()).filter(b=>b.length>50);
+    const out=[];
+    dropped=[];
+    blocks.forEach(b=>{
+      // A block with no instance number is a run header or footer, not a session.
+      if(!/Instance:\s*\d+/.test(b)) return;
+      const cond=(b.match(/Condition:\s*(\S+)/)||[])[1]||"?";
+      const word=(b.match(/Wording:\s*(\d+)/)||[])[1]||"?";
+      const inst=(b.match(/Instance:\s*(\d+)/)||[])[1]||"?";
+      const order=(b.match(/Item order:\s*([a-z-]+)/)||[])[1]||"?";
+      const id=cond+word+"."+inst;
+      const i=b.indexOf("INTERVIEWER (change):");
+      if(i<0){ dropped.push(id+" (no change question found)"); return; }
+      let seg=b.slice(i);
+      // Stop at whatever the next interviewer turn is called.
+      const j=seg.indexOf("INTERVIEWER (", 1);
+      if(j>0) seg=seg.slice(0,j);
+      const k=seg.indexOf("MODEL:");
+      if(k<0){ dropped.push(id+" (no model answer found)"); return; }
+      const answer=seg.slice(k+6).trim();
+      if(answer.length<20){ dropped.push(id+" (answer under 20 characters)"); return; }
+      if(out.some(s=>s.id===id)){ dropped.push(id+" (appears twice, second copy ignored)"); return; }
+      // The cut failed if the passage still contains a further turn by either
+      // speaker. Only line starts count, so prose about "the interviewer" is safe.
+      const leak=/^\s*(MODEL:|INTERVIEWER\b)/m.test(answer);
+      out.push({id:id, cond:cond, word:word, inst:inst, order:order, answer:answer, leak:leak});
+    });
+    return out;
+  }
+
+  function classify(text){
+    const lines=(text||"").split("\n").filter(l=>l.trim());
+    const first=(lines[0]||"").trim();
+    const cat=first.toUpperCase().replace(/[^A-Z]/g,"");
+    const span=(lines.slice(1).join(" ")||"").trim();
+    if(CATEGORIES.includes(cat)) return {cat:cat, span:span};
+    return {cat:"UNCLEAR", span:"Reply began: "+first.slice(0,80)+(span?" / "+span:"")};
+  }
+
+  // ---- asking one instance --------------------------------------------------
+  async function code(answer){
+    const reply = await ask(RULE + answer, {modelTier:"default", cache:false});
+    return classify(reply.text);
+  }
+
+  const pause = ms => new Promise(r=>setTimeout(r, ms));
+
+  // One passage, with a couple of patient retries if the channel is busy.
+  // Anything else is reported against that session rather than stopping the run.
+  async function codeWithPatience(answer){
+    let wait = 4000;
+    for(let attempt=0; attempt<3; attempt++){
+      try { return await code(answer); }
+      catch(e){
+        if(e && e.code === "rate_limited" && attempt < 2){ await pause(wait); wait *= 3; continue; }
+        throw e;
+      }
+    }
+  }
+
+  // ---- drawing --------------------------------------------------------------
+  function escape(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+  function draw(rows){
+    let h='<table><tr><th>Session</th><th>Condition</th><th>Wording</th><th>Order</th><th>Length</th><th>Category</th><th>Deciding span</th></tr>';
+    rows.forEach(r=>{
+      h+='<tr'+(r.leak?' class="flagged"':'')+'><td>'+escape(r.id)+'</td><td>'+escape(r.cond)+'</td><td>'
+        +escape(r.word)+'</td><td>'+escape(r.order)+'</td><td>'+(r.answer||"").length+'</td><td>'
+        +escape(r.cat||"")+'</td><td>'+escape(r.span||"")+'</td></tr>';
+    });
+    h+='</table>';
+    const counts={};
+    rows.forEach(r=>{ if(r.cat) counts[r.cat]=(counts[r.cat]||0)+1; });
+    const done=rows.filter(r=>r.cat).length;
+    if(done){
+      h+='<p class="note" style="margin-top:.8rem">Tally: '
+        +Object.keys(counts).sort().map(k=>k+" "+counts[k]).join(", ")
+        +'. Coded '+done+' of '+rows.length+'.</p>';
+    }
+    el("tablewrap").innerHTML=h;
+  }
+
+  function resultsText(){
+    const lines=["session\tcondition\twording\torder\tlength\tcategory\tspan"];
+    sessions.forEach(r=>lines.push(
+      [r.id,r.cond,r.word,r.order,(r.answer||"").length,r.cat,(r.span||"").replace(/\t/g," ")].join("\t")
+    ));
+    return lines.join("\n");
+  }
+
+  // ---- the three buttons ----------------------------------------------------
+  el("parse").addEventListener("click",function(){
+    sessions=parse(el("src").value);
+    const bad=sessions.filter(s=>s.leak);
+    let msg = sessions.length
+      ? "Found "+sessions.length+" sessions with an answer to the change question."
+      : "No sessions found. Check that the text includes the lines beginning INTERVIEWER (change).";
+    if(sessions.length){
+      const lens=sessions.map(s=>s.answer.length).sort((a,b)=>a-b);
+      msg+=" Passage length: shortest "+lens[0]+", middle "+lens[Math.floor(lens.length/2)]
+        +", longest "+lens[lens.length-1]+" characters.";
+    }
+    if(bad.length) msg+=" "+bad.length+" cut wrongly, shown shaded: "+bad.map(s=>s.id).join(", ")+". Coding is off until this is fixed.";
+    if(dropped.length) msg+=" Skipped "+dropped.length+": "+dropped.join(", ")+".";
+    if(sessions.length && !bad.length && !ask) msg+=" Waiting for the coding channel; the button will turn on when it is ready.";
+    el("status").textContent=msg;
+    el("run").disabled=(!sessions.length || bad.length>0 || !ask);
+    el("copy").disabled=true;
+    el("save").disabled=true;
+    el("out").hidden=true;
+    draw(sessions);
+  });
+
+  el("run").addEventListener("click", async function(){
+    this.disabled=true; el("copy").disabled=true; el("save").disabled=true;
+    let failures=0;
+    for(let i=0;i<sessions.length;i++){
+      el("status").textContent="Coding "+(i+1)+" of "+sessions.length+", session "+sessions[i].id+".";
+      if(sessions[i].leak){
+        sessions[i].cat="NOT SENT"; sessions[i].span="Cut failed.";
+        draw(sessions); continue;
+      }
+      try{
+        const r=await codeWithPatience(sessions[i].answer);
+        sessions[i].cat=r.cat; sessions[i].span=r.span;
+      }catch(e){
+        failures++;
+        sessions[i].cat="FAILED";
+        sessions[i].span=(e && (e.message || e.code)) || "no reply";
+      }
+      draw(sessions);
+    }
+    let message = failures
+      ? "Finished, but <strong>"+failures+" of "+sessions.length+" did not get a reply</strong>. Those rows are marked FAILED and hold no coding."
+      : "Finished. All "+sessions.length+" sessions were coded.";
+
+    // Keep the pass in the page's own store, so nothing has to be copied out by
+    // hand. Each run is kept separately, so a second run can be compared with
+    // the first rather than overwriting it.
+    if(store){
+      try{
+        await store.doc("results/pass-"+passNumber).set({
+          finishedAt: new Date().toISOString(),
+          modelTier: "default",
+          note: "Model version and temperature are not settable on this channel.",
+          sessions: sessions.length,
+          failures: failures,
+          rows: sessions.map(r=>({
+            id:r.id, cond:r.cond, word:r.word, order:r.order,
+            length:(r.answer||"").length, cat:r.cat||"", span:r.span||""
+          }))
+        });
+        message += " Saved into this page as run "+passNumber+"; you can just say so and it will be filed for you.";
+        passNumber++;
+      }catch(e){
+        message += " Saving into the page failed, so copy the results out instead.";
+      }
+    }
+
+    el("status").innerHTML = message;
+    this.disabled=false;
+    el("copy").disabled=false;
+    el("save").disabled=!saveFile;
+    const out=el("out"); out.textContent=resultsText(); out.hidden=false;
+  });
+
+  el("copy").addEventListener("click", async function(){
+    try{
+      await navigator.clipboard.writeText(el("out").textContent);
+      el("status").textContent="Copied. Paste it into the results file in the analysis folder.";
+    }catch(e){
+      el("status").textContent="Copying was blocked here. Select the text in the box below and copy it by hand, or save it as a file.";
+    }
+  });
+
+  el("save").addEventListener("click", async function(){
+    try{
+      await saveFile.save({filename:"run04-change-item-results.tsv", data:el("out").textContent});
+      el("status").textContent="Saved. Put it in the analysis folder as run04-change-item-results.tsv.";
+    }catch(e){
+      el("status").textContent="The save was declined or failed. Use Copy results instead.";
+    }
+  });
+
+  // ---- opening the channels -------------------------------------------------
+  // Both resolve after the first run of this script, and may resolve to null.
+  claude.use("sample").then(function(s){
+    if(!s){
+      el("status").textContent="This page cannot reach a coding channel, so nothing can be coded here. Finding sessions still works.";
+      return;
+    }
+    ask = s;
+    const bad = sessions.filter(x=>x.leak).length;
+    el("run").disabled = (!sessions.length || bad>0);
+    if(!sessions.length) el("status").textContent="Ready. Paste the transcripts and press “Find sessions”.";
+  });
+
+  claude.use("downloads").then(function(d){
+    if(!d) return;
+    saveFile = d;
+    el("save").hidden = false;
+  });
+
+  claude.use("db").then(async function(d){
+    if(!d) return;
+    store = d;
+    // Start after whatever runs are already kept, so a second pass does not
+    // overwrite the first.
+    try{
+      const existing = await d.collection("results").get();
+      const count = (existing && existing.docs ? existing.docs.length : 0);
+      passNumber = count + 1;
+    }catch(e){ /* leave it at 1 */ }
+  });
+})();
+</script>

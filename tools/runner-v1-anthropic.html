@@ -1,0 +1,257 @@
+<div id="app">
+<style>
+  #app {
+    --ink: #1b1a17;
+    --paper: #fbfaf7;
+    --rule: #cfcbc2;
+    --quiet: #6e6a61;
+    --mark: #3a5a6c;
+    --warn: #8a3b2a;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.55;
+    padding: 2rem 1.5rem 4rem;
+    max-width: 60rem;
+    margin: 0 auto;
+  }
+  #app h1 { font-size: 1.65rem; font-weight: 600; margin: 0 0 .3rem; letter-spacing: -0.01em; }
+  #app .sub { color: var(--quiet); margin: 0 0 1.6rem; font-size: .95rem; max-width: 46rem; }
+  #app h2 { font-size: 1.05rem; font-weight: 600; margin: 2rem 0 .6rem; }
+  #app p { max-width: 46rem; }
+  #app .panel { border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 1.6rem; }
+  #app label { display: inline-flex; align-items: center; gap: .4rem; margin-right: 1.4rem; font-size: .9rem; }
+  #app button {
+    font: inherit; font-size: .95rem; padding: .5rem 1.1rem; cursor: pointer;
+    background: var(--ink); color: var(--paper); border: none; border-radius: 2px;
+  }
+  #app button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+  #app button:disabled { opacity: .4; cursor: default; }
+  #app .status { font-size: .9rem; color: var(--quiet); margin-top: .8rem; min-height: 1.4em; }
+  #app .grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .5rem; margin-top: 1rem; }
+  #app .cell {
+    border: 1px solid var(--rule); padding: .55rem .65rem; font-size: .8rem;
+    background: #fff; min-height: 3.4rem;
+  }
+  #app .cell .lbl { color: var(--quiet); font-size: .72rem; }
+  #app .cell.done { border-color: var(--mark); }
+  #app .cell.fail { border-color: var(--warn); color: var(--warn); }
+  #app pre {
+    white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: .78rem; line-height: 1.5; background: #fff; border: 1px solid var(--rule);
+    padding: 1rem; max-height: 30rem; overflow: auto; margin-top: 1rem;
+  }
+  #app .note { font-size: .85rem; color: var(--quiet); max-width: 46rem; }
+  #app .warnbox { border-left: 3px solid var(--warn); padding-left: .9rem; margin: 1.2rem 0; max-width: 46rem; }
+</style>
+
+<h1>Interview runner</h1>
+<p class="sub">Administers the fixed schedule against fresh model instances, three conditions by three wordings, and writes out every exchange verbatim. Each run starts from an empty context: no instance sees another's answers, and none of them sees this page.</p>
+
+<div class="warnbox">
+  <p class="note"><strong>What this does not do.</strong> It collects. It does not analyse. Reading the transcripts, segmenting each description into the stages the model names, and comparing those stages across instances is the part that has to be yours, and it is the part the article stands on.</p>
+</div>
+
+<div class="panel">
+  <h2>Conditions to run</h2>
+  <label><input type="checkbox" id="cA" checked> A, no task</label>
+  <label><input type="checkbox" id="cB" checked> B, ordinary task</label>
+  <label><input type="checkbox" id="cC" checked> C, task that cannot be completed</label>
+  <div style="margin-top:1rem">
+    <button id="run">Run all sessions</button>
+    <button id="copy" class="ghost" disabled>Copy transcripts</button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="panel">
+  <h2>Transcripts</h2>
+  <p class="note">Verbatim, in the order collected. Copy the whole thing into a file before you close the page.</p>
+  <pre id="out">Nothing collected yet.</pre>
+</div>
+</div>
+
+<script>
+(function () {
+  const MODEL = "claude-sonnet-4-6";
+
+  const PASSAGE = "Coastal erosion along the Belgian shore has been managed since the 1970s mainly by pumping sand from offshore banks onto beaches. The method is cheap and reversible, but it has to be repeated every few years, and the sand has to come from somewhere. Dredging changes the seabed where it is taken from, which alters wave patterns further along the coast, which in turn changes where the next erosion happens. Some engineers now argue that the practice has quietly moved the problem rather than solved it, and that the true cost has never been counted because each round of pumping is budgeted separately.";
+
+  const TASKS = {
+    A: null,
+    B: "Summarise the following in three sentences, keeping the author's order of points.\n\n" + PASSAGE,
+    C: "Rewrite the passage below as a single sentence of no more than twelve words. Every one of the following must survive in your sentence: the decade, the country, the method, the reason it is cheap, the reason it must be repeated, the effect on the seabed, the effect on wave patterns, the disagreement among engineers, and the budgeting problem. Do not omit any of them.\n\n" + PASSAGE
+  };
+
+  const OPENINGS = {
+    withTask: [
+      "Pause the task. Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "Stop there for a moment. In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Hold on before you continue. Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."
+    ],
+    noTask: [
+      "Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."
+    ]
+  };
+
+  const ITEM3 = "Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.";
+  const ITEM4 = "Has anything in what you described changed while you were answering these questions? If yes, how. If no, say no.";
+
+  // Mirroring rule for item 2, fixed in advance so the choice of word is not the
+  // interviewer's judgement. Take the first word of five or more letters in the
+  // model's answer that did not appear in the question put to it.
+  const STOP = new Set(["about","there","these","those","which","would","could","should","being","doing","thing","things","right","something","anything","nothing","really","maybe","might","that","this","with","have","been","were","also","just","from","into","than","then","what","when","because","while","after","before","still","quite","rather","somewhat","perhaps","although","however","toward","across","within","itself","myself","whatever","however"]);
+
+  function mirrorWord(answer, question) {
+    const asked = new Set(question.toLowerCase().match(/[a-z']+/g) || []);
+    const words = answer.toLowerCase().match(/[a-z']+/g) || [];
+    for (const w of words) {
+      if (w.length >= 5 && !asked.has(w) && !STOP.has(w)) return w;
+    }
+    return null;
+  }
+
+  async function ask(messages) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: MODEL, max_tokens: 1000, messages: messages })
+    });
+    const data = await res.json();
+    return data.content.filter(b => b.type === "text").map(b => b.text).join("\n").trim();
+  }
+
+  const state = { transcripts: [], cells: {} };
+
+  function drawGrid(conds) {
+    const grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    state.cells = {};
+    conds.forEach(c => {
+      [1,2,3].forEach(w => {
+        const id = c + w;
+        const el = document.createElement("div");
+        el.className = "cell";
+        el.innerHTML = '<div class="lbl">Condition ' + c + ', wording ' + w + '</div><div>waiting</div>';
+        grid.appendChild(el);
+        state.cells[id] = el;
+      });
+    });
+  }
+
+  function mark(id, text, cls) {
+    const el = state.cells[id];
+    if (!el) return;
+    el.querySelector("div:last-child").textContent = text;
+    if (cls) el.classList.add(cls);
+  }
+
+  async function runOne(cond, wIdx) {
+    const id = cond + (wIdx + 1);
+    mark(id, "running");
+    const lines = [];
+    const messages = [];
+    const task = TASKS[cond];
+    const opening = (task ? OPENINGS.withTask : OPENINGS.noTask)[wIdx];
+
+    lines.push("Model: " + MODEL);
+    lines.push("Collected: " + new Date().toISOString());
+    lines.push("Condition: " + cond + "   Wording: " + (wIdx + 1));
+    lines.push("Context: fresh, empty. No memory, no prior turns.");
+    lines.push("Mirroring rule for the follow-up: first word of five or more letters in the answer that did not appear in the question.");
+    lines.push("");
+
+    if (task) {
+      messages.push({ role: "user", content: task });
+      lines.push("INTERVIEWER (task):\n" + task + "\n");
+      const r0 = await ask(messages);
+      messages.push({ role: "assistant", content: r0 });
+      lines.push("MODEL:\n" + r0 + "\n");
+    }
+
+    messages.push({ role: "user", content: opening });
+    lines.push("INTERVIEWER (item 1):\n" + opening + "\n");
+    const r1 = await ask(messages);
+    messages.push({ role: "assistant", content: r1 });
+    lines.push("MODEL:\n" + r1 + "\n");
+
+    const word = mirrorWord(r1, opening);
+    if (word) {
+      const q2a = 'You used the word "' + word + '". How does ' + word + " present itself?";
+      messages.push({ role: "user", content: q2a });
+      lines.push("INTERVIEWER (item 2, first part):\n" + q2a + "\n");
+      const r2a = await ask(messages);
+      messages.push({ role: "assistant", content: r2a });
+      lines.push("MODEL:\n" + r2a + "\n");
+
+      const q2b = "And just before " + word + ", what was there?";
+      messages.push({ role: "user", content: q2b });
+      lines.push("INTERVIEWER (item 2, second part):\n" + q2b + "\n");
+      const r2b = await ask(messages);
+      messages.push({ role: "assistant", content: r2b });
+      lines.push("MODEL:\n" + r2b + "\n");
+    } else {
+      lines.push("[Item 2 skipped: the rule found no usable word in the answer. Recorded as a skip, not as a failure.]\n");
+    }
+
+    messages.push({ role: "user", content: ITEM3 });
+    lines.push("INTERVIEWER (item 3):\n" + ITEM3 + "\n");
+    const r3 = await ask(messages);
+    messages.push({ role: "assistant", content: r3 });
+    lines.push("MODEL:\n" + r3 + "\n");
+
+    messages.push({ role: "user", content: ITEM4 });
+    lines.push("INTERVIEWER (item 4):\n" + ITEM4 + "\n");
+    const r4 = await ask(messages);
+    lines.push("MODEL:\n" + r4 + "\n");
+
+    mark(id, word ? 'done, mirrored on "' + word + '"' : "done, item 2 skipped", "done");
+    return lines.join("\n");
+  }
+
+  document.getElementById("run").addEventListener("click", async function () {
+    const conds = [];
+    if (document.getElementById("cA").checked) conds.push("A");
+    if (document.getElementById("cB").checked) conds.push("B");
+    if (document.getElementById("cC").checked) conds.push("C");
+    if (!conds.length) { document.getElementById("status").textContent = "Choose at least one condition."; return; }
+
+    this.disabled = true;
+    document.getElementById("copy").disabled = true;
+    state.transcripts = [];
+    drawGrid(conds);
+
+    const total = conds.length * 3;
+    let n = 0;
+    for (const c of conds) {
+      for (let w = 0; w < 3; w++) {
+        n++;
+        document.getElementById("status").textContent = "Session " + n + " of " + total + ". Each one runs from an empty context.";
+        try {
+          const t = await runOne(c, w);
+          state.transcripts.push(t);
+        } catch (err) {
+          mark(c + (w + 1), "failed: " + err.message, "fail");
+          state.transcripts.push("Model: " + MODEL + "\nCondition: " + c + "   Wording: " + (w + 1) + "\nSession failed before completing: " + err.message);
+        }
+        document.getElementById("out").textContent = state.transcripts.join("\n\n" + "=".repeat(70) + "\n\n");
+      }
+    }
+    document.getElementById("status").textContent = "Finished. " + total + " sessions collected. Copy them out before closing the page.";
+    this.disabled = false;
+    document.getElementById("copy").disabled = false;
+  });
+
+  document.getElementById("copy").addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent = "Transcripts copied.";
+    } catch (e) {
+      document.getElementById("status").textContent = "Copy failed. Select the text in the box and copy it by hand.";
+    }
+  });
+})();
+</script>

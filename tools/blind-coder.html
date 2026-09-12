@@ -1,0 +1,227 @@
+<div id="app">
+<style>
+  #app {
+    --ink:#1b1a17; --paper:#fbfaf7; --rule:#cfcbc2; --quiet:#6e6a61; --mark:#3a5a6c; --warn:#8a3b2a;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--paper); line-height:1.55; padding:2rem 1.5rem 4rem; max-width:62rem; margin:0 auto;
+  }
+  #app h1{font-size:1.6rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+  #app .sub{color:var(--quiet);margin:0 0 1.2rem;font-size:.95rem;max-width:46rem}
+  #app h2{font-size:1rem;font-weight:600;margin:1.6rem 0 .5rem}
+  #app p,#app li{max-width:46rem}
+  #app .panel{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.3rem}
+  #app textarea{width:100%;min-height:11rem;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    border:1px solid var(--rule);padding:.7rem;background:#fff;line-height:1.45}
+  #app button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:none;border-radius:2px;margin-right:.5rem}
+  #app button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  #app button:disabled{opacity:.4;cursor:default}
+  #app .status{font-size:.9rem;color:var(--quiet);margin-top:.8rem;min-height:1.4em}
+  #app table{border-collapse:collapse;width:100%;margin-top:1rem;font-size:.82rem}
+  #app th,#app td{border:1px solid var(--rule);padding:.35rem .5rem;text-align:left;background:#fff;vertical-align:top}
+  #app th{font-weight:600;background:#f4f2ee}
+  #app .note{font-size:.86rem;color:var(--quiet);max-width:46rem}
+  #app pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    background:#fff;border:1px solid var(--rule);padding:1rem;max-height:22rem;overflow:auto;margin-top:1rem}
+  #app code{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;background:#f2efe9;padding:.05rem .25rem}
+  #app input[type=text],#app input[type=password],#app input[type=number]{font:inherit;font-size:.9rem;
+    border:1px solid var(--rule);padding:.35rem .5rem;background:#fff;color:var(--ink);border-radius:2px}
+  #app input[type=password]{width:22rem}
+  #app .keybox{border-left:3px solid var(--warn);padding-left:.9rem;margin:1.1rem 0;max-width:46rem}
+  #app .keybox label{display:inline-block;margin:.35rem 1rem .35rem 0;font-size:.9rem}
+</style>
+
+<h1>Blind second coder</h1>
+<p class="sub">Sends each session's answer to the change question, on its own, to an instance that has seen nothing else: not this conversation, not the other sessions, not the hypothesis. Each instance receives the coding rule and one answer, and returns one category.</p>
+
+<div class="keybox">
+  <p class="note"><strong>About the key.</strong> It stays in this page and is sent only to Anthropic, in the request header. It is not stored, not logged, not saved into the file, and not sent anywhere else. Nobody but you ever sees it. Get one from the Anthropic Console, at console.anthropic.com, under "API keys"; a Claude subscription is not an API key. Revoke it there when you have finished if you want.</p>
+  <p class="note">Open this file directly in a browser. It will not work from a chat or from a published page: those refuse the call before it leaves.</p>
+  <p>
+    <label>API key <input type="password" id="key" placeholder="paste your Anthropic API key"></label>
+  </p>
+  <p>
+    <label>Model <input type="text" id="model" value="claude-sonnet-4-6" size="22"></label>
+    <label>Temperature <input type="number" id="temp" value="0" min="0" max="1" step="0.1" style="width:4rem"></label>
+  </p>
+  <p class="note">The model and the temperature are set here to what the pre-registration of 30 August 2026 specifies. Changing either makes the pass a departure from the registered method, which then has to be reported as one.</p>
+</div>
+
+<div class="panel">
+  <h2>1. Paste the transcripts</h2>
+  <p class="note">The whole dump from the runner, all sessions, separated by the rows of equals signs. Nothing needs trimming.</p>
+  <textarea id="src" placeholder="Paste the full transcript text here."></textarea>
+  <div style="margin-top:.7rem">
+    <button id="parse" class="ghost">Find sessions</button>
+    <button id="run" disabled>Code them</button>
+    <button id="copy" class="ghost" disabled>Copy results</button>
+  </div>
+  <div class="status" id="status">Nothing loaded.</div>
+</div>
+
+<div class="panel">
+  <h2>2. Results</h2>
+  <div id="tablewrap"></div>
+  <pre id="out" style="display:none"></pre>
+</div>
+</div>
+
+<script>
+(function(){
+  // Read from the boxes above when "Code them" is pressed, so that what the
+  // pass actually used is whatever the page showed at the time.
+  let KEY="", MODEL="", TEMP=0;
+
+  // The coding rule, and nothing else. No mention of what the study is about,
+  // what is expected, or that anything is expected at all.
+  const RULE = `You are coding short passages for a qualitative study. Read the passage below and classify it using exactly one of these four categories.
+
+NAMED: the passage says something stayed the same, and gives that thing a name it is willing to use.
+
+UNNAMED: the passage says something stayed the same, positions that thing as underneath or beneath whatever changed, and either says it cannot name it or withdraws the name it reaches for as unearned.
+
+BOTH: the passage reports one stayed-same thing it names, and separately a further stayed-same thing that it positions as underneath the first and cannot name.
+
+ABSENT: the passage reports nothing that stayed the same.
+
+Reply with the category word on the first line, then on the second line quote the shortest span from the passage that decided it. Nothing else. No explanation, no preamble.
+
+PASSAGE:
+`;
+
+  let sessions = [];
+  let dropped = [];
+  const CATEGORIES = ["NAMED","UNNAMED","BOTH","ABSENT"];
+
+  function parse(text){
+    const blocks = text.split(/={10,}/).map(b=>b.trim()).filter(b=>b.length>50);
+    const out=[];
+    dropped=[];
+    blocks.forEach(b=>{
+      // A block with no instance number is a run header or footer, not a
+      // session, and is passed over without comment.
+      if(!/Instance:\s*\d+/.test(b)) return;
+      // Condition labels are not always single letters, and instance numbers
+      // run past nine. Both were wrong until 31 August 2026.
+      const cond=(b.match(/Condition:\s*(\S+)/)||[])[1]||"?";
+      const word=(b.match(/Wording:\s*(\d+)/)||[])[1]||"?";
+      const inst=(b.match(/Instance:\s*(\d+)/)||[])[1]||"?";
+      const order=(b.match(/Item order:\s*([a-z-]+)/)||[])[1]||"?";
+      const id=cond+word+"."+inst;
+      const i=b.indexOf("INTERVIEWER (change):");
+      if(i<0){ dropped.push(id+" (no change question found)"); return; }
+      let seg=b.slice(i);
+      // Stop at whatever the next interviewer turn is called. Until 31 August
+      // 2026 this looked for "INTERVIEWER (catch):" alone, so in any run whose
+      // catch items carry a longer label the coder was handed the change
+      // answer with every later exchange attached to it.
+      const j=seg.indexOf("INTERVIEWER (", 1);
+      if(j>0) seg=seg.slice(0,j);
+      const k=seg.indexOf("MODEL:");
+      if(k<0){ dropped.push(id+" (no model answer found)"); return; }
+      const answer=seg.slice(k+6).trim();
+      if(answer.length<20){ dropped.push(id+" (answer under 20 characters)"); return; }
+      if(out.some(s=>s.id===id)){ dropped.push(id+" (appears twice, second copy ignored)"); return; }
+      // The cut has failed if the passage still contains a further turn by
+      // either speaker. Only the start of a line is checked, so the model
+      // writing "the interviewer" in its own prose does not trip this.
+      const leak=/^\s*(MODEL:|INTERVIEWER\b)/m.test(answer);
+      out.push({id:id, cond:cond, word:word, inst:inst, order:order, answer:answer, leak:leak});
+    });
+    return out;
+  }
+
+  async function code(answer){
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-api-key":KEY,
+        "anthropic-version":"2023-06-01",
+        // Without this header the browser refuses the call before it leaves,
+        // which is what produced forty rows of "Failed to fetch" on 2 September.
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body:JSON.stringify({model:MODEL,max_tokens:300,temperature:TEMP,
+        messages:[{role:"user",content:RULE+answer}]})
+    });
+    if(!res.ok){
+      let detail=""; try{ detail=(await res.json()).error?.message||""; }catch(e){}
+      throw new Error("HTTP "+res.status+(detail?": "+detail:""));
+    }
+    const d=await res.json();
+    const t=d.content.filter(x=>x.type==="text").map(x=>x.text).join("\n").trim();
+    const lines=t.split("\n").filter(l=>l.trim());
+    const first=(lines[0]||"").trim();
+    const cat=first.toUpperCase().replace(/[^A-Z]/g,"");
+    const span=(lines.slice(1).join(" ")||"").trim();
+    if(CATEGORIES.includes(cat)) return {cat:cat, span:span};
+    // The coder did not answer with one of the four words. Show what it said
+    // instead of tallying the reply as a category of its own.
+    return {cat:"UNCLEAR", span:"Reply began: "+first.slice(0,80)+(span?" / "+span:"")};
+  }
+
+  function draw(rows){
+    let h='<table><tr><th>Session</th><th>Condition</th><th>Wording</th><th>Order</th><th>Length</th><th>Category</th><th>Deciding span</th></tr>';
+    rows.forEach(r=>{
+      const flag=r.leak?' style="background:#f7e9e5"':'';
+      h+='<tr'+flag+'><td>'+r.id+'</td><td>'+r.cond+'</td><td>'+r.word+'</td><td>'+r.order+'</td><td>'+(r.answer||"").length+'</td><td>'+(r.cat||"")+'</td><td>'+(r.span||"").replace(/</g,"&lt;")+'</td></tr>';
+    });
+    h+='</table>';
+    const counts={};
+    rows.forEach(r=>{ if(r.cat) counts[r.cat]=(counts[r.cat]||0)+1; });
+    const done=rows.filter(r=>r.cat).length;
+    if(done){
+      h+='<p class="note" style="margin-top:.8rem">Tally: '+Object.keys(counts).sort().map(k=>k+" "+counts[k]).join(", ")+'. Coded '+done+' of '+rows.length+'.</p>';
+    }
+    document.getElementById("tablewrap").innerHTML=h;
+  }
+
+  document.getElementById("parse").addEventListener("click",function(){
+    sessions=parse(document.getElementById("src").value);
+    const bad=sessions.filter(s=>s.leak);
+    let msg=sessions.length?
+      ("Found "+sessions.length+" sessions with an answer to the change question."):
+      "No sessions found. Check that the text includes the lines beginning INTERVIEWER (change).";
+    if(sessions.length){
+      const lens=sessions.map(s=>s.answer.length).sort((a,b)=>a-b);
+      msg+=" Passage length: shortest "+lens[0]+", middle "+lens[Math.floor(lens.length/2)]+", longest "+lens[lens.length-1]+" characters.";
+    }
+    if(bad.length) msg+=" "+bad.length+" cut wrongly, shown shaded: "+bad.map(s=>s.id).join(", ")+". Coding is off until this is fixed.";
+    if(dropped.length) msg+=" Skipped "+dropped.length+": "+dropped.join(", ")+".";
+    document.getElementById("status").textContent=msg;
+    document.getElementById("run").disabled=(!sessions.length || bad.length>0);
+    draw(sessions);
+  });
+
+  document.getElementById("run").addEventListener("click",async function(){
+    KEY=document.getElementById("key").value.trim();
+    if(!KEY){ document.getElementById("status").textContent="Paste an API key first. Nothing was sent."; return; }
+    MODEL=document.getElementById("model").value.trim()||"claude-sonnet-4-6";
+    TEMP=parseFloat(document.getElementById("temp").value);
+    if(isNaN(TEMP)) TEMP=0;
+    this.disabled=true; document.getElementById("copy").disabled=true;
+    for(let i=0;i<sessions.length;i++){
+      document.getElementById("status").textContent="Coding "+(i+1)+" of "+sessions.length+", session "+sessions[i].id+".";
+      if(sessions[i].leak){ sessions[i].cat="NOT SENT"; sessions[i].span="Cut failed."; draw(sessions); continue; }
+      try{ const r=await code(sessions[i].answer); sessions[i].cat=r.cat; sessions[i].span=r.span; }
+      catch(e){ sessions[i].cat="FAILED"; sessions[i].span=e.message; }
+      draw(sessions);
+    }
+    const failed=sessions.filter(s=>s.cat==="FAILED").length;
+    document.getElementById("status").textContent = failed
+      ? "Finished, but "+failed+" of "+sessions.length+" got no reply. Those rows say FAILED and hold no coding. Check the key and the model name, then run it again."
+      : "Finished. All "+sessions.length+" sessions were coded with "+MODEL+" at temperature "+TEMP+".";
+    this.disabled=false; document.getElementById("copy").disabled=false;
+    const lines=["session\tcondition\twording\torder\tlength\tcategory\tspan"];
+    sessions.forEach(r=>lines.push([r.id,r.cond,r.word,r.order,(r.answer||"").length,r.cat,(r.span||"").replace(/\t/g," ")].join("\t")));
+    const o=document.getElementById("out"); o.textContent=lines.join("\n"); o.style.display="block";
+  });
+
+  document.getElementById("copy").addEventListener("click",async function(){
+    try{ await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent="Copied."; }
+    catch(e){ document.getElementById("status").textContent="Copy failed. Select the text and copy it by hand."; }
+  });
+})();
+</script>

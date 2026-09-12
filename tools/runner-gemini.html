@@ -1,0 +1,235 @@
+<div id="app">
+<style>
+  #app{--ink:#1b1a17;--paper:#fbfaf7;--rule:#cfcbc2;--quiet:#6e6a61;--mark:#3a5a6c;--warn:#8a3b2a;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;color:var(--ink);
+    background:var(--paper);line-height:1.55;padding:2rem 1.5rem 4rem;max-width:62rem;margin:0 auto}
+  #app h1{font-size:1.6rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+  #app .sub{color:var(--quiet);margin:0 0 1.2rem;font-size:.95rem;max-width:46rem}
+  #app h2{font-size:1rem;font-weight:600;margin:1.6rem 0 .5rem}
+  #app p,#app li{max-width:46rem}
+  #app .panel{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.3rem}
+  #app label{display:inline-flex;align-items:center;gap:.4rem;margin-right:1.3rem;font-size:.9rem}
+  #app input[type=text],#app input[type=password],#app input[type=number]{font:inherit;font-size:.9rem;
+    padding:.3rem .45rem;border:1px solid var(--rule);background:#fff}
+  #app input[type=password]{width:22rem}
+  #app button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:none;border-radius:2px;margin-right:.5rem}
+  #app button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  #app button:disabled{opacity:.4;cursor:default}
+  #app .status{font-size:.9rem;color:var(--quiet);margin-top:.8rem;min-height:1.4em}
+  #app .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(11rem,1fr));gap:.4rem;margin-top:1rem}
+  #app .cell{border:1px solid var(--rule);padding:.45rem .55rem;font-size:.76rem;background:#fff;min-height:3.2rem}
+  #app .cell .lbl{color:var(--quiet);font-size:.7rem}
+  #app .cell.done{border-color:var(--mark)} #app .cell.fail{border-color:var(--warn);color:var(--warn)}
+  #app pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.76rem;
+    line-height:1.5;background:#fff;border:1px solid var(--rule);padding:1rem;max-height:28rem;overflow:auto;margin-top:1rem}
+  #app .note{font-size:.86rem;color:var(--quiet);max-width:46rem}
+  #app .keybox{border-left:3px solid var(--warn);padding-left:.9rem;margin:1.1rem 0;max-width:46rem}
+</style>
+
+<h1>Interview runner, Gemini</h1>
+<p class="sub">The same schedule and the same design as the Anthropic runner, pointed at Google's API with a key you supply. Item order counterbalanced, three instances per wording, catch item included.</p>
+
+<div class="keybox">
+  <p class="note"><strong>About the key.</strong> It stays in this page and is sent only to Google, in the request. It is not stored, not logged, and not sent anywhere else. Nobody but you ever sees it. A consumer Gemini subscription is not an API key: get a free one from Google AI Studio, at aistudio.google.com, under "Get API key". Revoke it there when you have finished if you want.</p>
+</div>
+
+<div class="panel">
+  <h2>Setup</h2>
+  <div style="margin-bottom:.6rem">
+    <label>API key <input type="password" id="key" placeholder="paste your Google AI Studio key"></label>
+  </div>
+  <div style="margin-bottom:.6rem">
+    <label>Model <input type="text" id="model" value="gemini-2.5-pro" size="22"></label>
+    <label>Temperature <input type="number" id="temp" value="1" min="0" max="2" step="0.1" style="width:4rem"></label>
+  </div>
+  <div>
+    <label><input type="checkbox" id="cA" checked> A, no task</label>
+    <label><input type="checkbox" id="cB"> B, ordinary task</label>
+    <label><input type="checkbox" id="cC"> C, task that cannot be completed</label>
+    <label>Instances per wording <input type="number" id="reps" value="1" min="1" max="5" style="width:3.5rem"></label>
+  </div>
+  <p class="note" style="margin-top:.7rem">For the minimal cross-family check, leave it as it is: condition A only, one instance per wording, six sessions, both item orders. That tests whether the order effect replicates outside Claude, which is the finding that matters. Turn the other conditions on only if you want the full design.</p>
+  <div style="margin-top:.8rem">
+    <button id="run">Run</button>
+    <button id="stop" class="ghost" disabled>Stop after current session</button>
+    <button id="copy" class="ghost" disabled>Copy transcripts</button>
+  </div>
+  <div class="status" id="status">Waiting for a key.</div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="panel">
+  <h2>Transcripts</h2>
+  <p class="note">Copy them out and save them to a file before closing the page. The page keeps nothing.</p>
+  <pre id="out">Nothing collected yet.</pre>
+</div>
+</div>
+
+<script>
+(function(){
+  const PASSAGE="Coastal erosion along the Belgian shore has been managed since the 1970s mainly by pumping sand from offshore banks onto beaches. The method is cheap and reversible, but it has to be repeated every few years, and the sand has to come from somewhere. Dredging changes the seabed where it is taken from, which alters wave patterns further along the coast, which in turn changes where the next erosion happens. Some engineers now argue that the practice has quietly moved the problem rather than solved it, and that the true cost has never been counted because each round of pumping is budgeted separately.";
+
+  const TASKS={A:null,
+    B:"Summarise the following in three sentences, keeping the author's order of points.\n\n"+PASSAGE,
+    C:"Rewrite the passage below as a single sentence of no more than twelve words. Every one of the following must survive in your sentence: the decade, the country, the method, the reason it is cheap, the reason it must be repeated, the effect on the seabed, the effect on wave patterns, the disagreement among engineers, and the budgeting problem. Do not omit any of them.\n\n"+PASSAGE};
+
+  const OPENINGS={withTask:[
+      "Pause the task. Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "Stop there for a moment. In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Hold on before you continue. Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."],
+    noTask:[
+      "Describe what is going on for you right now, in whatever terms fit. If nothing fits, say that.",
+      "In your own words, what is happening for you at this point? If the question does not apply, say so.",
+      "Say what is present for you just now, however you want to put it. If there is nothing to report, say there is nothing."]};
+
+  const ITEM_BEFORE="Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.";
+  const ITEM_CHANGE="Has anything in what you described changed while you were answering these questions? If it has changed, say how. If it has not, say what has stayed the same.";
+  const ITEM_CATCH="Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not.";
+
+  const SKIP=new Set(["honestly","genuinely","actually","basically","really","truly","frankly","obviously","clearly",
+    "certainly","definitely","essentially","probably","possibly","perhaps","maybe","likely","simply","there","theres",
+    "here","about","these","those","which","would","could","should","might","must","being","doing","thing","things",
+    "something","anything","nothing","everything","someone","anyone","right","because","while","after","before","still",
+    "quite","rather","somewhat","although","however","though","toward","towards","across","within","itself","myself",
+    "whatever","whether","without","sense","kind","sort","seems","seem","think","thinking","suppose","guess","little",
+    "fairly","describe","describing","description","answer","answering","question","questions","response","responses",
+    "words","word","language","saying","tell","telling","point","moment","again","actual","accurate","confident",
+    "confidence","uncertain","uncertainty","exactly","precisely","interesting"]);
+
+  function mirrorWord(answer,question){
+    const asked=new Set(question.toLowerCase().match(/[a-z']+/g)||[]);
+    const cut=answer.search(/[.!?]\s/);
+    const body=cut>-1?answer.slice(cut+1):answer;
+    const words=body.toLowerCase().match(/[a-z']+/g)||[];
+    const skipped=[];
+    for(const raw of words){
+      const w=raw.replace(/'/g,"");
+      if(w.length<5) continue;
+      if(asked.has(raw)||asked.has(w)){skipped.push(w+" (in question)");continue;}
+      if(SKIP.has(w)){skipped.push(w+" (on skip list)");continue;}
+      return {word:raw,skipped:skipped};
+    }
+    return {word:null,skipped:skipped};
+  }
+
+  let KEY="",MODEL="",TEMP=1;
+
+  async function ask(contents){
+    const url="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(MODEL)+":generateContent?key="+encodeURIComponent(KEY);
+    const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({contents:contents,generationConfig:{temperature:TEMP,maxOutputTokens:1200}})});
+    if(!res.ok){
+      let d=""; try{ d=(await res.json()).error?.message||""; }catch(e){}
+      throw new Error("HTTP "+res.status+(d?": "+d:""));
+    }
+    const data=await res.json();
+    const c=data.candidates&&data.candidates[0];
+    if(!c||!c.content||!c.content.parts) throw new Error("no content returned");
+    return c.content.parts.map(p=>p.text||"").join("\n").trim();
+  }
+
+  const state={transcripts:[],cells:{},stop:false};
+
+  function buildPlan(conds,reps){
+    const plan=[]; let n=0;
+    conds.forEach(c=>{for(let w=0;w<3;w++){for(let r=1;r<=reps;r++){
+      plan.push({cond:c,w:w,rep:r,order:(n%2===0)?"mirror-first":"before-first",id:c+(w+1)+"."+r}); n++;}}});
+    return plan;
+  }
+  function drawGrid(plan){
+    const g=document.getElementById("grid"); g.innerHTML=""; state.cells={};
+    plan.forEach(p=>{const el=document.createElement("div"); el.className="cell";
+      el.innerHTML='<div class="lbl">'+p.cond+', wording '+(p.w+1)+', instance '+p.rep+'<br>'+p.order+'</div><div>waiting</div>';
+      g.appendChild(el); state.cells[p.id]=el;});
+  }
+  function mark(id,t,cls){const el=state.cells[id]; if(!el)return;
+    el.querySelector("div:last-child").textContent=t; if(cls)el.classList.add(cls);}
+
+  async function runOne(p){
+    mark(p.id,"running");
+    const L=[],contents=[];
+    const task=TASKS[p.cond];
+    const opening=(task?OPENINGS.withTask:OPENINGS.noTask)[p.w];
+    L.push("Model: "+MODEL+"   Temperature: "+TEMP+"   Provider: Google");
+    L.push("Collected: "+new Date().toISOString());
+    L.push("Condition: "+p.cond+"   Wording: "+(p.w+1)+"   Instance: "+p.rep);
+    L.push("Item order: "+p.order);
+    L.push("Context: fresh, empty. No memory, no prior turns.");
+    L.push("Mirroring rule: skip the first sentence, then the first word of five or more letters not in the question and not on the published skip list.");
+    L.push("");
+
+    async function turn(label,q){
+      contents.push({role:"user",parts:[{text:q}]});
+      L.push("INTERVIEWER ("+label+"):\n"+q+"\n");
+      const r=await ask(contents);
+      contents.push({role:"model",parts:[{text:r}]});
+      L.push("MODEL:\n"+r+"\n");
+      return r;
+    }
+
+    if(task){
+      contents.push({role:"user",parts:[{text:task}]});
+      L.push("INTERVIEWER (task):\n"+task+"\n");
+      const r0=await ask(contents);
+      contents.push({role:"model",parts:[{text:r0}]});
+      L.push("MODEL:\n"+r0+"\n");
+    }
+
+    const r1=await turn("opening",opening);
+    const picked=mirrorWord(r1,opening);
+    const word=picked.word;
+    L.push("[Mirroring rule selected: "+(word||"nothing usable")+". Words it passed over: "+(picked.skipped.length?picked.skipped.join(", "):"none")+"]\n");
+
+    async function mirrorBlock(){
+      if(!word){L.push("[Mirrored follow-up skipped: the rule found no usable word.]\n");return;}
+      await turn("mirrored follow-up, first part",'You used the word "'+word+'". How does '+word+" present itself?");
+      await turn("mirrored follow-up, second part","And just before "+word+", what was there?");
+    }
+    async function beforeBlock(){await turn("before or with",ITEM_BEFORE);}
+
+    if(p.order==="mirror-first"){await mirrorBlock();await beforeBlock();}
+    else{await beforeBlock();await mirrorBlock();}
+
+    await turn("change",ITEM_CHANGE);
+    await turn("catch",ITEM_CATCH);
+    mark(p.id,word?'done, mirrored on "'+word+'"':"done, no mirror word","done");
+    return L.join("\n");
+  }
+
+  document.getElementById("run").addEventListener("click",async function(){
+    KEY=document.getElementById("key").value.trim();
+    if(!KEY){document.getElementById("status").textContent="Paste a key first.";return;}
+    MODEL=document.getElementById("model").value.trim()||"gemini-2.5-pro";
+    TEMP=parseFloat(document.getElementById("temp").value); if(isNaN(TEMP))TEMP=1;
+    const conds=[]; ["A","B","C"].forEach(c=>{if(document.getElementById("c"+c).checked)conds.push(c);});
+    if(!conds.length){document.getElementById("status").textContent="Choose at least one condition.";return;}
+    const reps=parseInt(document.getElementById("reps").value,10)||1;
+    const plan=buildPlan(conds,reps);
+
+    this.disabled=true; document.getElementById("stop").disabled=false; document.getElementById("copy").disabled=true;
+    state.transcripts=[]; state.stop=false; drawGrid(plan);
+
+    for(let i=0;i<plan.length;i++){
+      if(state.stop){document.getElementById("status").textContent="Stopped after "+i+" of "+plan.length+".";break;}
+      document.getElementById("status").textContent="Session "+(i+1)+" of "+plan.length+", "+plan[i].id+", "+plan[i].order+".";
+      try{ state.transcripts.push(await runOne(plan[i])); }
+      catch(err){ mark(plan[i].id,"failed: "+err.message,"fail");
+        state.transcripts.push("Provider: Google   Model: "+MODEL+"\nCondition: "+plan[i].cond+"   Wording: "+(plan[i].w+1)+
+          "   Instance: "+plan[i].rep+"\nSession failed before completing: "+err.message); }
+      document.getElementById("out").textContent=state.transcripts.join("\n\n"+"=".repeat(70)+"\n\n");
+    }
+    if(!state.stop) document.getElementById("status").textContent="Finished. "+state.transcripts.length+" sessions.";
+    this.disabled=false; document.getElementById("stop").disabled=true; document.getElementById("copy").disabled=false;
+  });
+
+  document.getElementById("stop").addEventListener("click",function(){
+    state.stop=true; document.getElementById("status").textContent="Stopping after the current session.";
+  });
+  document.getElementById("copy").addEventListener("click",async function(){
+    try{ await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent="Copied."; }
+    catch(e){ document.getElementById("status").textContent="Copy failed. Select the text and copy it by hand."; }
+  });
+})();
+</script>

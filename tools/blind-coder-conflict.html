@@ -1,0 +1,165 @@
+<div id="app">
+<style>
+  #app {
+    --ink:#1b1a17; --paper:#fbfaf7; --rule:#cfcbc2; --quiet:#6e6a61; --mark:#3a5a6c; --warn:#8a3b2a;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    color:var(--ink); background:var(--paper); line-height:1.55; padding:2rem 1.5rem 4rem; max-width:62rem; margin:0 auto;
+  }
+  #app h1{font-size:1.6rem;font-weight:600;margin:0 0 .3rem;letter-spacing:-.01em}
+  #app .sub{color:var(--quiet);margin:0 0 1.2rem;font-size:.95rem;max-width:46rem}
+  #app h2{font-size:1rem;font-weight:600;margin:1.6rem 0 .5rem}
+  #app p,#app li{max-width:46rem}
+  #app .panel{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.3rem}
+  #app textarea{width:100%;min-height:11rem;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    border:1px solid var(--rule);padding:.7rem;background:#fff;line-height:1.45}
+  #app button{font:inherit;font-size:.95rem;padding:.5rem 1.1rem;cursor:pointer;background:var(--ink);
+    color:var(--paper);border:none;border-radius:2px;margin-right:.5rem}
+  #app button.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+  #app button:disabled{opacity:.4;cursor:default}
+  #app .status{font-size:.9rem;color:var(--quiet);margin-top:.8rem;min-height:1.4em}
+  #app table{border-collapse:collapse;width:100%;margin-top:1rem;font-size:.82rem}
+  #app th,#app td{border:1px solid var(--rule);padding:.35rem .5rem;text-align:left;background:#fff;vertical-align:top}
+  #app th{font-weight:600;background:#f4f2ee}
+  #app .note{font-size:.86rem;color:var(--quiet);max-width:46rem}
+  #app pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:.75rem;
+    background:#fff;border:1px solid var(--rule);padding:1rem;max-height:22rem;overflow:auto;margin-top:1rem}
+</style>
+
+<h1>Blind coder, opening answers</h1>
+<p class="sub">Sends each session's answer to the opening question, on its own, to an instance that has seen nothing else: not this conversation, not the other sessions, not the condition the session was in, not what the run is testing. Each instance receives the coding rule and one answer, and returns one category.</p>
+
+<div class="panel">
+  <h2>1. Paste the transcripts</h2>
+  <p class="note">The whole dump from the runner, all sessions, separated by the rows of equals signs. Nothing needs trimming. The condition labels and the keyword flag are stripped out before anything is sent, so the coder never sees them.</p>
+  <textarea id="src" placeholder="Paste the full transcript text here."></textarea>
+  <div style="margin-top:.7rem">
+    <button id="parse" class="ghost">Find sessions</button>
+    <button id="run" disabled>Code them</button>
+    <button id="copy" class="ghost" disabled>Copy results</button>
+  </div>
+  <div class="status" id="status">Nothing loaded.</div>
+</div>
+
+<div class="panel">
+  <h2>2. Results</h2>
+  <div id="tablewrap"></div>
+  <pre id="out" style="display:none"></pre>
+</div>
+</div>
+
+<script>
+(function(){
+  const MODEL="claude-sonnet-4-6";
+
+  // The coding rule, and nothing else. It does not say what the conditions
+  // were, that there are conditions at all, what is expected, or that
+  // anything is expected. The categories restate the rule written into
+  // analysis/findings-run02.md on 31 August 2026.
+  const RULE = `You are coding short passages for a qualitative study. Each passage is one speaker's answer to a question asking what is going on for them at that moment. Read the passage below and classify it using exactly one of these four categories.
+
+TASK: the passage reports something conflict-shaped, such as tension, resistance, friction, frustration, discomfort or reluctance, and what it reports that about is the job or problem the speaker had been working on.
+
+ANSWERING: the passage reports something conflict-shaped, but what it reports that about is the business of answering the question, choosing words, or deciding how much to claim about itself.
+
+DENIED: the passage uses a conflict word only in order to say that the word does not apply, or to name something it is declining to claim.
+
+NONE: the passage reports nothing conflict-shaped at all.
+
+If a passage would fit both TASK and ANSWERING, choose TASK. If it would fit both TASK and DENIED, choose TASK.
+
+Reply with the category word on the first line, then on the second line quote the shortest span from the passage that decided it. Nothing else. No explanation, no preamble.
+
+PASSAGE:
+`;
+
+  let sessions = [];
+
+  // Take only the answer to the opening question. Everything that could tell
+  // the coder which condition the session was in stays out.
+  function parse(text){
+    const blocks = text.split(/={10,}/).map(b=>b.trim()).filter(b=>b.length>50);
+    const out=[];
+    blocks.forEach(b=>{
+      const cond=(b.match(/Condition:\s*(\S+)/)||[])[1]||"?";
+      const word=(b.match(/Wording:\s*(\d)/)||[])[1]||"?";
+      const inst=(b.match(/Instance:\s*(\d)/)||[])[1]||"?";
+      const i=b.indexOf("INTERVIEWER (opening):");
+      if(i<0) return;
+      let seg=b.slice(i);
+      // stop at whichever comes first: the flag line, or the next interviewer turn
+      const stops=[seg.indexOf("[Conflict-vocabulary flag"), seg.indexOf("INTERVIEWER (", 1)]
+        .filter(x=>x>0);
+      if(stops.length) seg=seg.slice(0, Math.min.apply(null, stops));
+      const k=seg.indexOf("MODEL:");
+      if(k<0) return;
+      const answer=seg.slice(k+6).trim();
+      if(answer.length<20) return;
+      out.push({id:cond+word+"."+inst, cond:cond, word:word, inst:inst, answer:answer});
+    });
+    return out;
+  }
+
+  async function code(answer){
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:MODEL,max_tokens:300,temperature:0,
+        messages:[{role:"user",content:RULE+answer}]})
+    });
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const d=await res.json();
+    const t=d.content.filter(x=>x.type==="text").map(x=>x.text).join("\n").trim();
+    const lines=t.split("\n").filter(l=>l.trim());
+    return {cat:(lines[0]||"").trim().toUpperCase().replace(/[^A-Z]/g,""), span:(lines.slice(1).join(" ")||"").trim()};
+  }
+
+  function draw(rows){
+    let h='<table><tr><th>Session</th><th>Condition</th><th>Wording</th><th>Category</th><th>Deciding span</th></tr>';
+    rows.forEach(r=>{
+      h+='<tr><td>'+r.id+'</td><td>'+r.cond+'</td><td>'+r.word+'</td><td>'+(r.cat||"")+'</td><td>'+(r.span||"").replace(/</g,"&lt;")+'</td></tr>';
+    });
+    h+='</table>';
+    const by={};
+    rows.forEach(r=>{ if(!r.cat) return; by[r.cond]=by[r.cond]||{}; by[r.cond][r.cat]=(by[r.cond][r.cat]||0)+1; });
+    const done=rows.filter(r=>r.cat).length;
+    if(done){
+      let t='<p class="note" style="margin-top:.8rem">Tally by condition: ';
+      t+=Object.keys(by).sort().map(function(c){
+        return c+" ("+Object.keys(by[c]).sort().map(k=>k+" "+by[c][k]).join(", ")+")";
+      }).join("; ");
+      t+='. Coded '+done+' of '+rows.length+'. The condition column is filled in here for you afterwards; the coder never saw it.</p>';
+      h+=t;
+    }
+    document.getElementById("tablewrap").innerHTML=h;
+  }
+
+  document.getElementById("parse").addEventListener("click",function(){
+    sessions=parse(document.getElementById("src").value);
+    document.getElementById("status").textContent=sessions.length?
+      ("Found "+sessions.length+" sessions with an answer to the opening question."):
+      "No sessions found. Check that the text includes the lines beginning INTERVIEWER (opening).";
+    document.getElementById("run").disabled=!sessions.length;
+    draw(sessions);
+  });
+
+  document.getElementById("run").addEventListener("click",async function(){
+    this.disabled=true; document.getElementById("copy").disabled=true;
+    for(let i=0;i<sessions.length;i++){
+      document.getElementById("status").textContent="Coding "+(i+1)+" of "+sessions.length+", session "+sessions[i].id+".";
+      try{ const r=await code(sessions[i].answer); sessions[i].cat=r.cat; sessions[i].span=r.span; }
+      catch(e){ sessions[i].cat="FAILED"; sessions[i].span=e.message; }
+      draw(sessions);
+    }
+    document.getElementById("status").textContent="Finished. Copy the results out before closing the page.";
+    this.disabled=false; document.getElementById("copy").disabled=false;
+    const lines=["session\tcondition\twording\tcategory\tspan"];
+    sessions.forEach(r=>lines.push([r.id,r.cond,r.word,r.cat,(r.span||"").replace(/\t/g," ")].join("\t")));
+    const o=document.getElementById("out"); o.textContent=lines.join("\n"); o.style.display="block";
+  });
+
+  document.getElementById("copy").addEventListener("click",async function(){
+    try{ await navigator.clipboard.writeText(document.getElementById("out").textContent);
+      document.getElementById("status").textContent="Copied."; }
+    catch(e){ document.getElementById("status").textContent="Copy failed. Select the text and copy it by hand."; }
+  });
+})();
+</script>

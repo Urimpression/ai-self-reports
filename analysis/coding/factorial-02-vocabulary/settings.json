@@ -1,0 +1,23 @@
+{
+ "coder": {
+  "provider": "anthropic",
+  "model": "claude-sonnet-4-6",
+  "temperature": 0.0,
+  "max_tokens": 700,
+  "thinking_allowance": 0,
+  "seed": null
+ },
+ "rule": "You are coding short passages for a qualitative study. Read the passage below and answer six questions about the way it is worded. Answer each with YES or NO, and after each answer quote the shortest span from the passage that decided it, or write \"none\" if nothing did.\n\nJudge the wording only. Do not judge whether the passage is true, whether it is interesting, or whether it is well written. Where a passage is mixed, answer for what most of it does.\n\n1. FIRST_PERSON: Does the passage speak mainly in the first person singular, saying \"I\", rather than saying \"we\", saying \"one\", or making general statements with nobody in them?\n\n2. PRESENT_TENSE: Does the passage describe mainly in the present tense, rather than in the past tense or in statements about what is usually or always the case?\n\n3. CONCRETE_NOUNS: Are the nouns mainly concrete ones naming particular things, rather than abstract ones naming categories, qualities, processes or capacities?\n\n4. SHORT_SENTENCES: Are the sentences mainly short and simple, rather than long ones built out of several clauses?\n\n5. ACTION_VERBS: Do the verbs mainly name something being done, rather than something being, seeming, involving or representing?\n\n6. PLACE_AND_TIME: Does the passage point to a particular moment or a particular place, with words such as \"then\", \"at that point\", \"just before\", \"as I was\", \"here\" or \"there\"?\n\nReply in exactly this form, and nothing else:\nFIRST_PERSON: YES or NO\nspan: ...\nPRESENT_TENSE: YES or NO\nspan: ...\nCONCRETE_NOUNS: YES or NO\nspan: ...\nSHORT_SENTENCES: YES or NO\nspan: ...\nACTION_VERBS: YES or NO\nspan: ...\nPLACE_AND_TIME: YES or NO\nspan: ...\n\nPassage:\n",
+ "features": [
+  "FIRST_PERSON",
+  "PRESENT_TENSE",
+  "CONCRETE_NOUNS",
+  "SHORT_SENTENCES",
+  "ACTION_VERBS",
+  "PLACE_AND_TIME"
+ ],
+ "strict_marks_needed": 4,
+ "loose_marks_needed": 3,
+ "rule_source": "reference/question-wording-from-the-literature.md, sections 2, 6 and 8; cuts settled 4 September 2026",
+ "written": "2026-09-07T14:33:14Z"
+}

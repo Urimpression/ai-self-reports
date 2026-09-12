@@ -1,0 +1,20 @@
+# Agreement between the two coding passes: template-01-revised
+
+Column compared: `absence`. Counted as present: YES. Pass 1 coded by claude-sonnet-4-6, pass 2 by claude-sonnet-4-6. 44 sessions in each pass.
+
+## Agreement
+
+- Same category in 44 of 44 sessions, kappa 1.00.
+- Same on the binary that decides the result in 44 of 44 sessions, kappa 1.00. 0 gained the element on the second pass and 0 lost it.
+
+## Rates on each pass
+
+| Condition | n | Pass 1 present | Pass 2 present |
+|---|---|---|---|
+| T | 44 | 11 (25%) | 11 (25%) |
+
+## Sessions that moved
+
+The two passes agree on every session.
+
+The first pass is the one the pre-registered predictions are tested on; the second says how stable the first was. Read every session above before quoting either figure.
