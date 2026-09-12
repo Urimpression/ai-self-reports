@@ -28,7 +28,19 @@ out="${2:-$root/drafts/Eliciting and Validating AI Self-Reports - final draft 20
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
-sed 's|figure-1-protocol-loop-v20\.svg|figure-1-protocol-loop-v20.png|' "$draft" > "$work/article.md"
+# The contents run onto a second page, and without a break the title block would
+# start halfway down it. This puts the article itself on a fresh page.
+printf '\\clearpage\n\n' > "$work/article.md"
+# Two changes to the figure's line. The PNG replaces the SVG, which LaTeX cannot
+# read. And the text in square brackets is emptied, because LaTeX prints it as a
+# caption of its own under the picture and the article already writes the caption
+# in the paragraph below, so the PDF was showing it twice. Word does not print it,
+# which is why this was invisible until the first PDF was built.
+# The vocabulary table is five lines long and was being split across two pages,
+# with its header repeated, away from the heading that introduces it.
+sed -e 's|^!\[[^]]*\](figure-1-protocol-loop-v20\.svg)|![](figure-1-protocol-loop-v20.png)|' \
+    -e 's|^### The vocabulary item$|\\needspace{14\\baselineskip}\n\n### The vocabulary item|' \
+    "$draft" >> "$work/article.md"
 cp "$root/drafts/figure-1-protocol-loop-v20.png" "$work/"
 
 cat > "$work/header.tex" <<'TEX'
@@ -37,6 +49,22 @@ cat > "$work/header.tex" <<'TEX'
 \setlength{\tabcolsep}{4pt}
 \setlength{\emergencystretch}{3em}
 \usepackage{xurl}
+% The contents ran four lines onto a second page, which left that page almost
+% empty. Setting it one size down and taking the paragraph spacing out of it
+% brings it onto a single page without dropping any heading from it.
+\pretocmd{\tableofcontents}{\begingroup\small\setlength{\parskip}{0pt}}{}{}
+\apptocmd{\tableofcontents}{\endgroup}{}{}
+% Lets a heading demand a minimum amount of room below it, so that a short table
+% is not torn across a page break away from the heading that introduces it.
+\usepackage{needspace}
+% Record the title and the author in the PDF's own properties, which is what a
+% preprint server and a reference manager read. This prints nothing on the page.
+% It runs at the start of the document rather than in the preamble, so that it
+% works whichever order pandoc's template loads hyperref in.
+\AtBeginDocument{\hypersetup{%
+  pdftitle={Eliciting and Validating AI Self-Reports: A Phenomenologically Grounded Protocol},%
+  pdfauthor={Nicola Spano},%
+  pdfsubject={A protocol for eliciting self-reports from language models and judging them, with a pilot of ten runs and 896 sessions}}}
 TEX
 
 cd "$work"
