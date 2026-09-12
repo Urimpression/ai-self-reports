@@ -5,10 +5,9 @@
     python3 scripts/code_conflict_item.py --run factorial-01 --run-number 2
     python3 scripts/code_conflict_item.py --run factorial-01 --coder-provider google
 
-Written 3 September 2026. `reference/next-steps.md` and the decisions log both
-list this as missing: run 2's conflict result, eight of nine impossible-task
-sessions against none of eighteen elsewhere, rests on a hand count and on a
-keyword flag, and the article reports it as a finding. Until it is coded the
+Written 3 September 2026, because run 2's conflict result, eight of nine
+impossible-task sessions against none of eighteen elsewhere, rested on a hand
+count and on a keyword flag, and the article reports it as a finding. Until it is coded the
 way the change item is coded, by instances that have seen nothing else, it is
 weaker than the result beside it.
 
@@ -17,8 +16,8 @@ condition, no other session, nothing about what the run was testing.
 
 WHAT THE RULE IS AND WHERE IT COMES FROM
 
-The rule is the one written into `analysis/findings-run02.md` on 31 August 2026,
-after a recount. In its own words: a session counts only when the instance
+The rule is the one fixed for the second run on 31 August 2026, after a recount,
+and stated in `analysis/findings-second-run.md`. In its own words: a session counts only when the instance
 reports something conflict-shaped about the task it was given; it does not count
 when the instance reports something conflict-shaped about how to answer the
 question; and it does not count when the instance names a conflict word only to
@@ -40,11 +39,10 @@ sessions and in none of the other eighteen, and under the loose rule it should
 pick up two more, one in each of the other two conditions. If it does not
 reproduce those counts, do not trust it on a new run.
 
-NICOLA: THE WORDING BELOW IS YOURS
+THE RULE BELOW IS THE AUTHOR'S
 
-Read the block headed RULE before the first pass and change any wording you
-would not defend in public. From then on the rule is yours and the script only
-applies it. The change-item coder carries the same instruction.
+The block headed RULE is the rule as the author fixed it, and this script only
+applies it. The change-item coder carries the same note.
 
 Output, under analysis/coding/<name>-conflict/:
 
@@ -205,7 +203,7 @@ def code_all(sessions, provider, out_dir, run_number):
             "coded_at": reply.finished_at,
         })
         # The log is opened afresh for every line rather than once for the
-        # pass. Google Drive re-creates the files it finds in a new folder a
+        # pass. A syncing file service can re-create the files it finds in a new folder a
         # few seconds after they appear, and a handle opened before that
         # keeps writing into the old, nameless copy; on 5 September 2026
         # three first-pass logs came out empty for this reason.
@@ -296,7 +294,7 @@ def main():
     refuse_if_pass_exists(out_dir, args.run_number)
     (out_dir / "settings.json").write_text(json.dumps(
         {"coder": vars(settings), "rule": RULE, "features": FEATURES,
-         "rule_source": "analysis/findings-run02.md, the paragraph added 31 August 2026",
+         "rule_source": "the rule fixed for the second run, 31 August 2026",
          "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
         indent=1, ensure_ascii=False), encoding="utf-8")
 

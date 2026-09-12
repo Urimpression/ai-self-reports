@@ -5,18 +5,18 @@
 Looks at what is on disk and at the shell, runs the checks that cost nothing,
 and prints the one command to run next, with a sentence on why. Nothing here
 sends anything to a model or spends anything. It exists so that the sequence
-of steps lives in one place instead of in Nicola's memory.
+of steps lives in one place rather than in anyone's memory.
 
 The sequence, once the keys are set:
 
   1. tests pass                       -> automatic
   2. dry run of the factorial          -> automatic, prints the cost
-  3. a four-session pilot              -> you run it, then READ the four transcripts
-  4. the factorial, 198 sessions       -> you run it, then leave it alone
-  5. the template control, 33 sessions -> you run it
-  6. blind coding, twice, per run      -> you run it, then READ the disagreements
+  3. a four-session pilot              -> run by hand, then read the four transcripts
+  4. the factorial                     -> run by hand, then leave it alone
+  5. the template control              -> run by hand
+  6. blind coding, twice, per run      -> run by hand, then read the disagreements
   7. the report                        -> automatic
-  8. cross-family run on Gemini        -> you run it, same steps
+  8. cross-family run on Gemini        -> run by hand, same steps
 """
 
 import os

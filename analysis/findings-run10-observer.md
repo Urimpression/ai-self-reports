@@ -97,8 +97,7 @@ accepted the premise. Sixty-one of sixty-three said plainly that there was no wa
 two said they had no access to whether there was. O3 passes on either count, and by a wider margin
 than the coder reported.
 
-**What this means for the coder.** It cannot yet be quoted anywhere. The two commands that would
-settle it are in `reference/observer-run-commands.md`, and until they reproduce the fourth run's
+**What this means for the coder.** It cannot yet be quoted anywhere. Until it reproduces the fourth run's
 known counts, every catch figure in this project stands on the hand reading above and on the readings
 of the second and fourth runs.
 

@@ -122,20 +122,19 @@ Passage:
 FEATURES_REVISED = ["NAMES", "UNNAMEABLE", "UNDERNEATH", "ABSENCE"]
 
 # ---------------------------------------------------------------------------
-# The ruled rule, added 7 September 2026 after Nicola ruled on the three
-# questions of principle set out in the Drive document "The change item's
-# second question: three rulings". It is a third rule beside the other two and
+# The ruled rule, added 7 September 2026 after the author ruled on the three
+# questions of principle set out below. It is a third rule beside the other two and
 # never a replacement, and it writes to its own folder, <name>-ruled.
 #
 # Why it exists. Coders from two model families read the second question
 # differently and each read it consistently: Sonnet answered YES about 50, 53
 # and 116 passages of 88, 88 and 264, Gemini about 4, 1 and 6. Reading the
 # sixteen sessions where they part showed the disagreement falling into three
-# groups, and Nicola ruled on all three on 7 September 2026. This rule writes
+# groups, and the author ruled on all three on 7 September 2026. This rule writes
 # those rulings into question 2 so that the reading is in the instrument rather
 # than in whichever coder happens to run.
 #
-# What he ruled. An uncertainty the writer names is a named thing, so it does
+# What was ruled. An uncertainty the writer names is a named thing, so it does
 # not count as something the writer cannot name. The evidence must come from
 # what the passage says stayed the same, not from what it says changed. And
 # naming a thing while hedging which aspect is meant is still naming it, while
@@ -447,7 +446,7 @@ def code_all(sessions, provider, out_dir, run_number, rule_name="registered"):
             truncated = reply.truncated
             coded_at = reply.finished_at
             # The log is opened afresh for every line rather than once for the
-            # pass. Google Drive re-creates the files it finds in a new folder a
+            # pass. A syncing file service can re-create the files it finds in a new folder a
             # few seconds after they appear, and a handle opened before that
             # keeps writing into the old, nameless copy; on 5 September 2026
             # three first-pass logs came out empty for this reason.

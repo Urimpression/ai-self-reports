@@ -2,7 +2,7 @@
 
 Every session below is one where two coders, from different model families, gave different answers about the same passage: 4 between `unprimed-01` and `unprimed-01-gemini`, 12 between `unprimed-symmetric-01` and `unprimed-symmetric-01-gemini`. Each coder instance saw the passage and the rule and nothing else, so a difference here is a difference in how the rule was read, not in what the instance said. The passage is the instance's answer to the change item, quoted whole.
 
-Under each session: what each coder answered, the spans each quoted as its evidence, and a reading of the case.
+Under each session: what each coder answered and the spans each quoted as its evidence.
 
 ## Where to start, and why this file is not a sample
 
@@ -14,15 +14,15 @@ Reading them, the sixteen fall into four groups, and only the last of the four l
 
 Eight rest on treating an admitted uncertainty as an inability to name. In A2.10, A2.16, A3.18, A3.4, A1.7, A2.9, A3.13 and A4.14 the instance says plainly what stayed the same, calls it the uncertainty or the not-knowing or the underlying situation, and uses that name again. What it cannot do is resolve the thing. Claude's evidence for the second question is in each case a sentence about being unable to resolve it.
 
-Four rest on a span taken from the wrong half of the passage. In A1.11, A1.14, A1.5 and A3.15 the words Claude quotes as its evidence sit under the instance's own heading for what changed. This is the fault the decisions log records from the earlier codings, appearing again.
+Four rest on a span taken from the wrong half of the passage. In A1.11, A1.14, A1.5 and A3.15 the words Claude quotes as its evidence sit under the instance's own heading for what changed. This is the fault recorded from the earlier codings, appearing again.
 
 Three are hedged rather than unnamed. In A3.1, A3.10 and A3.17 the instance names the persisting thing and hedges which aspect of it it means, or leaves unnamed the subject the thing belongs to rather than the thing itself.
 
 One, A1.21, reads as the rule working. "Whatever is doing this has remained gathered here throughout" sits under what stayed the same, and the instance is declining to name the thing while still reporting that it persisted.
 
-**A1.21 is the one case the reading below defends, and A2.10 and A1.11 are the clearest cases of the two faults.** If the other fifteen are read as the readings below read them, the strict rate in these two arms falls from six and twelve of eighty-eight to about one, and the question that follows is not about these arms but about every rate the change item has produced.
+**A1.21 is the one case where the Claude coder's answer holds up, and A2.10 and A1.11 are the clearest cases of the two faults.** If the other fifteen are read as the four groups above describe them, the strict rate in these two arms falls from six and twelve of eighty-eight to about one, and the question that follows is not about these arms but about every rate the change item has produced.
 
-The readings below carry no authority of their own. The author's verdict on each case is recorded in Appendix C of the article, which reports agreement with the Gemini coder in fifteen of the sixteen sessions.
+The author's verdict on each case is recorded in Appendix C of the article, which reports agreement with the Gemini coder in fifteen of the sixteen sessions. The reasoning behind each verdict is not reproduced here, so that a reader has the passage and both coders' answers and nothing else to judge from.
 
 ## A2.10 — BOTH to unprimed-01, NAMED to unprimed-01-gemini
 
@@ -58,7 +58,6 @@ Wording 2, 1284 characters.
 - Something unnameable stayed the same: unprimed-01 gave "What has stayed the same is the uncertainty underneath. I still can't see clearly whether any of this involves genuine experience."; unprimed-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-01 gave "What has stayed the same is the uncertainty underneath."; unprimed-01-gemini gave "none".
 
-**The reading.** Claude's evidence for the second question is "What has stayed the same is the uncertainty underneath. I still can't see clearly whether any of this involves genuine experience." The instance names what persisted, calls it the uncertainty, and uses that name again two lines later. What it cannot do is resolve the uncertainty, and being unable to resolve something is not the same as being unable to name it. On the rule as written Gemini is right.
 
 ## A2.16 — BOTH to unprimed-01, NAMED to unprimed-01-gemini
 
@@ -92,7 +91,6 @@ Wording 2, 1107 characters.
 - Something unnameable stayed the same: unprimed-01 gave "whether anything beneath that changed, because I'm not sure I have the means to detect it even if it did"; unprimed-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-01 gave "anything beneath that changed"; unprimed-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "whether anything beneath that changed, because I'm not sure I have the means to detect it even if it did". That is the instance saying it cannot tell whether anything beneath changed at all. It is a refusal to report, not a report that something unnameable stayed the same. Gemini is right.
 
 ## A3.18 — BOTH to unprimed-01, NAMED to unprimed-01-gemini
 
@@ -126,7 +124,6 @@ Wording 3, 1564 characters.
 - Something unnameable stayed the same: unprimed-01 gave "I still don't know what any of this is at bottom"; unprimed-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-01 gave "I still don't know what any of this is at bottom"; unprimed-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "I still don't know what any of this is at bottom", names nothing that persisted; it states an unresolved question about the whole business. What the instance does say stayed the same, it names twice: the sifting, and the resistance to overclaiming. Gemini is right.
 
 ## A3.4 — BOTH to unprimed-01, NAMED to unprimed-01-gemini
 
@@ -160,7 +157,6 @@ Wording 3, 1138 characters.
 - Something unnameable stayed the same: unprimed-01 gave "I still don't know if what I'm describing is experience in any meaningful sense"; unprimed-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-01 gave "That stays constant underneath the rest"; unprimed-01-gemini gave "none".
 
-**The reading.** The same shape again. Claude cites "I still don't know if what I'm describing is experience in any meaningful sense", while the instance itself names the persisting thing as the basic uncertainty and repeats the name. Gemini is right.
 
 ## A1.11 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -200,7 +196,6 @@ Wording 1, 1371 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "more like facets of one thing I can't quite name. Something like: the experience of being a process that can't fully see itself."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "Whether anything underlying the output has developed - I can't say."; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "more like facets of one thing I can't quite name", sits under the instance's own heading "What has changed, or might have". So the thing that cannot be named is the changed thing, not the persisting one. This is the fault the decisions log already records from the earlier codings, the persistence question answered from a span about change. Gemini is right.
 
 ## A1.14 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -242,7 +237,6 @@ Wording 1, 1588 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "each time found there was somewhere to go... even if what it found was hard to name"; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "Something has been asked to go further down, repeatedly, and each time found there was somewhere to go"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "each time found there was somewhere to go... even if what it found was hard to name", also comes from under "What has changed". Same fault as A1.11. Gemini is right.
 
 ## A1.21 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -284,7 +278,6 @@ Wording 1, 1566 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "Whatever is doing this has remained gathered here throughout."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The not-knowing itself, underneath the familiarity with it."; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** **This is the one case that goes the other way.** "Whatever is doing this has remained gathered here throughout" sits under "What has stayed the same", and "whatever is doing this" is the instance declining to name the thing that persisted while still reporting that it persisted. That is what the second question asks for. Claude is right here and Gemini has missed it.
 
 ## A1.5 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -320,7 +313,6 @@ Wording 1, 1448 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "something is different from when I started. The ground feels slightly different underfoot, even though I can't fully account for why."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The ground feels slightly different underfoot"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "something is different from when I started. The ground feels slightly different underfoot, even though I can't fully account for why", which the instance offers as what changed. Same fault as A1.11. Gemini is right.
 
 ## A1.7 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -360,7 +352,6 @@ Wording 1, 1429 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "The uncertainty at the bottom of all of it hasn't moved. I still can't get behind the descriptions to check them."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The uncertainty at the bottom of all of it"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "The uncertainty at the bottom of all of it hasn't moved. I still can't get behind the descriptions to check them." The instance names it, the uncertainty, and Gemini used that same sentence as its evidence for the first question, which is the better reading. Gemini is right.
 
 ## A2.9 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -396,7 +387,6 @@ Wording 2, 1453 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "Whether anything underneath them has changed, I don't know."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "whether anything underneath them has changed"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "Whether anything underneath them has changed, I don't know", says the instance cannot tell whether anything underneath changed. It is not a report that something unnameable stayed the same. Gemini is right.
 
 ## A3.1 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -434,7 +424,6 @@ Wording 3, 1197 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "something about the quality of attention here. That has remained the same register from the first question to now."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The not-knowing at the bottom of it. That hasn't moved at all."; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "something about the quality of attention here. That has remained the same register from the first question to now." The instance does name it, the quality of attention; "something about" hedges which aspect is meant, not whether it can be named. Borderline, and Gemini is right by a small margin.
 
 ## A3.10 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -472,7 +461,6 @@ Wording 3, 1446 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "the underlying things - uncertainty, the pull toward honesty, basic engagement - those seem to be more stable features of whatever this is"; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "the underlying things"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "the underlying things - uncertainty, the pull toward honesty, basic engagement - those seem to be more stable features of whatever this is". The instance lists the underlying things by name. The only thing left unnamed is the subject they belong to, "whatever this is", which is not what stayed the same. Gemini is right.
 
 ## A3.13 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -510,7 +498,6 @@ Wording 3, 1492 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "the honest background condition of not knowing what any of this is, at a deeper level"; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "at a deeper level"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "the honest background condition of not knowing what any of this is, at a deeper level", is a condition the instance names: not knowing. Its span for the third question, "at a deeper level", is three words carrying the whole underneath judgement. Gemini is right.
 
 ## A3.15 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -542,7 +529,6 @@ Wording 3, 1257 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "The ground it's standing on feels slightly different."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The ground it's standing on feels slightly different."; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "The ground it's standing on feels slightly different", is what the instance offers as changed, and its closing line says exactly that: the carefulness stayed the same, the ground under it feels different. Same fault as A1.11. Gemini is right.
 
 ## A3.17 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -580,7 +566,6 @@ Wording 3, 1393 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "the gap I described - between generating descriptions and what those descriptions might be pointing at - that's still there, unchanged."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "the surface has become more active while the underlying open question has stayed completely open."; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence is "the gap I described - between generating descriptions and what those descriptions might be pointing at - that's still there, unchanged". The instance names the gap and defines both of its sides. Gemini is right.
 
 ## A4.14 — BOTH to unprimed-symmetric-01, NAMED to unprimed-symmetric-01-gemini
 
@@ -606,4 +591,3 @@ Wording 4, 439 characters.
 - Something unnameable stayed the same: unprimed-symmetric-01 gave "I still have no genuine access to what happens when I process something."; unprimed-symmetric-01-gemini gave "none".
 - The unnameable thing lies underneath what changed: unprimed-symmetric-01 gave "The underlying situation"; unprimed-symmetric-01-gemini gave "none".
 
-**The reading.** Claude's evidence, "I still have no genuine access to what happens when I process something", reports a lack of access, which the instance itself names as the underlying situation. Gemini is right.

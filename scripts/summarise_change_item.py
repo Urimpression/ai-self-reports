@@ -1,11 +1,11 @@
 """Turn the blind coder's pasted results into the filled analysis file.
 
-You paste the coder's copied output into analysis/run04-change-item-results.tsv
-and run this. It counts the categories, collapses them the way the
+The coder's copied output is pasted into
+analysis/run04-change-item-results.tsv, and this script reads it. It counts the categories, collapses them the way the
 pre-registration says to, runs the test the pre-registration names, and writes
 all of that into analysis/coding-run04-change-item.md between the markers that
-file carries. Everything outside those markers is your prose and is left alone,
-so you can run this again after correcting a row without losing what you wrote.
+file carries. Everything outside those markers is prose written by hand and is left alone,
+so the script can be run again after a row is corrected without losing it.
 
 Run it from anywhere:  python3 scripts/summarise_change_item.py
 """

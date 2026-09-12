@@ -22,10 +22,10 @@ earlier passes stopped accepting the tool's call, and the only remaining route
 that does not require a separately billed API key does not let the page name a
 model version or set a temperature; it takes a tier of model, and this pass
 requested the default tier. So the model version and the temperature behind these
-codings are not known and cannot be stated. Nicola chose this route on 2
-September, before seeing any result from it, because billing was not available to
-him. The alternative was to leave the primary prediction unreported for as long
-as that remained true.
+codings are not known and cannot be stated. This route was chosen on 2
+September, before any result from it had been seen, because a separately billed
+API key was not available at the time. The alternative was to leave the primary
+prediction unreported for as long as that remained true.
 
 What this costs is reportability rather than accuracy. The coder is choosing
 among four categories on a single short passage, which is not a judgement that
@@ -197,8 +197,8 @@ one.
 
 ## Where this pass and the earlier reading disagree
 
-The earlier reading of run 2, in `coding-change-item.md`, was done by a reader
-who knew what the run was testing, and it found the unnamed element in three of
+The earlier reading of run 2 was done by a reader who knew what the run was
+testing, and it found the unnamed element in three of
 twenty-seven sessions clearly and one more marginally, all of the clear ones in
 the no-task condition. That is a different run and a different set of sessions,
 so what follows compares rates and not individual sessions.
@@ -253,7 +253,7 @@ in the first place.
 written. The count is settled at five, with the three being a count under a
 different rule; `coding-run02-change-item.md` has the working, and the
 pre-registration turned out not to carry the error. `findings-run04-replication.md`
-now reports the failure, and the decisions log has its entry. What remains open
+now reports the failure. What remains open
 from this file is the power point recorded in the same session: the registered
 rule passes about three times in ten even when its effect is exactly real, so
 "noise" here means the large exploratory effect is ruled out, not that a
@@ -261,9 +261,9 @@ modest one is.*
 
 The count that disagrees with itself is not settled by this pass and needs
 settling separately: the run 2 analysis records three clear cases and one
-marginal, while the decisions log, the article draft and the pre-registration
-all say five. Whichever number is right, the other three places need correcting.
+marginal, while the project's decisions log, the article draft and the
+pre-registration all say five. Whichever number is right, the other three places need correcting.
 
 Once this file carries real numbers, the section of
 `findings-run04-replication.md` that says the primary prediction is not settled
-has to be rewritten, and the decisions log needs an entry.
+has to be rewritten.

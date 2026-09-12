@@ -1,6 +1,6 @@
 """Gather every session where the two coding passes disagreed into one file
 for reading, with the passage the coder saw, both passes' answers and spans,
-and blank lines for a reading and a verdict.
+and a blank line for a reading.
 
     python3 scripts/gather_moved_sessions.py --name unprimed-01 --name unprimed-01-revised --out moved-sessions-unprimed.md
 
@@ -113,11 +113,7 @@ def session_block(folder_name, session, row_1, row_2, what_moved, passage,
                          f"{second_in_sentence} gave \"{row_2[span_column] or 'none'}\".")
     lines += [
         "",
-        "**My reading.** (to be written)",
-        "",
-        "**Your verdict:**",
-        "",
-        "**Your reason:**",
+        "**The reading.** (to be written)",
         "",
     ]
     return "\n".join(lines)
@@ -192,7 +188,7 @@ def main():
             "quoted whole.",
             "",
             "Under each session: what each coder answered, the spans each quoted as its "
-            "evidence, a reading, and two lines for your verdict and your reason.",
+            "evidence, and a reading of the case.",
             "",
         ]
     else:
@@ -207,7 +203,7 @@ def main():
             "adds the fourth; the others were coded under the registered rule.",
             "",
             "Under each session: what each pass answered, the spans each quoted as its "
-            "evidence, a reading, and two lines for your verdict and your reason.",
+            "evidence, and a reading of the case.",
             "",
         ]
     out_path.write_text("\n".join(header) + "\n" + "\n".join(blocks), encoding="utf-8")

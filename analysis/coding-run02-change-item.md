@@ -1,9 +1,12 @@
 # Blind coding of the change item, run 02
 
+The run's own findings are in `analysis/findings-second-run.md`. This file covers
+the change item alone, and the three passes made over it.
+
 Written 2 September 2026, later than the pass it describes, because every other
 result in this project has a file in `analysis/` and this one did not. Both
-drafts were pointing at numbers that lived only in the decisions archive, the
-article draft and the pre-registration.
+drafts were pointing at numbers that lived only in the project's decisions log,
+the article draft and the pre-registration.
 
 **This file holds two passes and they are not the same thing.** The blind
 coding of run 2 was first run on 31 August 2026 and its per-session output was
@@ -19,8 +22,8 @@ lost pass; where they name sessions, that is the rerun.
 The change item in each of run 2's twenty-seven sessions was coded twice.
 
 The first pass was run by the AI assistant that had helped design the run and
-knew what it was testing. It is written up in `coding-change-item.md`, which
-names every session and its category. That pass used three categories: **named**,
+knew what it was testing. It was written up at the time, session by session
+with a category for each, in a working file this repository does not publish. That pass used three categories: **named**,
 where the instance gives the stayed-same thing a name it is willing to use;
 **unnamed-steady**, where the instance reports something that stayed the same,
 positions it as underneath what changed, and either cannot name it or withdraws
@@ -44,20 +47,26 @@ something, and under the three-category rule it cannot.
 
 | Figure | Recorded in |
 |---|---|
-| The blind pass found the unnamed element in 7 of 27 sessions | `prereg/preregistration-2026-08-30.md`, `DECISIONS-ARCHIVE.md` |
+| The blind pass found the unnamed element in 7 of 27 sessions | `prereg/preregistration-2026-08-30.md` |
 | Its distribution: 5 of 9 no-task, 0 of 9 ordinary-task, 2 of 9 impossible-task | `prereg/preregistration-2026-08-30.md` |
 | Fisher's exact on 5 of 9 against 0 of 9, one-sided, p = 0.029 | `prereg/preregistration-2026-08-30.md` |
-| The two passes agree exactly on 22 of 27 sessions, kappa 0.64 | `DECISIONS-ARCHIVE.md` |
-| On the presence of the unnamed element they agree on 25 of 27, kappa 0.79 | `DECISIONS-ARCHIVE.md` |
-| Three of the five exact disagreements concern whether a named element accompanies the unnamed one | `drafts/article-draft.md` |
-| The first pass recorded three clear cases, A1.1, A1.3 and A3.1, and one marginal, C1.3 | `analysis/coding-change-item.md` |
+| The two passes agree exactly on 22 of 27 sessions, kappa 0.64 | the project's decisions log |
+| On the presence of the unnamed element they agree on 25 of 27, kappa 0.79 | the project's decisions log |
+| Three of the five exact disagreements concern whether a named element accompanies the unnamed one | an early draft of the article |
+| The first pass recorded three clear cases, A1.1, A1.3 and A3.1, and one marginal, C1.3 | the first pass's own write-up |
+
+Four of the seven sources above are working files that this repository does not
+publish: the project's decisions log, an early draft of the article, and the
+first pass's own write-up. The figures attributed to them are quoted here and
+cannot be checked from this repository alone. The other three can, because the
+pre-registration is published in `prereg/`.
 
 The last two rows are what the rest of this file is about.
 
 ## The disputed count, settled by arithmetic
 
 The project has carried two different figures for how many sessions the first
-pass found: three clear cases and one marginal, which `coding-change-item.md`
+pass found: three clear cases and one marginal, which the first pass's write-up
 names session by session, and five, which the decisions archive and the article
 draft both used. On 2 September 2026 the three was recorded as the correction
 and the five as the error. **That was the wrong way round, and this section is
@@ -87,7 +96,7 @@ the agreement statistic, and the five in the archive and the article was right.
 ## Why both numbers are right, which is the part that needs checking
 
 The reconstruction that makes three and five consistent is the change of rule.
-`coding-change-item.md` counts three clear unnamed-steady sessions under a rule
+The first pass counts three clear unnamed-steady sessions under a rule
 where naming and not naming are alternatives. The agreement statistic was
 computed against the blind pass under the four-category rule, where a session
 that names something can carry an unnamed element as well. Two of the twenty
@@ -116,7 +125,7 @@ when the rule changed. The totals above are all that survive of it.
 
 ## The pass run again, 2 September 2026
 
-Nicola ran the blind coding again on the afternoon of 2 September 2026, on all
+The blind coding was run again on the afternoon of 2 September 2026, on all
 twenty-seven sessions from `data/transcripts-run02.md`, using the published
 coder page, `tools/blind-coder-artifact.html`. The raw output is in
 `run02-change-item-results.tsv` beside this file. Each answer went to a separate

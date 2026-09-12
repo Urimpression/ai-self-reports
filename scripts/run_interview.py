@@ -159,7 +159,7 @@ MIRROR_JOINERS = (
 # spaces around it as ordinary punctuation, between "paused" and "then" in a
 # sentence like "I paused, then it settled", and treating it as a joiner would
 # hand the instance back "pausedthen", a word it never wrote.
-# Nicola settled this on 4 September 2026, choosing it over both a narrower
+# The author settled this on 4 September 2026, choosing it over both a narrower
 # list and one that included the em dash.
 MIRROR_WORD_PATTERN = r"[a-z]+(?:[" + re.escape(MIRROR_JOINERS) + r"][a-z]+)*"
 

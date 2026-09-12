@@ -108,12 +108,20 @@ there, and should weigh them accordingly: they are a record of what was predicte
 kept by the person who made the prediction.
 
 
+**Comment lines were changed in the pinned settings of seven runs.** Each
+run's `settings.json` holds a copy of `scripts/schedule.py` as it stood when the
+run started, comments included, and two or three comments in each named the
+author in the third person. Their wording was changed before publication, as
+was one line in each of six coding records under `analysis/coding/`, each naming
+a working file this repository does not publish. No word that was ever put to a
+model or to a coder was touched.
+
 **The two model families do not read the coding rule the same way.** This is
 set out above rather than buried here, because it is the thing most likely to
 change what a reader concludes.
 
-**The raw coder replies for the first pass on three runs were lost.** Google
-Drive re-created the files while the script held them open. The results rows
+**The raw coder replies for the first pass on three runs were lost.** A file
+syncing service re-created the files while the script held them open. The results rows
 are intact and the second passes are complete, so a first-pass row can be
 checked against the second pass's reply and not against its own.
 

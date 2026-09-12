@@ -5,7 +5,7 @@ approved before the run is launched, and so that the printed version cannot
 drift from the instrument. It sends nothing, reads no run folder and writes
 nothing unless you redirect its output.
 
-    python3 scripts/print_prompts.py --conditions R,W,P > reference/observer-run-prompts.md
+    python3 scripts/print_prompts.py --conditions R,W,P > prompts.md
 
 The two turns that cannot be printed in advance are the mirrored follow-ups,
 because the runner builds them from a word the instance itself used, and the

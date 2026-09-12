@@ -22,13 +22,10 @@ _found = _find_project_root(SCRIPTS_DIR)
 PROJECT_ROOT = _found if _found else SCRIPTS_DIR.parent
 ROOT_WAS_FOUND_BY_MARKER = _found is not None
 
-DRAFTS = PROJECT_ROOT / "drafts"
 DATA = PROJECT_ROOT / "data"
 ANALYSIS = PROJECT_ROOT / "analysis"
 TOOLS = PROJECT_ROOT / "tools"
 PREREG = PROJECT_ROOT / "prereg"
-REFERENCE = PROJECT_ROOT / "reference"
-SKILLS = PROJECT_ROOT / "skills"
 
 
 def require_project(*needed):
@@ -44,9 +41,8 @@ def require_project(*needed):
 def describe():
     print(f"project root      {PROJECT_ROOT}")
     print(f"found by marker   {'yes' if ROOT_WAS_FOUND_BY_MARKER else 'NO, guessed from script location'}")
-    for name, path in [("drafts", DRAFTS), ("data", DATA), ("analysis", ANALYSIS),
-                       ("tools", TOOLS), ("prereg", PREREG), ("reference", REFERENCE),
-                       ("skills", SKILLS)]:
+    for name, path in [("data", DATA), ("analysis", ANALYSIS),
+                       ("tools", TOOLS), ("prereg", PREREG)]:
         print(f"  {name:12s} {'ok     ' if path.is_dir() else 'MISSING'} {path}")
 
 

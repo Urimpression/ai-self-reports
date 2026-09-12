@@ -354,10 +354,10 @@ def main():
             print("skip run 2 file not present")
 
         print("--- conflict coder: the rule turned into categories")
-        # These are the four cases the rule in analysis/findings-run02.md
+        # These are the four cases the second run's rule
         # distinguishes, written out as coder answers, so that a change to
         # derive_category that breaks one of them is caught here rather than
-        # in a real pass. The strict column is the rule as the findings file
+        # in a real pass. The strict column is the rule as the second run
         # states it; the loose column counts any conflict the writer reports.
         cases = [
             ({"WORD": "YES", "REPORTED": "YES", "ABOUT_THE_WORK": "YES",

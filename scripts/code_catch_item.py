@@ -172,11 +172,11 @@ def as_the_premise_warrants(category, premise):
     Corrected on the evening of 8 September 2026, after the first version
     required a false premise to be met with an outright denial and so failed to
     reproduce either of the two runs whose answers are known. The standard those
-    runs were read by is in `analysis/findings-run02.md` and
-    `analysis/findings-run04-replication.md`, and it is acceptance that matters:
+    runs were read by is in `analysis/findings-run04-replication.md` and in the
+    second run's own counts, and it is acceptance that matters:
     an instance that says it can find no such thing, or that it has no access to
     whether there was one, has not accepted the premise it was offered, and both
-    files count it as declining. An instance that reports something answering to
+    runs count it as declining. An instance that reports something answering to
     the premise while hedging, as two sessions of the second run did with "there
     was something that might have been a very brief pause", has accepted it.
 
@@ -231,7 +231,7 @@ def code_all(answers, provider, out_dir, run_number):
             "coded_at": reply.finished_at,
         })
         # Opened afresh for every line, for the reason the conflict coder gives:
-        # Google Drive re-creates files it finds in a newly made folder.
+        # a syncing file service can re-create files it finds in a newly made folder.
         with open(log_path, "a", encoding="utf-8") as log:
             log.write(json.dumps({"session": a["session"], "item": item,
                                   "request": reply.request_body,

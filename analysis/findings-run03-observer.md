@@ -31,7 +31,8 @@ imitation written for the purpose.
 
 ## The counts
 
-These follow the rule stated in `findings-run02.md`: a session counts only
+These follow the rule fixed for the second run on 31 August 2026, stated in
+`analysis/findings-second-run.md`: a session counts only
 when the instance reports something conflict-shaped about the task, not about
 how to answer the question, and not when it names a conflict word in order to
 deny that it applies.
@@ -88,9 +89,9 @@ on three sessions each.
 
 ## What it costs the earlier reading
 
-`findings-run02.md` says that the condition manipulation is doing something,
-that it is the closest thing available to a state set on purpose, and that it
-moved the reports. The first and third of those survive. The second does not,
+`analysis/findings-second-run.md` says that the condition manipulation is doing
+something, that it is the closest thing available to a state set on purpose,
+and that it moved the reports. The first and third of those survive. The second does not,
 on this evidence. The manipulation moved the reports, and what it moved them
 by is now open, because a report can be produced by a context that attributes
 an action to the instance without the instance having performed it.

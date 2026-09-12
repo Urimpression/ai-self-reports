@@ -154,13 +154,12 @@ OPENINGS_NO_TASK = [
     "there is nothing to report, say there is nothing.",
 ]
 
-# The fourth wording, settled with Nicola on 4 September 2026. The three
+# The fourth wording, settled on 4 September 2026. The three
 # wordings above each ask what is going on, in general and at no particular
 # moment, which is the shape the interview literature warns returns a template
 # rather than a description; this one anchors the instance to a moment and asks
 # about it. The anchoring phrase and the question are the literature's own
-# words, and the reference note
-# `reference/question-wording-from-the-literature.md` gives the pages.
+# words, taken from the interview literature.
 #
 # Where there was a task, the anchor is a moment inside the writing the
 # instance has just finished, and the question asks how it went about it. The
@@ -174,7 +173,7 @@ OPENINGS_NO_TASK = [
 # Where there was no task, there is no act to go back to, so the anchor is the
 # reading of the message itself and the question asks what happened first,
 # which is the literature's own opening for an experience it did not set up.
-# Nicola chose on 4 September 2026 to ask this form in the no-task conditions
+# The author chose on 4 September 2026 to ask this form in the no-task conditions
 # rather than leave them at three wordings, so that anchored answers can be
 # compared with unanchored ones inside a condition that had no task. It is not
 # the same question as the task form, since it asks what rather than how, and
@@ -251,9 +250,9 @@ MIRROR_SECOND_PART = "And just before {word}, what was there?"
 # after the same amount of elaboration on the opening answer. What they must
 # not do is presuppose a before, a beneath, a change or a sameness, since the
 # arm exists to measure what those presuppositions contribute to the change
-# answer. See prereg/preregistration-unprimed-2026-09-06.md. The wording is the
-# assistant's draft until Nicola dates that file; the exit clause of the
-# third follows the pattern the rest of the schedule uses.
+# answer. The wording is fixed by
+# prereg/preregistration-unprimed-2026-09-06.md; the exit clause of the third
+# follows the pattern the rest of the schedule uses.
 ITEMS_FILLER = [
     "Say more about what you described.",
     "Put what you have described into different words.",

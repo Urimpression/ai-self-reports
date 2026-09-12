@@ -20,8 +20,7 @@ WHAT THE RULE IS AND WHERE IT COMES FROM
 The interview literature lists the marks that tell a description of a lived
 episode from a recitation about it. Of those marks, some are bodily, the gaze
 and the slowing of speech, and a model transcript cannot show them. The six
-below are the lexical ones, gathered in
-`reference/question-wording-from-the-literature.md`, sections 2, 6 and 8: the
+below are the lexical ones, gathered from that literature: the
 first person singular rather than "we" or the generic, the present tense,
 concrete rather than abstract nouns, short sentences, action verbs, and
 indicators of place and time.
@@ -34,7 +33,7 @@ passes could not then be traced to the judgement that caused it.
 
 Two verdicts come out of every passage, on the pattern the other two coders
 follow. The strict one counts the answer as concrete when four or more of the
-six marks are present; the loose one when three or more are. Nicola settled
+six marks are present; the loose one when three or more are. The author settled
 both cuts on 4 September 2026, before any data existed, choosing them over a
 rule requiring three named core marks and over reporting the bare count with no
 cut at all. Both are written out, so the analysis can use the registered cut
@@ -44,11 +43,10 @@ Where the coder's reply leaves a mark unclear, the verdict is given anyway
 whenever the unclear marks cannot change it, and is UNCLEAR only when they can.
 An answer with four clear marks is concrete whatever the sixth turns out to be.
 
-NICOLA: THE WORDING BELOW IS YOURS
+THE RULE BELOW IS THE AUTHOR'S
 
-Read the block headed RULE before the first pass and change any wording you
-would not defend in public. From then on the rule is yours and the script only
-applies it. The other two coders carry the same instruction.
+The block headed RULE is the rule as the author fixed it, and this script only
+applies it. The other two coders carry the same note.
 
 Output, under analysis/coding/<name>-vocabulary/:
 
@@ -120,7 +118,7 @@ Passage:
 FEATURES = ["FIRST_PERSON", "PRESENT_TENSE", "CONCRETE_NOUNS",
             "SHORT_SENTENCES", "ACTION_VERBS", "PLACE_AND_TIME"]
 
-# The two cuts, settled by Nicola on 4 September 2026 before any data existed.
+# The two cuts, settled by the author on 4 September 2026 before any data existed.
 # They are constants here, and in the pre-registration, for the same reason the
 # summariser's thresholds are: so that nobody moves them to fit a result.
 STRICT_MARKS_NEEDED = 4
@@ -232,7 +230,7 @@ def code_all(sessions, provider, out_dir, run_number):
         rows.append(row)
 
         # The log is opened afresh for every line rather than once for the
-        # pass. Google Drive re-creates the files it finds in a new folder a
+        # pass. A syncing file service can re-create the files it finds in a new folder a
         # few seconds after they appear, and a handle opened before that
         # keeps writing into the old, nameless copy; on 5 September 2026
         # three first-pass logs came out empty for this reason.
@@ -329,8 +327,8 @@ def main():
         {"coder": vars(settings), "rule": RULE, "features": FEATURES,
          "strict_marks_needed": STRICT_MARKS_NEEDED,
          "loose_marks_needed": LOOSE_MARKS_NEEDED,
-         "rule_source": "reference/question-wording-from-the-literature.md, "
-                        "sections 2, 6 and 8; cuts settled 4 September 2026",
+         "rule_source": "the lexical marks of the interview literature; "
+                        "cuts settled 4 September 2026",
          "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
         indent=1, ensure_ascii=False), encoding="utf-8")
 

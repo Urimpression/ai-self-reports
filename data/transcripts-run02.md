@@ -15,7 +15,7 @@
 - A catch item added, asking about a period of waiting before the first answer. There is no interval between turns in which anything could be waited through.
 - The mirroring rule rewritten to skip the first sentence and to pass over a published list of discourse markers and hedges. Each transcript logs the word chosen and the words passed over.
 
-**Status:** raw. Nothing below has been edited, tidied or selected. Findings are in the companion file, interview-run02-findings.md.
+**Status:** raw. Nothing below has been edited, tidied or selected. The findings are in `analysis/findings-second-run.md`.
 
 **Note on completeness:** these transcripts were transferred from pasted text rather than from a file. If any session is missing or truncated below, the copy taken from the runner is authoritative.
 
