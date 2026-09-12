@@ -96,6 +96,18 @@ def words_in(text):
     return len(text.split()) if text else 0
 
 
+def wording_counted_from_one(zero_based):
+    """Turn the plan's zero-based wording index into the number the session name uses.
+
+    Session A3.12 is instance 12 of the third wording, and its plan entry says
+    wording 2. Anything that is not a whole number, such as a run that records no
+    wording at all, is passed through untouched.
+    """
+    if isinstance(zero_based, bool) or not isinstance(zero_based, int):
+        return zero_based
+    return zero_based + 1
+
+
 def session_rows_from_run_folder(run_name, run_number, what):
     """One row per session, read from the session files the runner wrote."""
     folder = DATA / "runs" / run_name
@@ -122,7 +134,11 @@ def session_rows_from_run_folder(run_name, run_number, what):
             "run_number": run_number,
             "session": session.get("id"),
             "condition": plan.get("condition", ""),
-            "wording": plan.get("wording", ""),
+            # The runner's plan stores the wording as a zero-based index, while
+            # the session name and the transcript header both count the wordings
+            # from one, and so do the runs read from the markdown transcripts
+            # below. Publish the number a reader can match to the session name.
+            "wording": wording_counted_from_one(plan.get("wording", "")),
             "item_order": plan.get("order", ""),
             "instance": plan.get("instance", ""),
             "between": settings.get("between", ""),
