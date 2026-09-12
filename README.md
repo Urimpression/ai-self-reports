@@ -142,6 +142,18 @@ no test anywhere here of whether a report is accurate.**
 
 ## What is deliberately not here
 
+**Two working files are named in the pre-registrations and are not published.**
+The factorial and observer pre-registrations cite `analysis/findings-run02.md`
+for the conflict rule, and the factorial one also cites a reference note on
+question wording. Both were written for the author rather than for a reader, and
+neither is published for that reason. A pre-registration is not edited after its
+date, in this project or anywhere else, so those two citations stand as they were
+written. Nothing is lost by it: the conflict rule is published twice over, as the
+exact text the coder received in `public/coding-rules.md` and as prose inside the
+observer pre-registration itself, and the second run now has a write-up addressed
+to a reader in `analysis/findings-second-run.md`.
+
+
 The papers this work cites are not redistributed. Three folders of sessions are
 on disk and absent from the two tables, because none of the three is part of the
 pilot, and the third of them is worth a reader's attention.
