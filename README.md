@@ -175,6 +175,13 @@ it lacks. They are published because deleting a run that was started and
 abandoned would leave the record incomplete, not because anything can be
 concluded from them.
 
+## How to cite this archive
+
+Cite https://doi.org/10.5281/zenodo.22728631, which is Zenodo's identifier for the
+archive as a whole and always resolves to the newest release. `CITATION.cff` at
+the top of the repository carries the same details in a form a reference manager
+can read.
+
 ## Licence
 
 The scripts and the browser tools are under the MIT licence. The transcripts,
