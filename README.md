@@ -57,10 +57,12 @@ the verdicts and the span the coder quoted as its evidence. Join them on the
 **Reading the sessions in a browser.** `public/reader.html` filters the 896
 sessions by run, condition and wording, searches their text, opens any one of
 them in full, and shows what each coding pass answered about it with the span
-each coder quoted. It reads the two tables and the session files from this
-repository, which browsers will not do from a file on disk, so serve the folder
-rather than opening the file directly: run `python3 -m http.server 8000` at the
-top of the repository and open `http://localhost:8000/public/reader.html`.
+each coder quoted. **It is live at https://urimpression.github.io/ai-self-reports/public/reader.html**, so
+nothing has to be cloned or installed to read the sessions. If you have cloned
+the repository and want to run the page yourself, serve the folder rather than
+opening the file directly, because a browser will not let a page on disk read
+the data files: run `python3 -m http.server 8000` at the top of the repository
+and open `http://localhost:8000/public/reader.html`.
 
 Both files are rebuilt from the run folders and the coding folders by
 `scripts/build_public_tables.py`, and `scripts/check_public_tables.py`
