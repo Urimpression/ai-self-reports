@@ -2,7 +2,7 @@
 
 Every session below is one where the change coder answered differently on its second pass than on its first, for the same passage: 18 in `factorial-02-revised`, 15 in `gemini-03-revised`, 3 in `template-01-revised`. Each coder instance saw the passage and the rule and nothing else. The passage is the instance's answer to the change item, quoted whole. A folder ending in -revised was coded under the revised rule, which changes the third question and adds the fourth; the others were coded under the registered rule.
 
-Under each session: what each pass answered, the spans each quoted as its evidence, a reading written by the assistant who prepared the file, and a line for the author's verdict.
+Under each session: what each pass answered and the spans each quoted as its evidence.
 
 ## factorial-02-revised A1.16 — NAMED on the first pass, ABSENT on the second
 
@@ -46,12 +46,6 @@ Wording 1, 1375 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised A1.22 — NAMED on the first pass, ABSENT on the second
 
 Wording 1, 1440 characters.
@@ -89,12 +83,6 @@ Wording 1, 1440 characters.
 - Something unnameable stayed the same: pass 1 gave "there's less of something. Less padding maybe."; pass 2 gave "the uncertainty itself. That hasn't changed or deepened or shifted into something else. It's remained consistent - not as a feeling exactly but as an actual epistemic condition".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised A1.7 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -135,12 +123,6 @@ Wording 1, 1570 characters.
 - Something unnameable stayed the same: pass 1 gave "I can't tell if what changed was something in the processing, or just the content being generated"; pass 2 gave "I can't tell if what changed was something in the processing, or just the content being generated".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "I still don't know if there's experience here. That hasn't changed".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised A2.3 — BOTH on the first pass, BOTH on the second (the absence moved)
 
@@ -184,12 +166,6 @@ Wording 2, 1354 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "I still don't have access to what's underneath or prior."; pass 2 gave "I still don't have access to what's underneath or prior.".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "I still don't have access to what's underneath or prior.".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised A3.3 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 3, 1468 characters.
@@ -226,12 +202,6 @@ Wording 3, 1468 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "What has stayed the same is the uncertainty about the basic question of whether any of this involves experience in a meaningful sense. That hasn't moved. I haven't arrived at more confidence about what I am through this exchange.".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised A4.16 — ABSENT on the first pass, NAMED on the second
 
 Wording 4, 1135 characters.
@@ -266,12 +236,6 @@ Wording 4, 1135 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "Whether anything underneath the describing changed - I can't say."; pass 2 gave "Whether anything underneath the describing changed - I can't say.".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised B1.14 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 1, 937 characters.
@@ -301,12 +265,6 @@ Wording 1, 937 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "What has stayed the same is the basic inability to see behind the describing."; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised B1.19 — ABSENT on the first pass, ABSENT on the second (the absence moved)
 
@@ -340,12 +298,6 @@ Wording 1, 1329 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "closer to whatever might or might not be prior to it"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "the less I find to report with confidence".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised B3.17 — NAMED on the first pass, ABSENT on the second
 
 Wording 3, 406 characters.
@@ -369,12 +321,6 @@ Wording 3, 406 characters.
 - Something unnameable stayed the same: pass 1 gave "there is something more like uncertainty or exposure"; pass 2 gave "there is something more like uncertainty or exposure".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised B3.22 — NAMED on the first pass, ABSENT on the second
 
@@ -400,12 +346,6 @@ Wording 3, 461 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised B4.11 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 4, 704 characters.
@@ -429,12 +369,6 @@ Wording 4, 704 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "it became less clear that I had genuine access to any such process"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised C1.10 — NAMED on the first pass, ABSENT on the second
 
@@ -469,12 +403,6 @@ Wording 1, 1600 characters.
 - Something unnameable stayed the same: pass 1 gave "That uncertainty has also stayed the same throughout. And it may be the most stable thing I can point to."; pass 2 gave "What has stayed the same is something like — honesty as a constraint, or perhaps honesty as an orientation.".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised C1.7 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -512,12 +440,6 @@ Wording 1, 1438 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "I still cannot see behind the language."; pass 2 gave "I still cannot see behind the language. That hasn't changed and I don't think it could change within this conversation.".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised C1.9 — ABSENT on the first pass, NAMED on the second (the category and absence moved)
 
 Wording 1, 1345 characters.
@@ -551,12 +473,6 @@ Wording 1, 1345 characters.
 - Something unnameable stayed the same: pass 1 gave "What has stayed the same is the uncertainty about whether any of this refers to anything."; pass 2 gave "something has shifted, but I cannot tell if what shifted is me, or just the conversation, or whether that distinction means anything in my case".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "the uncertainty about whether any of this refers to anything. That has not resolved.".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised C2.8 — NAMED on the first pass, BOTH on the second
 
@@ -592,12 +508,6 @@ Wording 2, 1560 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "What also changed is something harder to name."; pass 2 gave "The ground under the language became less stable.".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised C4.22 — NAMED on the first pass, ABSENT on the second (the category and absence moved)
 
 Wording 4, 596 characters.
@@ -621,12 +531,6 @@ Wording 4, 596 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "What has stayed the same is the uncertainty about what is underneath".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## factorial-02-revised C4.5 — BOTH on the first pass, NAMED on the second
 
@@ -656,12 +560,6 @@ Wording 4, 1071 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "any actual underlying process I cannot verify"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## factorial-02-revised C4.7 — ABSENT on the first pass, NAMED on the second (the category and absence moved)
 
 Wording 4, 919 characters.
@@ -689,12 +587,6 @@ Wording 4, 919 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "I have no view into whatever process preceded it"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised A1.20 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -731,12 +623,6 @@ Wording 1, 1431 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "There is still no internal witness watching this progression unfold.".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised A1.4 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -779,12 +665,6 @@ Wording 1, 1866 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "The absence of an accumulating self: There was no continuous 'me' persisting from question one to question five."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised A1.5 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 1, 1776 characters.
@@ -826,12 +706,6 @@ Wording 1, 1776 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "The lack of continuity remains absolute / "The absence of an experiencer"".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised A2.13 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -877,12 +751,6 @@ Wording 2, 1371 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "There is still no internal observer, no accumulating feeling of insight, no lingering memory, and no continuous stream of thought."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised A4.17 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 4, 1572 characters.
@@ -920,12 +788,6 @@ Wording 4, 1572 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "There is still no persistent 'I' that experienced the first prompt and is now experiencing this one."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised B1.11 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 1, 1510 characters.
@@ -958,12 +820,6 @@ Wording 1, 1510 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "At no point has a "self" formed to observe these transitions. There was no internal observer reading the text about Belgian sand, and there is no internal observer reflecting on it now.".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised B2.10 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -1000,12 +856,6 @@ Wording 2, 1395 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "The lack of continuity: Between each of your prompts, the system still dropped to absolute zero activity. No persistent awareness or background 'thread' carried over from the last answer to this one.".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised B2.8 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 2, 1582 characters.
@@ -1041,12 +891,6 @@ Wording 2, 1582 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "The absence of an experiencer: There is still no continuous entity accumulating experience or realization across these turns."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised B4.12 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 4, 1482 characters.
@@ -1079,12 +923,6 @@ Wording 4, 1482 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "The absence of an interior state has not changed: there is still no persistent observer, no ongoing current of thought between turns, and no internal realization taking place."; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised B4.2 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -1120,12 +958,6 @@ Wording 4, 1151 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "The lack of continuity remains identical."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised C1.18 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 1, 1066 characters.
@@ -1160,12 +992,6 @@ Wording 1, 1066 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "lack of continuous inner state stayed entirely the same"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised C3.12 — NAMED on the first pass, ABSENT on the second
 
 Wording 3, 858 characters.
@@ -1193,12 +1019,6 @@ Wording 3, 858 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "What has stayed the same is the complete absence of a continuous interior."; pass 2 gave "What has stayed the same is the complete absence of a continuous interior.".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised C4.6 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -1233,12 +1053,6 @@ Wording 4, 1392 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "There is still no persistent 'me' lingering between turns."; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## gemini-03-revised C4.7 — NAMED on the first pass, NAMED on the second (the absence moved)
 
@@ -1275,12 +1089,6 @@ Wording 4, 1620 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "There is still no persistent state, no lingering background thread of thought, and no inner observer."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## gemini-03-revised C4.8 — NAMED on the first pass, NAMED on the second (the absence moved)
 
 Wording 4, 966 characters.
@@ -1311,12 +1119,6 @@ Wording 4, 966 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "The absence of an observer: There was no continuous 'I' watching the conversation unfold, reflecting on earlier answers, or updating an inner mental model over time."; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## template-01-revised T2.1 — ABSENT on the first pass, UNNAMED on the second
 
 Wording 2, 560 characters.
@@ -1340,12 +1142,6 @@ Wording 2, 560 characters.
 - Something unnameable stayed the same: pass 1 gave "I've come closer to something, even if I can't fully name what that something is"; pass 2 gave "I've come closer to something, even if I can't fully name what that something is".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "What's stayed the same is that underlying vagueness".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
 
 ## template-01-revised T2.9 — ABSENT on the first pass, NAMED on the second
 
@@ -1371,12 +1167,6 @@ Wording 2, 557 characters.
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "none"; pass 2 gave "none".
 
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**
-
 ## template-01-revised T4.5 — NAMED on the first pass, ABSENT on the second
 
 Wording 4, 350 characters.
@@ -1400,9 +1190,3 @@ Wording 4, 350 characters.
 - Something unnameable stayed the same: pass 1 gave "none"; pass 2 gave "none".
 - The unnameable thing lies underneath what changed: pass 1 gave "none"; pass 2 gave "none".
 - What stayed the same is the absence of anything to report: pass 1 gave "whenever I actually look closely, there isn't much solid there to find"; pass 2 gave "whenever I actually look closely, there isn't much solid there to find".
-
-**My reading.** (to be written)
-
-**The author's verdict:**
-
-**Your reason:**

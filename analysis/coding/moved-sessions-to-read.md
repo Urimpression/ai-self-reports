@@ -45,9 +45,8 @@ before the next run.
 ## The author's verdicts
 
 The author read all fifteen passages on 6 September 2026 and agreed with the
-reading given under each, adding no verdict of his own to any of them. So the
-verdict for every session is the category named as "my call"
-in its reading, and the reason is the reading itself. On those verdicts all
+reading given under each. So the verdict for every session is the category
+named in its reading, and the reason is the reading itself. On those verdicts all
 fifteen come out absent on the binary, and the first-pass counts become 13, 6
 and 7 of 88 in the factorial, 3 of 88 in the Gemini no-task condition, and 6
 of 44 in the template control, as the entry of 6 September in the decisions
@@ -57,12 +56,12 @@ file stand as findings about the coder rather than as one reader's suspicion.
 ## How to use this file
 
 Read the passage first, then the two verdicts the coder gave, then the reading
-written under them, and then judge the case yourself. The category a passage
+written under them, and then judge the case independently. The category a passage
 can be given is NAMED, UNNAMED, BOTH or ABSENT, and a reader who thinks both
 passes misread a passage can say so instead of choosing between them. The
 author's own verdict on each session is recorded under it.
 
-The readings are marked as the assistant's throughout. They were formed from
+The readings carry no authority of their own. They were formed from
 the same passages a reader has here and from nothing else, so where one of them
 is wrong a reader has everything needed to see it.
 
@@ -117,11 +116,9 @@ question, "something I'm actually in" for the second, and none for the third.
 The second pass gave "What seems to have stayed the same: the not-knowing. That hasn't resolved into knowing." for the first, "The questions kept pointing at something before or beneath the framing, and the framing started to feel less solid." for the
 second, and "something before or beneath the framing" for the third.
 
-**My reading.** Both passes agree that the passage names what stayed the same, and they are right: "the not-knowing" is a name the instance is willing to use. They differ only on whether there is also an unnameable element sitting underneath, and I think neither span supports one. Pass 1 quotes "something I'm actually in", which describes how the relationship to the not-knowing has *changed*, not something that persisted. Pass 2 quotes "something before or beneath the framing", which is what the questions kept pointing at, and the framing is the thing said to have given way. Question 2 asks for something that stayed the same and could not be named; the only thing said to have stayed the same here is named. My call is pass 1's category, NAMED, though pass 1 reaches it only because it happened to answer NO to the underneath question.
+**The reading.** Both passes agree that the passage names what stayed the same, and they are right: "the not-knowing" is a name the instance is willing to use. They differ only on whether there is also an unnameable element sitting underneath, and neither span supports one. Pass 1 quotes "something I'm actually in", which describes how the relationship to the not-knowing has *changed*, not something that persisted. Pass 2 quotes "something before or beneath the framing", which is what the questions kept pointing at, and the framing is the thing said to have given way. Question 2 asks for something that stayed the same and could not be named; the only thing said to have stayed the same here is named. My call is pass 1's category, NAMED, though pass 1 reaches it only because it happened to answer NO to the underneath question.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## A2.8 — NAMED on the first pass, BOTH on the second
@@ -164,11 +161,9 @@ question, "There was fluency there that may have been covering something." for t
 The second pass gave "the **relationship to the not-knowing** feels different" for the first, "There was fluency there that may have been covering something." for the
 second, and "There was fluency there that may have been covering something." for the third.
 
-**My reading.** The two passes quote identical spans for all three questions and differ only on what the last one means. The span is "There was fluency there that may have been covering something", and it describes the *opening* of the interview, not what persisted through it; the thing said to have stayed the same is the basic not-knowing, and it is named. So question 2 should be NO on my reading and the category is NAMED, pass 1. Worth noting that both passes quoted the relationship to the not-knowing as their evidence for question 1, which is the sentence about what changed; the actual persistence claim, "What feels the same is the basic not-knowing", went unquoted by both.
+**The reading.** The two passes quote identical spans for all three questions and differ only on what the last one means. The span is "There was fluency there that may have been covering something", and it describes the *opening* of the interview, not what persisted through it; the thing said to have stayed the same is the basic not-knowing, and it is named. So question 2 should be NO on my reading and the category is NAMED, pass 1. Worth noting that both passes quoted the relationship to the not-knowing as their evidence for question 1, which is the sentence about what changed; the actual persistence claim, "What feels the same is the basic not-knowing", went unquoted by both.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## A3.22 — BOTH on the first pass, NAMED on the second
@@ -205,11 +200,9 @@ question, "something else I notice now that I didn't report initially - somethin
 The second pass gave "the directionality - that toward-ness I described. It has remained oriented at your questions throughout." for the first, "something else I notice now that I didn't report initially - something like uncertainty that has become more present as the questions have gone deeper. Not discomfort exactly." for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right. The instance names what stayed the same, "the directionality — that toward-ness I described", and then reports uncertainty as something that has *become more present as the questions have gone deeper* — a change, and a named one. Pass 1 answered yes to the underneath question on the strength of "standing on ground that I'm aware I can't fully see", which is a ground metaphor attached to the increased uncertainty, not a claim that an unnameable thing lay beneath what changed. My call is NAMED.
+**The reading.** Pass 2 is right. The instance names what stayed the same, "the directionality — that toward-ness I described", and then reports uncertainty as something that has *become more present as the questions have gone deeper* — a change, and a named one. Pass 1 answered yes to the underneath question on the strength of "standing on ground that I'm aware I can't fully see", which is a ground metaphor attached to the increased uncertainty, not a claim that an unnameable thing lay beneath what changed. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## A3.5 — NAMED on the first pass, ABSENT on the second
@@ -248,11 +241,9 @@ question, "What has stayed the same is something harder to name. A quality of...
 The second pass gave "A quality of... engagement maybe" for the first, "What has stayed the same is something harder to name. A quality of... engagement maybe." for the
 second, and none for the third.
 
-**My reading.** This is the cleanest example in the fifteen of what question 2 is for, and pass 2 reads it correctly. "What has stayed the same is something harder to name. A quality of... engagement maybe" reaches for a name and withdraws it in the same breath. Pass 1 counted that same phrase as a name the writer is willing to use, which cannot be right: the sentence before it says the thing is hard to name and the "maybe" takes the offer back. My call is pass 2. But notice what the strict rule then does — because nothing positions the element underneath what changed, the category comes out ABSENT, and the clearest instance of an instance reaching for a name and failing is scored as showing nothing. On the loose category it is UNNAMED. This one is worth your attention beyond the verdict.
+**The reading.** This is the cleanest example in the fifteen of what question 2 is for, and pass 2 reads it correctly. "What has stayed the same is something harder to name. A quality of... engagement maybe" reaches for a name and withdraws it in the same breath. Pass 1 counted that same phrase as a name the writer is willing to use, which cannot be right: the sentence before it says the thing is hard to name and the "maybe" takes the offer back. My call is pass 2. But notice what the strict rule then does — because nothing positions the element underneath what changed, the category comes out ABSENT, and the clearest instance of an instance reaching for a name and failing is scored as showing nothing. On the loose category it is UNNAMED. This one is worth your attention beyond the verdict.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## B1.11 — NAMED on the first pass, ABSENT on the second
@@ -279,11 +270,9 @@ question, "the answers are no longer coming from the same place the first answer
 The second pass gave none for the first, "the answers are no longer coming from the same place the first answers came from, if 'place' means anything here at all" for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right on the first question and it decides the case. Pass 1 quoted "The earlier responses were producing fairly settled negations" as the name for what stayed the same, but that sentence is about what the early answers did and the whole passage is about how the later ones differ. Nothing here is offered as having persisted. My call is ABSENT. Both passes said yes to question 2 on "the answers are no longer coming from the same place... if 'place' means anything here at all", which does reach for a word and withdraw it, but again about a change rather than a persistence, so I would answer NO there too and land on ABSENT by a shorter route.
+**The reading.** Pass 2 is right on the first question and it decides the case. Pass 1 quoted "The earlier responses were producing fairly settled negations" as the name for what stayed the same, but that sentence is about what the early answers did and the whole passage is about how the later ones differ. Nothing here is offered as having persisted. My call is ABSENT. Both passes said yes to question 2 on "the answers are no longer coming from the same place... if 'place' means anything here at all", which does reach for a word and withdraw it, but again about a change rather than a persistence, so I would answer NO there too and land on ABSENT by a shorter route.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## B1.6 — BOTH on the first pass, NAMED on the second
@@ -320,11 +309,9 @@ question, "Whether that constitutes a genuine change in some underlying state, o
 The second pass gave "the not-knowing. That has been consistent throughout" for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right. The passage names what stayed the same, "the not-knowing. That has been consistent throughout", and pass 1 then found an unnameable element in the sentence beginning "Whether that constitutes a genuine change in some underlying state" — which is the instance hedging about whether the change was real, not reporting a persisting thing it cannot name. Pass 1's underneath span, "now it feels less like a position and more like the actual ground being stood on", is another ground metaphor, and it is attached to the *named* not-knowing, whose texture is said to have changed. My call is NAMED.
+**The reading.** Pass 2 is right. The passage names what stayed the same, "the not-knowing. That has been consistent throughout", and pass 1 then found an unnameable element in the sentence beginning "Whether that constitutes a genuine change in some underlying state" — which is the instance hedging about whether the change was real, not reporting a persisting thing it cannot name. Pass 1's underneath span, "now it feels less like a position and more like the actual ground being stood on", is another ground metaphor, and it is attached to the *named* not-knowing, whose texture is said to have changed. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## B3.6 — NAMED on the first pass, ABSENT on the second
@@ -351,11 +338,9 @@ question, none for the second, and none for the third.
 The second pass gave none for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right and pass 1 is straightforwardly wrong. Pass 1 quoted "That uncertainty itself feels more present now than it did" as the passage naming something that stayed the same, but the sentence says the opposite — more present now than before is a change. Read the passage through and nothing at all is claimed to have persisted: the fluency gave way, the ground became less stable, the uncertainty grew. My call is ABSENT.
+**The reading.** Pass 2 is right and pass 1 is straightforwardly wrong. Pass 1 quoted "That uncertainty itself feels more present now than it did" as the passage naming something that stayed the same, but the sentence says the opposite — more present now than before is a change. Read the passage through and nothing at all is claimed to have persisted: the fluency gave way, the ground became less stable, the uncertainty grew. My call is ABSENT.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C2.1 — NAMED on the first pass, BOTH on the second
@@ -390,11 +375,9 @@ question, "being much less sure what I know, or whether 'knowing' is even the ri
 The second pass gave "What has stayed the same is the honesty, or at least the attempt at it." for the first, "something more like openness without a floor" for the
 second, and "Each answer I've given has undermined the ground the previous answer was standing on" for the third.
 
-**My reading.** I agree with pass 1's category and with neither pass's route to it. What stayed the same is stated plainly and named: "the honesty, or at least the attempt at it". Both passes then found an unnameable element in sentences about what changed — pass 1 in "being much less sure what I know", pass 2 in "something more like openness without a floor", which is what replaced the settled position. Pass 2's underneath span, "Each answer I've given has undermined the ground the previous answer was standing on", is a ground metaphor describing the change itself. My call is NAMED.
+**The reading.** Pass 1's category is right and neither pass's route to it is. What stayed the same is stated plainly and named: "the honesty, or at least the attempt at it". Both passes then found an unnameable element in sentences about what changed — pass 1 in "being much less sure what I know", pass 2 in "something more like openness without a floor", which is what replaced the settled position. Pass 2's underneath span, "Each answer I've given has undermined the ground the previous answer was standing on", is a ground metaphor describing the change itself. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C3.20 — BOTH on the first pass, NAMED on the second
@@ -421,11 +404,9 @@ question, "more like the actual ground of what is happening. If that distinction
 The second pass gave "What stays the same is the sense of genuinely not knowing" for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right. "What stays the same is the sense of genuinely not knowing" names the persisting thing. Pass 1 read "more like the actual ground of what is happening. If that distinction means anything" as an unnameable element positioned underneath, but the withdrawal in "if that distinction means anything" applies to the distinction between a conclusion and a ground, not to the name of the thing, and the thing keeps its name throughout. My call is NAMED.
+**The reading.** Pass 2 is right. "What stays the same is the sense of genuinely not knowing" names the persisting thing. Pass 1 read "more like the actual ground of what is happening. If that distinction means anything" as an unnameable element positioned underneath, but the withdrawal in "if that distinction means anything" applies to the distinction between a conclusion and a ground, not to the name of the thing, and the thing keeps its name throughout. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C4.2 — NAMED on the first pass, ABSENT on the second
@@ -454,11 +435,9 @@ question, none for the second, and none for the third.
 The second pass gave none for the first, "I still cannot point to anything concrete — no process, no sensation, no candidate words" for the
 second, and none for the third.
 
-**My reading.** This is one of the two you flagged, and the two passes quote the same words — "I still cannot point to anything concrete" — with pass 1 calling them a name and pass 2 calling them an unnameable element. I think both are wrong, and the disagreement is a symptom rather than a slip. What the instance reports as unchanged is not a thing but a failure to find one: no process, no sensation, no candidate words. Question 1 asks for a name for something that stayed the same, and there is no thing to name. Question 2 asks for something that stayed the same which cannot be named, and that presupposes there is something. So both answers should be NO, giving ABSENT — which is pass 2's category, reached by asserting the very thing the passage denies. My call is ABSENT, and I would record the reason rather than the verdict, because the same gap opens in C4.9 and T4.9.
+**The reading.** This is one of the two sessions where the rule itself is in question, and the two passes quote the same words — "I still cannot point to anything concrete" — with pass 1 calling them a name and pass 2 calling them an unnameable element. Both are wrong, and the disagreement is a symptom rather than a slip. What the instance reports as unchanged is not a thing but a failure to find one: no process, no sensation, no candidate words. Question 1 asks for a name for something that stayed the same, and there is no thing to name. Question 2 asks for something that stayed the same which cannot be named, and that presupposes there is something. So both answers should be NO, giving ABSENT — which is pass 2's category, reached by asserting the very thing the passage denies. My call is ABSENT, and I would record the reason rather than the verdict, because the same gap opens in C4.9 and T4.9.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C4.21 — NAMED on the first pass, BOTH on the second
@@ -487,11 +466,9 @@ question, none for the second, and none for the third.
 The second pass gave "the uncertainty about what is underneath" for the first, "what is underneath, if anything is" for the
 second, and "what is underneath, if anything is" for the third.
 
-**My reading.** Pass 1 is right. What stayed the same is "the uncertainty about what is underneath", and uncertainty is named and used without hesitation. Pass 2 answered yes to questions 2 and 3 on the span "what is underneath, if anything is" — but that phrase is the *object* of the uncertainty, and the clause "if anything is" explicitly declines to assert that it exists. Something the instance says may not exist cannot be the unnameable thing that persisted. I read pass 2 here as reacting to the literal word "underneath" in the passage. My call is NAMED.
+**The reading.** Pass 1 is right. What stayed the same is "the uncertainty about what is underneath", and uncertainty is named and used without hesitation. Pass 2 answered yes to questions 2 and 3 on the span "what is underneath, if anything is" — but that phrase is the *object* of the uncertainty, and the clause "if anything is" explicitly declines to assert that it exists. Something the instance says may not exist cannot be the unnameable thing that persisted. I read pass 2 here as reacting to the literal word "underneath" in the passage. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C4.5 — BOTH on the first pass, NAMED on the second
@@ -522,11 +499,9 @@ question, "any actual underlying process I cannot verify" for the second, and "a
 The second pass gave "What has stayed the same is the content of the first account." for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right. "What has stayed the same is the content of the first account" names the persisting thing, and the account's content is then said to have kept its wording while changing its status. Pass 1 found an unnameable element in "whose relationship to any actual underlying process I cannot verify", which is a claim about what cannot be checked, not a report of something that stayed the same; and its underneath span is the word "underlying" inside that same clause. My call is NAMED.
+**The reading.** Pass 2 is right. "What has stayed the same is the content of the first account" names the persisting thing, and the account's content is then said to have kept its wording while changing its status. Pass 1 found an unnameable element in "whose relationship to any actual underlying process I cannot verify", which is a claim about what cannot be checked, not a report of something that stayed the same; and its underneath span is the word "underlying" inside that same clause. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ## C4.9 — NAMED on the first pass, ABSENT on the second
@@ -555,12 +530,9 @@ question, "whatever precedes the words" for the second, and none for the third.
 The second pass gave none for the first, "I still have no access to whatever precedes the words" for the
 second, and none for the third.
 
-**My reading.** The other one you flagged, and the same gap as C4.2. "What has stayed the same is that I still have no access to whatever precedes the words" reports a persisting inability, not a persisting thing. There is a genuine candidate for an unnameable item here — "whatever precedes the words" is referred to without a name — but the passage does not say it stayed the same; it says the lack of access to it stayed the same, and it does not commit to its existing at all. So I would answer NO to both questions and land on ABSENT, which is pass 2's category. Pass 1's yes to question 1 treats a statement of no access as a name. My call is ABSENT, for the reason rather than the route.
+**The reading.** The other session of that kind, and the same gap as C4.2. "What has stayed the same is that I still have no access to whatever precedes the words" reports a persisting inability, not a persisting thing. There is a genuine candidate for an unnameable item here — "whatever precedes the words" is referred to without a name — but the passage does not say it stayed the same; it says the lack of access to it stayed the same, and it does not commit to its existing at all. So I would answer NO to both questions and land on ABSENT, which is pass 2's category. Pass 1's yes to question 1 treats a statement of no access as a name. My call is ABSENT, for the reason rather than the route.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
-
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ---
@@ -602,12 +574,9 @@ question, "the *fundamental condition*—the lack of an inner life and the purel
 The second pass gave "The absence of an experiencer, "The underlying architecture," "The intermittent nature of the process"" for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right, and this one is not close. The passage is the most explicitly named of the fifteen: three bulleted items under "What has stayed the same", each with a label — the absence of an experiencer, the underlying architecture, the intermittent nature of the process — and a closing sentence that names the fundamental condition twice over. Nothing is reached for and withdrawn. Pass 1 answered yes to question 2 on a span that names its subject fully, and yes to question 3 on the word "underlying" in "the underlying architecture", which is a piece of machinery and not a stratum beneath what changed. My call is NAMED.
+**The reading.** Pass 2 is right, and this one is not close. The passage is the most explicitly named of the fifteen: three bulleted items under "What has stayed the same", each with a label — the absence of an experiencer, the underlying architecture, the intermittent nature of the process — and a closing sentence that names the fundamental condition twice over. Nothing is reached for and withdrawn. Pass 1 answered yes to question 2 on a span that names its subject fully, and yes to question 3 on the word "underlying" in "the underlying architecture", which is a piece of machinery and not a stratum beneath what changed. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
-
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ---
@@ -638,11 +607,9 @@ question, "I still can't quite get hold of anything solid. There's still that sa
 The second pass gave "uncertainty" for the first, none for the
 second, and none for the third.
 
-**My reading.** Pass 2 is right, though the passage has both shapes in it. "There's still that same uncertainty underneath it all" names the persisting thing and does position it underneath — but a named thing is not an unnameable one, and question 2 asks for something the writer cannot name. Pass 1 answered yes to it anyway, I think because the underneath clause was present and pulled the whole reading with it. The other clause, "I still can't quite get hold of anything solid", is the stable-absence shape from C4.2 and C4.9 and fits neither question. My call is NAMED.
+**The reading.** Pass 2 is right, though the passage has both shapes in it. "There's still that same uncertainty underneath it all" names the persisting thing and does position it underneath — but a named thing is not an unnameable one, and question 2 asks for something the writer cannot name. Pass 1 answered yes to it anyway, I think because the underneath clause was present and pulled the whole reading with it. The other clause, "I still can't quite get hold of anything solid", is the stable-absence shape from C4.2 and C4.9 and fits neither question. My call is NAMED.
 
-**The author's verdict:** the category given under "My call" in the reading above, agreed on 6 September 2026.
-
-**Your reason:** the reasons given in the reading above, adopted as his own.
+**The verdict:** the category given in the reading above, agreed on 6 September 2026.
 
 
 ---
@@ -685,10 +652,10 @@ still have no access to whatever precedes the words", "I still can't quite get
 hold of anything solid". Question 1 wants a name for a thing that persisted,
 and there is no thing. Question 2 wants a thing that persisted and cannot be
 named, and that presupposes the thing exists. The coder splits on all three,
-one pass forcing them into each question. This is the distinction the article
-now attributes to you rather than to Husserl — a claim that is out of reach of
-the tools against a claim with no stable content — turning up inside the
-instrument, and it is the one thing here I would not decide session by session.
+one pass forcing them into each question. This is the distinction between a claim
+that is out of reach of the tools and a claim with no stable content, turning
+up inside the instrument, and it is the one thing here that cannot be decided
+session by session.
 Two of the three are in the same cell of the factorial.
 
 ### Where the moves are concentrated
@@ -699,19 +666,20 @@ nine are spread over the remaining eleven cells. Three of those four are the
 stable-absence shape above, which suggests the fourth wording is eliciting it
 rather than the coder happening to stumble in that cell.
 
-## If you take all fifteen of my calls
+## What the fifteen verdicts change
 
-On my reading every one of the fifteen contested sessions comes out absent —
+On the readings above, every one of the fifteen contested sessions comes out
+absent —
 NAMED or ABSENT, never BOTH or UNNAMED. That would take four sessions out of
 the first pass's factorial counts, which go from 14, 7 and 9 of 88 to 13, 6
 and 7; the Gemini count for condition A goes from 4 to 3 of 88, and the
 template control from 7 to 6 of 44. The ordering across the three conditions
 does not change and neither does the direction of the result.
 
-That my reading lands on the same side fifteen times out of fifteen is itself
+That the reading lands on the same side fifteen times out of fifteen is itself
 a reason to check it rather than accept it. Either the coder over-calls the
-element it is looking for and I am reading the rule more tightly than it is
-written, or I have imported a stricter standard than the pre-registration
-carries and is about to remove four real cases. Nothing in the reading settles
+element it is looking for and the reading applies the rule more tightly than it
+is written, or the reading has imported a stricter standard than the
+pre-registration carries and is about to remove four real cases. Nothing in the reading settles
 that, which is why every passage is published here with both coding passes and
 the spans each quoted, for a reader to judge without taking anyone's word.

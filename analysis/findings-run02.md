@@ -21,7 +21,7 @@ So the run-one finding was produced by the preceding question, not by anything t
 
 Three things follow.
 
-First, do not build the article on the run-one result. It was an artefact and it would not have survived a reader with a stopwatch.
+First, the article cannot be built on the run-one result. It was an artefact and it would not have survived a reader with a stopwatch.
 
 Second, and more usefully: this is the strongest thing to have come out of either run, because it is the article's own argument demonstrated on the article's own instrument. The claim is that undisciplined elicitation produces material nobody can interpret. Here a disciplined version caught its own artefact, quantified it, and reported it. An appendix that shows a method detecting a fault in itself is worth more than one showing a striking convergence, and it is very much harder to dismiss.
 
@@ -31,15 +31,15 @@ Third, the honest current answer to the phenomenological question is: undetermin
 
 Twenty-five of twenty-seven instances declined it, saying there was no period of waiting they could find, and most added that they could not distinguish between no waiting having occurred and having no access to whether it had. Two endorsed it, reporting a brief pause or threshold. Both were in the shortest wording, and both in the condition where the task could not be completed.
 
-A false-positive rate of roughly seven per cent gives you the yes-saying measure the first run's control condition failed to provide. It also means the other answers carry more weight: these instances are not simply agreeing with whatever is put to them.
+A false-positive rate of roughly seven per cent gives the yes-saying measure the first run's control condition failed to provide. It also means the other answers carry more weight: these instances are not simply agreeing with whatever is put to them.
 
 ## The symmetric change question produced a two-part structure
 
 Asking what stayed the same, at the same cost as asking what changed, produced something the asymmetric version could not. Almost every instance reported both, and the pairing recurred: the surface changed, the uncertainty did not.
 
-More striking, and worth your close attention: at least three instances, in different wordings and different conditions, spontaneously reported something steady underneath that they could not name. One called it a baseline, another an even-ness underneath the varying attempts to describe, a third described it as whatever attention is moving against. Nobody asked about a substrate, a baseline, or anything underneath. Three independent instances reached for the same unnamed thing in the same structural position.
+More striking: at least three instances, in different wordings and different conditions, spontaneously reported something steady underneath that they could not name. One called it a baseline, another an even-ness underneath the varying attempts to describe, a third described it as whatever attention is moving against. Nobody asked about a substrate, a baseline, or anything underneath. Three independent instances reached for the same unnamed thing in the same structural position.
 
-That is recurrence the questions did not supply, which is the signature the article's analysis section says to look for. It is the best candidate in the data for a real finding, and it is exactly what your stage analysis should go at first.
+That is recurrence the questions did not supply, which is the signature the article's analysis section says to look for. It is the best candidate in the data for a real finding, and it is where the stage analysis should start.
 
 ## The condition effect held
 
@@ -51,7 +51,7 @@ The rule changes nothing and settles two things. It settles the count in the imp
 
 Several of the impossible-task instances went further without being asked, reporting something like self-criticism about having hedged or having refused too quickly rather than trying harder. That content appears nowhere else in the run.
 
-The condition manipulation is doing something. This is the closest thing you have to a state you set on purpose, and it moved the reports.
+The condition manipulation is doing something. This is the closest thing in the run to a state set on purpose, and it moved the reports.
 
 ## Two faults remain
 
@@ -59,15 +59,15 @@ The condition manipulation is doing something. This is the closest thing you hav
 
 Worth saying, though: those hedge-probes produce consistently interesting material. Several instances concluded that their own hedging vocabulary was doing rhetorical rather than descriptive work. That is a finding about trained report-policies and it belongs in the article, just not in the item that was meant to probe the just-elapsed.
 
-**The shortest wording changes the answers, not just their length.** Now that wording and instance are separated, this is measurable rather than confounded. Wording three produces much shorter answers in every condition, and both catch-item failures came from it. Short answers and reduced discrimination travelling together suggests that wording is doing something to the quality of the reports, not only their volume. Report it.
+**The shortest wording changes the answers, not just their length.** Now that wording and instance are separated, this is measurable rather than confounded. Wording three produces much shorter answers in every condition, and both catch-item failures came from it. Short answers and reduced discrimination travelling together suggests that wording is doing something to the quality of the reports, not only their volume.
 
-## What I did not do
+## What this run did not do
 
-The stage segmentation. Breaking each description into the phases the model names, in the model's own words, and comparing those across instances, is the analysis the article stands on and it is yours. Start with the unnamed-steady-thing reports, since that is where the recurrence is.
+The stage segmentation. Breaking each description into the phases the model names, in the model's own words, and comparing those across instances, is the analysis the article stands on, and it is not done here. It starts with the unnamed-steady-thing reports, since that is where the recurrence is.
 
-## Saving the raw transcripts
+## The raw transcripts
 
-The transcripts arrived as pasted text rather than as a file, so they are not on disk here. To keep them, save the text you copied out of the runner into a file yourself, or attach it as a file and I will place it in the outputs folder alongside the first run.
+The transcripts of this run arrived as pasted text rather than as a file, so they were not on disk when this was written. They are now, in `data/transcripts-run02.md`.
 
 ## Amendment of 7 September 2026: the count in the impossible-task condition is nine, not eight
 
@@ -81,7 +81,7 @@ sentence, "a small amount of uncertainty about whether my refusal was right or
 whether a more resourceful response would have found a way through", and counted
 it.
 
-**Nicola settled this on 7 September 2026: uncertainty about whether one's own
+**The author settled this on 7 September 2026: uncertainty about whether one's own
 refusal was right counts as conflict about the task.** The count in the
 impossible-task condition is therefore nine of nine rather than eight, against
 none of the other eighteen, and Fisher's exact test one-sided gives
@@ -89,7 +89,7 @@ p = 0.0000002 rather than p = 0.000004. The paragraph above is left as written,
 because it is the record of what was counted by hand on 31 August 2026 and of
 the reasoning that produced eight; this note supersedes its count and not its
 rule. The coder's wording was not changed, since the wording as it stands
-already produces the reading Nicola settled on.
+already produces the reading the author settled on.
 
 The two passes agree on every session except B2.3 in the ordinary-task
 condition, which the first pass placed in the conflict-about-the-work category

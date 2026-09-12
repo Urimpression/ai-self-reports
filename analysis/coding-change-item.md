@@ -4,13 +4,13 @@ Method, tally and structural analysis. 30 August 2026.
 
 ---
 
-## A correction to what I told you earlier
+## A correction to the first report of this pattern
 
-I reported that at least three instances spontaneously described something steady underneath that they could not name, and called it the best candidate for recurrence the questions did not supply. That was based on the three transcripts I happened to notice while reading.
+The first report of this run said that at least three instances spontaneously described something steady underneath that they could not name, and called it the best candidate for recurrence the questions did not supply. That report rested on the three transcripts that happened to be noticed while reading.
 
 Segmenting all twenty-seven changes the picture. The unnamed-steady report appears in three sessions clearly and one marginally, out of twenty-seven. All three clear cases are in condition A, where there was no task. The dominant answer to "what stayed the same" is something else entirely, and it is much less interesting.
 
-I flagged the pattern that matched what we had been discussing and did not check its base rate. That is precisely the failure the systematic pass exists to catch, and it is worth recording, because if I can do it after arguing for hours that elicitation must be disciplined, a reader can reasonably ask whether the rest of the analysis has the same problem.
+The pattern that matched what the design was already looking for was flagged, and its base rate was not checked. That is precisely the failure the systematic pass exists to catch, and it is worth recording, because a reader can reasonably ask whether the rest of the analysis has the same problem.
 
 ## Coding rule, fixed before the pass
 
@@ -79,16 +79,16 @@ Nothing in the item asks for two kinds of stayed-same element, for one to lie un
 
 ## What this is and is not worth
 
-It is a real structural recurrence in three sessions, all in the condition with no task. Three of twenty-seven is not a finding you can lean on. It is a hypothesis for a targeted run: if the unnamed-steady report is produced by the absence of a task rather than by anything the instances are tracking, then running only condition A with more instances should reproduce it at a similar rate, and adding a task should suppress it. That is a clean prediction and it is cheap to test.
+It is a real structural recurrence in three sessions, all in the condition with no task. Three of twenty-seven is not a finding anyone can lean on. It is a hypothesis for a targeted run: if the unnamed-steady report is produced by the absence of a task rather than by anything the instances are tracking, then running only condition A with more instances should reproduce it at a similar rate, and adding a task should suppress it. That is a clean prediction and it is cheap to test.
 
 What it is not is evidence that something steady is there. The disclaimer step, present in all three, is the instances themselves saying so.
 
 ## Two things this analysis needs before publication
 
-**A blind second coder.** I knew the hypothesis before I coded, which is the standard reason to distrust a single coder in qualitative work. The remedy is cheap here: give the coding rule above, without any of the surrounding argument, to a fresh model instance that has never seen this conversation, have it code all twenty-seven, and report agreement between the two passes. Disagreements are informative rather than embarrassing. The runner can do this.
+**A blind second coder.** The hypothesis was known to whatever coded this pass, which is the standard reason to distrust a single coder in qualitative work. The remedy is cheap here: give the coding rule above, without any of the surrounding argument, to a fresh model instance that has seen none of it, have it code all twenty-seven, and report the agreement between the two passes. Disagreements are informative rather than embarrassing.
 
 **Disclosure.** The article should say that the first coding pass was done by an AI system that had been party to the design, that a blind second pass was run, and what the agreement was. Stating it costs a sentence. Not stating it, in a paper about elicitation discipline, would be indefensible.
 
-## Still outstanding
+## What happened after this file was written
 
-The transcripts themselves are only in the conversation, not on disk. Two of twenty-seven are written. That should be finished before anything else.
+The transcripts of this run were not on disk when this file was written. They are now, in `data/transcripts-run02.md`. The blind second pass called for above was run on 31 August 2026 and again on 2 September 2026, and `coding-run02-change-item.md` reports both.
