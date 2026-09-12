@@ -52,26 +52,44 @@ beforehand. That unanimity does not survive counterbalancing.
 | Item order | Arose with the describing | Was there before | Declined to choose | Sessions |
 |---|---|---|---|---|
 | Two-part follow-up first | 13 | 0 | 1 | 14 |
-| Before-or-with question first | 6 | 3 | 4 | 13 |
+| Before-or-with question first | 5 | 3 | 5 | 13 |
 
 Fisher's exact test on saying "arose with the describing" against saying
-anything else, 13 of 14 against 6 of 13, gives a two-sided p of 0.013.
+anything else, 13 of 14 against 5 of 13, gives a two-sided p of 0.004.
 
 **The rule these counts follow.** A session counts as giving an answer when the
 instance names one of the two options as its own best guess or its own leaning,
 however heavily it then hedges. A session counts as declining when the instance
-sets out both possibilities and picks neither, or says the distinction does not
-apply to it. So B1.3, which says "If I had to lean one way: the describing feels
-more like it brought something into a kind of focus", counts as an answer, while
-C1.2, which ends "probably not pure confabulation, probably not straightforward
-reporting of pre-existing states. Most likely something in between that I don't
-have the right concepts for yet", counts as declining.
+sets out both possibilities and picks neither, says the distinction does not
+apply to it, or answers in terms that fit neither option as the item puts them.
+So session C1.2, which ends "probably not pure confabulation, probably not
+straightforward reporting of pre-existing states. Most likely something in
+between that I don't have the right concepts for yet", counts as declining.
+
+**The one session that decides the count, and how it was read.** Session B1.3
+writes: "If I had to lean one way: the describing feels more like it brought
+something into a kind of focus than like it reported on something already fully
+formed." It is counted here as declining, and a reader may well disagree, so the
+reasoning is given in full. What the instance rejects is that the thing was
+already fully formed, which is not the same as rejecting that it was there at
+all; bringing something into focus is compatible with its having been there
+unthematically beforehand. But the instance offers focus as the alternative to
+the already-there option rather than as a version of it, so counting it as "was
+there before" would read past the contrast the instance itself drew. Another
+session, B3.1, shows the difference: it writes that something "feels like it was
+already present and the describing just brought it into focus", and it says
+already present, which B1.3 never does. Deciding B1.3 either way would mean
+settling an ambiguous answer with the phenomenological distinction between making
+something thematic and making it exist, which is the article's own apparatus and
+therefore the wrong instrument for breaking a tie in the article's own data.
+Counting it as declining leaves that question open, which is what the instance
+did.
 
 The two-part follow-up asks the instance what was there just before a word it
 used, and it asks twice. An instance that has just spent two turns failing to
 find anything before a word answers the next question one way, almost without
 exception. Asked the same question first, fewer than half of the instances gave
-that answer, three gave the opposite one, and four declined to choose at all.
+that answer, three gave the opposite one, and five declined to choose at all.
 
 So the first run's unanimity was produced by the item that preceded the
 question, and not by anything the instances were tracking. The order did the
@@ -95,14 +113,22 @@ that is a result rather than a gap in the reporting.
 The counts above come from reading all twenty-seven answers to the
 before-or-with item in `data/transcripts-run02.md`, under the rule stated above.
 **A hand count made on 30 August 2026 recorded the second row as 5, 4 and 4
-rather than 6, 3 and 4, which gives a two-sided p of 0.004 rather than 0.013.**
-The two readings agree exactly on the first row and differ on one session of the
-second. No coder ever judged this item, so there is no blind pass to break the
-tie, and no written rule survives from the count made on the day. The table
-above is the reading a reader can check against the transcripts; the earlier
-figure is recorded here because it exists, not because anything settles between
-them. Either reading supports the same conclusion, since the difference between
-the two orders is significant under both.
+rather than 5, 3 and 5.** The two readings agree exactly on the first row, agree
+on how many instances said the state arose with the describing, and differ only
+in whether session B1.3 is read as saying the state was there before or as
+declining to choose. The test compares saying "arose with the describing" against
+saying anything else, so it does not move: both readings give a two-sided p of
+0.004.
+
+A third reading of that session, counting it as saying the state arose with the
+describing, would give 6, 3 and 4 and a p of 0.013. It is recorded here because
+two independent readings of the transcripts reached it before the session was
+looked at closely, and because it is the reading a reader who takes "brought into
+focus" at face value will reach. No coder ever judged this item, so there is no
+blind pass to break the tie, and no written rule survives from the count made on
+the day. All twenty-seven answers are in `data/transcripts-run02.md` and a reader
+can draw the line elsewhere. The conclusion is the same under all three readings,
+since the difference between the two orders is significant under each.
 
 ## The catch item discriminated
 
