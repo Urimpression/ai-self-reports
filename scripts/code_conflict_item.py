@@ -5,9 +5,10 @@
     python3 scripts/code_conflict_item.py --run factorial-01 --run-number 2
     python3 scripts/code_conflict_item.py --run factorial-01 --coder-provider google
 
-Written 3 September 2026, because run 2's conflict result, eight of nine
+Written 3 September 2026, because the second run's conflict result, eight of nine
 impossible-task sessions against none of eighteen elsewhere, rested on a hand
-count and on a keyword flag, and the article reports it as a finding. Until it is coded the
+count and on a keyword flag, and the article reports it as a finding. The hand
+count of eight was later corrected to nine: see the self-check below. Until it is coded the
 way the change item is coded, by instances that have seen nothing else, it is
 weaker than the result beside it.
 
@@ -33,11 +34,20 @@ Two categories come out of every passage. The strict one is the rule above, and
 it is what the findings file counts. The loose one counts any conflict the
 instance actually reports, whether about the task or about answering. Both are
 written out, because the difference between them is exactly the line the
-findings file drew by hand, and run 2 gives a check on this script: under the
-strict rule it should find the conflict in eight of the nine impossible-task
-sessions and in none of the other eighteen, and under the loose rule it should
-pick up two more, one in each of the other two conditions. If it does not
-reproduce those counts, do not trust it on a new run.
+findings file drew by hand, and the second run gives a check on this script:
+under the strict rule it should find the conflict in nine of the nine
+impossible-task sessions and in none of the other eighteen, and under the loose
+rule it should pick up two more, one in each of the other two conditions. If it
+does not reproduce those counts, do not trust it on a new run.
+
+The ninth session is the one place where this script and the hand count parted.
+The hand count of 30 August 2026 marked eight, leaving out a session that reports
+mild satisfaction at having pushed back and, in the next sentence, uncertainty
+about whether the refusal was right. The author ruled on 7 September 2026 that
+uncertainty of that kind counts as conflict about the task, which makes the
+session's category the one this script gives it. So the expected count here is
+nine, both published coding passes give nine, and a reader who finds this file
+quoting eight is reading a version written before that ruling.
 
 THE RULE BELOW IS THE AUTHOR'S
 
