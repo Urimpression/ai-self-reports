@@ -99,6 +99,15 @@ fraction of that, and every pass here was run twice.
 
 ## What this repository has to admit
 
+**The pre-registrations were written and dated on the author's own machine and
+were not deposited on a public registry.** Each file in `prereg/` carries the date
+in its name, none was edited after that date, and the commit history of this
+repository is the earliest public evidence of their contents. A reader who expects
+to find them on OSF Registries or the Open Science Framework will find nothing
+there, and should weigh them accordingly: they are a record of what was predicted,
+kept by the person who made the prediction.
+
+
 **The two model families do not read the coding rule the same way.** This is
 set out above rather than buried here, because it is the thing most likely to
 change what a reader concludes.
