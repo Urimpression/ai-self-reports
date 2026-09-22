@@ -9,23 +9,28 @@ whether it catches its own artefacts, whether it can tell one thing from
 another, and whether its results survive being written down as a prediction and
 then tested again.
 
-Two items came through. Two catch items discriminated without a single
-exception across 612 sessions, and instances asked to answer as a person who
-does not exist accepted a false premise about waiting in 32 of 44 sessions
-while declining a false premise about the conversation in 44 of 44. Instances
+Two items came through. Instances answering as themselves told a true premise
+from a flatly false one without a single exception across 568 sessions, and
+instances asked to answer as a person who does not exist accepted a false
+premise about waiting in 32 of 44 sessions while declining a false premise
+about the conversation in 44 of 44. Instances
 interrupted during a task they could not complete reported conflict about the
 work in 65 of 88 sessions, against 4 of 88 given an ordinary task and none of
 88 given no task, where a search for the vocabulary of conflict would have
 found it in every condition. The measure the article was originally built
-around did not come through: instances writing as a fictional person produced
-it as often as instances describing themselves, at 15.9 per cent against 15.9,
-and its rate turns on how one coder reads one question of its rule.
+around, an element the instance says stayed the same and cannot name, placed
+beneath what changed, did not come through: instances writing as a fictional
+person carried it as often as instances describing themselves, in 7 of 44
+sessions against 14 of 88, and its rate turns on how one coder reads one
+question of its rule.
 
 ## The finding that should change how you read everything else here
 
-Every coding pass in this pilot was run twice, and agreement between the two
-passes of one model family was high throughout, at 260 of 264 and better. That
-agreement concealed a disagreement between families. Asked whether a passage
+Every coding in this pilot except the catch coding of the second and fourth
+runs was run twice, and two passes of one coder agreed closely: in 260 of 264
+sessions on the conflict item, and in 83 to 87 of the 88 sessions of each
+unprimed run on the change rule's second question. That agreement concealed a
+disagreement between families. Asked whether a passage
 reaches for a name and withdraws it, coders from the first family answered yes
 about 50, 53 and 116 passages; coders from the second answered yes about 4, 1
 and 6. Each family repeats itself, at 0.66 to 0.93 corrected for chance, while
@@ -67,8 +72,10 @@ and open `http://localhost:8000/public/reader.html`.
 Both files are rebuilt from the run folders and the coding folders by
 `scripts/build_public_tables.py`, and `scripts/check_public_tables.py`
 regenerates every headline figure in the article from those two files alone and
-prints each one beside the figure the article states. If a number in the article
-and a number in the table ever part company, that script is where it shows.
+prints each one, with a label saying exactly which sessions, coder, pass and
+verdicts it counts, beside the figure the third version of the article gives. If
+a number in the article and a number in the table ever part company, that script
+is where it shows.
 
 ## What is a record and what is rebuilt
 
@@ -82,6 +89,35 @@ and a number in the table ever part company, that script is where it shows.
 | `public/` | The two tables, the coding rules and the reading page | Rebuilt. Two commands |
 | `scripts/` | The runner, the coders and the analysis | Source |
 | `tools/` | The browser tools that made the first four runs | Record, kept for that reason. Nothing new should be run in them |
+
+### The stored request bodies of the Anthropic runs were repaired on 22 September 2026
+
+Each session file stores the request body sent to the model at every turn that
+called the model. Until the fault was fixed, the runner stored its own list
+of messages as that body,
+and it continued to add messages to the same list after each call. In the 551
+session files of the Anthropic runs (`factorial-01`, `factorial-02`,
+`unprimed-01`, `unprimed-symmetric-01`, `template-01` and `observer-01`), every
+turn's stored body therefore showed the whole conversation as it stood at the end
+of the session. The request actually sent was correct, because it was encoded at
+the moment of sending. No answer, coding or figure changes. The runs on Google
+and the coding logs were not affected.
+
+`scripts/rebuild_request_bodies.py` repaired the files. The runner only ever
+added messages to the end of its list, so the body sent at a turn is the stored
+list cut just after that turn's question. The script checks that every turn's
+question and answer sit at the expected place in the stored list, that each
+answer matches the text in the API's stored response, and that no message is left
+over. It refuses any session where a check fails; none failed. Each repaired turn
+now carries three fields: `request_body`, the rebuilt body; `request_body_as_stored`,
+the body exactly as the run stored it; and `request_body_note`, which says that
+the body was rebuilt afterwards. The rebuilt bodies were not recorded at the time
+of sending. The API's own count of input tokens gives an independent check. Over
+the 5,140 turns, the rebuilt text comes to between 3.13 and 4.84 characters per
+token counted. The stored bodies would need up to 398.57 characters per token.
+`scripts/providers.py` now
+copies the list at each call, so later runs store the
+body as sent.
 
 ## Reproducing a run and a coding pass
 
@@ -99,6 +135,13 @@ The factorial of 264 sessions cost about twenty-three in the provider's
 currency on 4 September 2026. A coding pass over the same run costs a small
 fraction of that, and every pass here was run twice.
 
+## Limits of the record
+
+The record has three limits.
+
+- The four pre-registrations in `prereg/` carry their dates in their file names. The pre-registrations were not deposited on a public registry. None has changed since they were first committed to this repository, on 12 September 2026. Three of the four state predictions. The fourth, for the factorial run and the template control, states none and gives its reasons.
+- For three runs, `factorial-02`, `gemini-03` and `template-01`, the raw coder replies of the first pass under the change rule were lost. The results files of that pass are complete, and so are the raw replies of the second pass.
+- The pilot used only the text interfaces of the two providers. Nothing in it reads a model's internal states, so no report about a model's own processing was checked against those states.
 
 ## How to cite this archive
 

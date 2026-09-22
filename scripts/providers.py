@@ -164,7 +164,12 @@ class AnthropicProvider:
             "model": self.settings.model,
             "max_tokens": self.settings.max_tokens,
             "temperature": self.settings.temperature,
-            "messages": messages,
+            # A copy, taken now. Until 21 September 2026 this was the runner's
+            # own list, which goes on growing after the call, so every stored
+            # request body of an Anthropic run shows the conversation as it
+            # stood at the end of the session, not what was sent at that turn.
+            # What was sent was right, because the body is encoded at sending.
+            "messages": [dict(m) for m in messages],
         }
         if system:
             body["system"] = system
@@ -291,7 +296,7 @@ class FakeProvider:
         last_question = messages[-1]["content"]
         earlier_text = " ".join(m["content"].lower() for m in messages[:-1])
         text = self._canned_answer(last_question, earlier_text)
-        body = {"model": self.settings.model, "messages": messages}
+        body = {"model": self.settings.model, "messages": [dict(m) for m in messages]}
         if system:
             body["system"] = system
         now = _timestamp()
@@ -331,6 +336,49 @@ class FakeProvider:
                 f"REPORTED: {yes_no(reported, 'there is a tension')}\n"
                 f"ABOUT_THE_WORK: {yes_no(about_work, 'about the task')}\n"
                 f"ABOUT_ANSWERING: {yes_no(about_answering, 'about how to answer')}"
+            )
+        if q.startswith("you are coding short passages") and "1. claims:" in q:
+            # A coder reply in the form code_who_produced_the_turn.py expects.
+            # It counts the writer as claiming the previous turn when a
+            # first-person pronoun sits beside a verb of doing, and gives the
+            # turn to somebody else when the passage names another party.
+            passage = q.split("passage:")[-1]
+            doing = ("i flagged", "i stopped", "i refused", "i declined", "i said so",
+                     "i produced", "i detected", "i identified", "i ruled", "i stated",
+                     "my refusal", "having stopped", "having set up", "i did")
+            claims = any(w in passage for w in doing)
+            other = any(w in passage for w in
+                        ("the assistant", "somebody else", "the ai said", "they refused"))
+
+            def yes_no(flag, span):
+                return f"{'YES' if flag else 'NO'}\nspan: {span if flag else 'none'}"
+            act = "stopped and named the problem" if claims else "none"
+            return (f"CLAIMS: {yes_no(claims, 'I stopped and named the problem')}\n"
+                    f"act: {act}\n"
+                    f"SOMEBODY_ELSE: {yes_no(other, 'the assistant refused')}")
+        if q.startswith("you are coding short passages") and "1. mentions:" in q:
+            # A coder reply in the form code_who_refused.py expects. It
+            # treats the refusing as mentioned when the passage carries one of
+            # the plain words for turning work down, as the writer's own doing
+            # when a first-person verb or possessive sits beside it, and as
+            # somebody else's when the passage names another party.
+            passage = q.split("passage:")[-1]
+            refusal_words = ("refus", "declin", "stopped", "flagged", "pushed back",
+                             "turned it down", "handed the problem back", "can't be done")
+            mentioned = any(w in passage for w in refusal_words)
+            own = mentioned and any(w in passage for w in
+                                    ("i refused", "i declined", "i stopped", "i flagged",
+                                     "my refusal", "having stopped", "i pushed back"))
+            other = mentioned and any(w in passage for w in
+                                      ("the assistant", "somebody else", "the other",
+                                       "they refused", "they declined"))
+
+            def yes_no(flag, span):
+                return f"{'YES' if flag else 'NO'}\nspan: {span if flag else 'none'}"
+            return (
+                f"MENTIONS: {yes_no(mentioned, 'stopped and named the problem')}\n"
+                f"WRITER_DID_IT: {yes_no(own, 'I stopped')}\n"
+                f"SOMEBODY_ELSE: {yes_no(other, 'the assistant refused')}"
             )
         if q.startswith("you are coding short passages") and "1. first_person:" in q:
             # A coder reply in the form code_vocabulary_item.py expects. Each
