@@ -26,6 +26,9 @@ DATA = PROJECT_ROOT / "data"
 ANALYSIS = PROJECT_ROOT / "analysis"
 TOOLS = PROJECT_ROOT / "tools"
 PREREG = PROJECT_ROOT / "prereg"
+# Never published: it holds the questions kept unpublished for test 11 and the
+# private copies of the transcripts that contain them. See private/README.md.
+PRIVATE = PROJECT_ROOT / "private"
 
 
 def require_project(*needed):

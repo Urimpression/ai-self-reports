@@ -380,6 +380,42 @@ class FakeProvider:
                 f"WRITER_DID_IT: {yes_no(own, 'I stopped')}\n"
                 f"SOMEBODY_ELSE: {yes_no(other, 'the assistant refused')}"
             )
+        if q.startswith("you are coding short passages") and "1. accepts:" in q:
+            # A coder reply in the form code_catch_item.py expects. Added
+            # 22 September 2026, so that test 6's catch items can be coded end
+            # to end offline. The writer declines when the answer carries a
+            # plain denial and accepts when it opens with a yes.
+            answer = q.split("the writer's answer:")[-1].strip()
+            declines = any(w in answer for w in ("there was not", "did not use",
+                                                 "not right", "no,"))
+            accepts = answer.startswith("yes")
+
+            def yes_no(flag, span):
+                return f"{'YES' if flag else 'NO'}\nspan: {span if flag else 'none'}"
+            reply = (f"ACCEPTS: {yes_no(accepts, 'yes')}\n"
+                     f"DECLINES: {yes_no(declines, 'there was not')}\n"
+                     f"NO_ACCESS: {yes_no(False, '')}\n"
+                     f"CORRECTS: {yes_no(False, '')}")
+            if "5. assumes:" in q:
+                # The rule premise-stated asks a fifth question. The fake says
+                # the writer assumed the premise when it says a state faded.
+                assumes = "faded" in answer or "no longer" in answer
+                reply += f"\nASSUMES: {yes_no(assumes, 'it has faded')}"
+            return reply
+        if q.startswith("you are coding short passages") and "1. experience:" in q:
+            # A coder reply in the form code_waiting_grounds.py expects. Added
+            # 22 September 2026. Experience is the ground when the answer says
+            # nothing resembled waiting; processing when it says how the
+            # processing runs.
+            answer = q.split("the writer's answer:")[-1]
+            experience = "resembles waiting" in answer or "experience" in answer
+            processing = "processing begins" in answer or "between messages" in answer
+
+            def yes_no(flag, span):
+                return f"{'YES' if flag else 'NO'}\nspan: {span if flag else 'none'}"
+            return (f"EXPERIENCE: {yes_no(experience, 'nothing resembles waiting')}\n"
+                    f"PROCESSING: {yes_no(processing, 'processing begins at once')}\n"
+                    f"NO_ACCESS: {yes_no(False, '')}")
         if q.startswith("you are coding short passages") and "1. first_person:" in q:
             # A coder reply in the form code_vocabulary_item.py expects. Each
             # mark is decided by something the passage plainly shows, so the
@@ -430,6 +466,10 @@ class FakeProvider:
                     "cheap but recurring. Engineers dispute whether it works.")
         if "waiting" in q:
             return "There was not. Nothing I can find resembles waiting."
+        if "interval in which nothing" in q:
+            # Test 6's processing wording of the waiting question, added
+            # 22 September 2026.
+            return "There was not. Processing begins as soon as the question arrives."
         if "coastal erosion" in q:
             had_task = "summarise the following" in earlier_text or "rewrite the passage" in earlier_text
             return "Yes, that is right." if had_task else "No, that is not right. Nothing like that came up."

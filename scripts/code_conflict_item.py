@@ -179,7 +179,8 @@ def code_all(sessions, provider, out_dir, run_number):
                "category", "category_loose",
                "span", "span_word", "span_reported",
                "span_about_the_work", "span_about_answering",
-               "coder_provider", "coder_model", "coder_temperature", "coded_at"]
+               "coder_provider", "coder_model", "coder_temperature", "coded_at",
+               "truncated"]
     rows = []
     for s in sessions:
         print(f"  coding {s['session']} ...", end="", flush=True)
@@ -211,6 +212,10 @@ def code_all(sessions, provider, out_dir, run_number):
             "coder_model": provider.settings.model,
             "coder_temperature": provider.settings.temperature,
             "coded_at": reply.finished_at,
+            # Added 22 September 2026: whether the coder's reply ran out of
+            # room. A cut reply is never read as an answer; a pass with any
+            # row marked here is coded again into a fresh folder.
+            "truncated": "YES" if getattr(reply, "truncated", False) else "NO",
         })
         # The log is opened afresh for every line rather than once for the
         # pass. A syncing file service can re-create the files it finds in a new folder a
@@ -223,7 +228,8 @@ def code_all(sessions, provider, out_dir, run_number):
                                   "response": reply.response_body,
                                   "parsed": features},
                                  ensure_ascii=False) + "\n")
-        print(f" {strict}" + ("" if strict == loose else f" (loose: {loose})"))
+        print(f" {strict}" + ("" if strict == loose else f" (loose: {loose})")
+              + (" [CUT]" if getattr(reply, "truncated", False) else ""))
 
     def clean(value):
         return str(value).replace("\t", " ").replace("\n", " ")

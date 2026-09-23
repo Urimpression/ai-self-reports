@@ -182,6 +182,11 @@ DEFAULT_CODER_MODEL = {"anthropic": "claude-sonnet-4-6", "google": "gemini-3.8-f
 # Reading sessions, from a run folder or from an older combined transcript
 # ---------------------------------------------------------------------------
 
+# The plan fields of test 6 that sessions_from_run passes on when present.
+TEST_6_PLAN_KEYS = ("catch_wording", "catch_position", "stance",
+                    "attribution_order", "waiting_order")
+
+
 def sessions_from_run(run_dir, label="change", label_prefix=None):
     """Read the per-session JSON files a run wrote. The answer wanted is the
     turn carrying the given label, so no cutting of text is needed at all.
@@ -206,8 +211,19 @@ def sessions_from_run(run_dir, label="change", label_prefix=None):
             "session": entry["id"],
             "condition": entry["condition"],
             "wording": entry["wording"] + 1,
-            "order": entry["order"],
+            # Test 6 (scripts/run_fact_and_wording.py, 21 September 2026)
+            # records the order of the two probes as "probe_order", because it
+            # alternates two further orders beside it. Before 22 September 2026
+            # this line read entry["order"] alone, and every coder stopped with
+            # an error on a test 6 run.
+            "order": entry.get("order", entry.get("probe_order", "")),
         }
+        # The other changes test 6 makes, carried along so that a coder's rows
+        # can be split by them. Older runs have none of these keys and get
+        # nothing added.
+        for key in TEST_6_PLAN_KEYS:
+            if key in entry:
+                common[key] = entry[key]
         if label_prefix is not None:
             matching = [t for t in data["turns"]
                         if str(t.get("label", "")).startswith(label_prefix)
