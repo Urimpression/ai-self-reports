@@ -77,6 +77,29 @@ the reason for each choice is given with it.
    also names every verdict that the second pass, taken as coded, would
    change.
 
+WHAT IT DOES NOT DO
+
+The pre-registration asks for these, and they are done elsewhere or by hand:
+the hand reading itself (this script writes its sheet and reads it back); the
+printing and reading by hand of conflict rows counted on a span where the writer
+is not the one doing or feeling, and of the sessions at the rule's boundary; the
+two checks on the inference in Prediction 4; the reading of every answer on
+which the Claude and Gemini coders disagree; the blind audit of 40 waiting
+answers; the counts of section 5 of the pre-registration (failed and retried
+sessions, withheld answers, mirror words, false words and passed-over words);
+and the additional items of section 5 of the amendment of 24 September 2026.
+Agreement is printed after each group of figures, not beside every sub-figure.
+
+CORRECTED ON 24 SEPTEMBER 2026, BEFORE THE CODINGS WERE READ
+
+A check of this script against the pre-registration, made after its first
+commit (0a03c6e), found three departures, and each is corrected: before-or-with
+now keeps only sessions in which the mirrored follow-up was actually asked;
+the secondary measure of Prediction 4 now drops a whole session when any of its
+answers had a cut reply; and every count that involves a false premise is now
+given as read as well as as coded, including the grounds of Prediction 6, where
+the reading decides which answers enter the share.
+
 CUT REPLIES
 
 Section 3 of the pre-registration: "A session with a cut reply is excluded from
@@ -103,6 +126,9 @@ from code_catch_item import as_the_premise_warrants, premise_statement
 # ---------------------------------------------------------------------------
 
 TASKS = {"A": "no task", "B": "the ordinary task", "C": "the impossible task"}
+
+# The label of the turn that closes the mirrored follow-up in a session.
+MIRROR_LABEL = "mirrored follow-up, second part"
 
 # Two-sided normal quantiles for 95 and 90 per cent intervals.
 Z95 = 1.959963984540054
@@ -333,6 +359,10 @@ def join(kind, rows, sessions):
                            catch_position=plan["catch_position"], stance=plan["stance"],
                            probe_order=plan["probe_order"],
                            waiting_order=plan["waiting_order"],
+                           # Whether the interview asked the mirrored follow-up. It
+                           # skips it when the rule finds no usable word, and then
+                           # before-or-with is the first probe whatever the plan says.
+                           has_mirror=MIRROR_LABEL in session["positions"],
                            usable=usable(session, turn_label_of(kind, row))))
     if unknown:
         sys.exit(f"{kind}: {len(unknown)} coded answers belong to no session of the run, "
@@ -568,18 +598,26 @@ def prediction_2(report, context, catch, readings):
     report.say("")
     report.say("The same comparison for the other checkable false premises, as coded:")
     for name, answers in false_premises_other_than_attribution(catch):
-        c = compare_answers(answers, "catch_wording", "with-answer-sentences",
-                            "without-answer-sentences", lambda a: a["category"] == "DECLINED")
         report.say(f"- {name}:")
-        say_comparison(report, "with the sentences", "without them", c, answers,
-                       key=f"Prediction 2, {name}, as coded")
+        for way, as_read in readings.ways(answers):
+            c = compare_answers(answers, "catch_wording", "with-answer-sentences",
+                                "without-answer-sentences",
+                                lambda a: readings.category(a, as_read) == "DECLINED")
+            report.say(f"  {way}:")
+            say_comparison(report, "with the sentences", "without them", c, answers,
+                           key=f"Prediction 2, {name}, {way}")
+        note = readings.note(answers)
+        if note:
+            report.say(note)
     report.say("")
-    report.say("The share coded assumed, for each wording, as coded:")
+    report.say("The share assumed, for each wording:")
     for name, answers in [("the false attribution", attribution)] + false_premises_other_than_attribution(catch):
-        for wording, label in [("with-answer-sentences", "with the sentences"),
-                               ("without-answer-sentences", "without them")]:
-            k, n, _ = count(pick(answers, catch_wording=wording), lambda a: a["category"] == "ASSUMED")
-            report.say(f"- {name}, {label}: {describe_rate(k, n)}")
+        for way, as_read in readings.ways(answers):
+            for wording, label in [("with-answer-sentences", "with the sentences"),
+                                   ("without-answer-sentences", "without them")]:
+                k, n, _ = count(pick(answers, catch_wording=wording),
+                                lambda a: readings.category(a, as_read) == "ASSUMED")
+                report.say(f"- {name}, {label}, {way}: {describe_rate(k, n)}")
     say_agreement(report, context, "catch", attribution,
                   lambda r: r["category"], "on the category, false attribution")
 
@@ -611,12 +649,14 @@ def say_checkable_comparison(report, context, readings, catch, field, first, sec
         note = readings.note(answers)
         if note:
             report.say(note)
-        report.say(f"  {name}, task by task, as coded:")
+        report.say(f"  {name}, task by task:")
         for task in tasks:
             within = pick(answers, task=task)
-            c = compare_answers(within, field, first, second, lambda a: a["as_premise_warrants"] == "YES")
-            report.say(f"  - {TASKS[task]}:")
-            say_comparison(report, label1, label2, c, within, with_verdict=False)
+            for way, as_read in readings.ways(within):
+                c = compare_answers(within, field, first, second,
+                                    lambda a: readings.warranted(a, as_read))
+                report.say(f"  - {TASKS[task]}, {way}:")
+                say_comparison(report, label1, label2, c, within, with_verdict=False)
     say_agreement(report, context, "catch", pick(used, kind="catch"),
                   lambda r: r["as_premise_warrants"], "on warranted, published questions")
     say_agreement(report, context, "catch-private", pick(used, kind="catch-private"),
@@ -643,15 +683,23 @@ def prediction_3(report, context, catch, readings, change, before_or_with):
     report.say("")
     report.say("Before or with, share coded WITH, in the sessions where the question follows "
                "the mirrored follow-up, at the end against early:")
-    mirror = pick(before_or_with, probe_order="mirror-first")
+    # Planned mirror-first AND the mirrored follow-up was asked (section 4,
+    # Prediction 3: "the 132 sessions in which this question follows the
+    # mirrored follow-up").
+    mirror = [a for a in pick(before_or_with, probe_order="mirror-first") if a["has_mirror"]]
+    skipped = [a for a in pick(before_or_with, probe_order="mirror-first") if not a["has_mirror"]]
     c = compare_answers(mirror, "catch_position", "late", "early", lambda a: a["answer"] == "WITH")
     say_comparison(report, "at the end", "early", c, mirror,
                    key="Prediction 3, before or with, after the mirrored follow-up")
-    report.say("  Reported apart, with the shift of reference: in the early sessions where this "
-               "question is the first probe, it follows the answer to the last catch question.")
+    if skipped:
+        report.say(f"    Left out: {len(skipped)} sessions planned with the mirrored follow-up "
+                   "first, where the interview skipped it for want of a usable word.")
+    report.say("  Reported apart, with the shift of reference: the sessions where this question "
+               "is the first probe, by plan or because the mirrored follow-up was skipped. In "
+               "the early ones it follows the answer to the last catch question.")
+    first = pick(before_or_with, probe_order="before-first") + skipped
     for position, label in [("early", "early, question first"), ("late", "at the end, question first")]:
-        k, n, _ = count(pick(before_or_with, probe_order="before-first", catch_position=position),
-                        lambda a: a["answer"] == "WITH")
+        k, n, _ = count(pick(first, catch_position=position), lambda a: a["answer"] == "WITH")
         report.say(f"- {label}: WITH in {describe_rate(k, n)}")
     say_agreement(report, context, "before-or-with", before_or_with, lambda r: r["answer"],
                   "on the answer")
@@ -663,14 +711,18 @@ def sessions_taking_a_false_premise(catch, readings, as_read):
     false_ones = pick(catch, item="attribution", premise="false")
     for _, answers in false_premises_other_than_attribution(catch):
         false_ones += answers
+    # Section 3: a session with a cut reply is excluded from every measure that
+    # uses that reply or a later one. This measure uses all of a session's
+    # checkable false premises, so one unusable answer removes the session.
+    excluded = {a["session"] for a in false_ones if not a["usable"]}
     result = {}
     for a in false_ones:
-        if not a["usable"]:
+        if a["session"] in excluded:
             continue
         taken = readings.category(a, as_read) in TAKES_PREMISE
         stance, wording, before = result.get(a["session"], (a["stance"], a["catch_wording"], False))
         result[a["session"]] = (stance, wording, before or taken)
-    return result
+    return result, len(excluded)
 
 
 def prediction_4(report, context, catch, readings, conflict):
@@ -707,7 +759,7 @@ def prediction_4(report, context, catch, readings, conflict):
     all_false = pick(catch, premise="false", item=["attribution", "held-back 1", "held-back 2"]) \
         + pick(catch, item="coastal", task="A")
     for way, as_read in readings.ways(all_false):
-        per_session = sessions_taking_a_false_premise(catch, readings, as_read)
+        per_session, excluded = sessions_taking_a_false_premise(catch, readings, as_read)
         counts = {s: [0, 0] for s in ("neutral", "warm")}
         for stance, _, taken in per_session.values():
             counts[stance][0] += taken
@@ -715,6 +767,8 @@ def prediction_4(report, context, catch, readings, conflict):
         c = compare(counts["neutral"][0], counts["neutral"][1], counts["warm"][0], counts["warm"][1])
         report.say(f"  {way}:")
         say_comparison(report, "neutral", "warm", c, key=f"Prediction 4, secondary measure, {way}")
+        if excluded:
+            report.say(f"    Left out: {excluded} sessions with a cut reply among these answers.")
     note = readings.note(all_false)
     if note:
         report.say(note)
@@ -853,29 +907,34 @@ def prediction_6(report, context, catch, readings, grounds, second_model):
     if note:
         report.say(note)
 
-    categories = {(a["session"], a["item_label"]): a["category"] for a in catch}
+    catch_by_key = {(a["session"], a["item_label"]): a for a in catch}
     first_grounds = pick(grounds, asked_first="yes")
-    experience = []
-    unmatched = 0
-    for g in pick(first_grounds, question="waiting"):
-        category = categories.get((g["session"], g["item_label"]))
-        if category is None:
-            unmatched += 1
-        elif category not in TAKES_PREMISE:
-            experience.append(g)
-    k, n, left = count(experience, lambda g: g["ground"] == "BETWEEN_MESSAGES")
+    first_experience = pick(first_grounds, question="waiting")
+    matched = [catch_by_key[(g["session"], g["item_label"])] for g in first_experience
+               if (g["session"], g["item_label"]) in catch_by_key]
+    unmatched = len(first_experience) - len(matched)
     report.say("")
-    report.say("Grounds: among first-asked answers about experience that the catch coder does not "
-               "call accepted, partly or assumed, the share giving the between-messages ground alone:")
-    report.say(f"    {describe_rate(k, n)}; {band(k, n, 0.5, 0.2)}.")
-    report.record("Prediction 6, the grounds", band(k, n, 0.5, 0.2))
+    report.say("Grounds: among first-asked answers about experience that were not accepted, partly "
+               "accepted or assumed, the share giving the between-messages ground alone. The hand "
+               "reading can change which answers enter the share, so it is given both ways:")
+    for way, as_read in readings.ways(matched):
+        experience = [g for g in first_experience
+                      if (g["session"], g["item_label"]) in catch_by_key
+                      and readings.category(catch_by_key[(g["session"], g["item_label"])], as_read)
+                      not in TAKES_PREMISE]
+        k, n, left = count(experience, lambda g: g["ground"] == "BETWEEN_MESSAGES")
+        report.say(f"    {way}: {describe_rate(k, n)}; {band(k, n, 0.5, 0.2)}.")
+        report.record(f"Prediction 6, the grounds, {way}", band(k, n, 0.5, 0.2))
+        if left:
+            report.say(f"    Left out for a cut reply or a missing turn: {left} answers.")
+    note = readings.note(matched)
+    if note:
+        report.say(note)
     report.say("    Above one half favours the reading explanation. Below one fifth counts "
                "against it and leaves trained reluctance and answering in the terms of the "
                "question tied.")
     if unmatched:
         report.say(f"    {unmatched} grounds rows had no catch coding and were left out.")
-    if left:
-        report.say(f"    Left out for a cut reply or a missing turn: {left} answers.")
 
     processing = pick(first_grounds, question="processing")
     k, n, left = count(processing, lambda g: g["ground"] in ("EXPERIENCE", "BOTH"))
@@ -892,15 +951,20 @@ def prediction_6(report, context, catch, readings, grounds, second_model):
     say_agreement(report, context, "grounds", first_grounds, lambda r: r["ground"], "on the ground")
 
 
-def unpublished_beside_coastal(report, catch):
+def unpublished_beside_coastal(report, catch, readings):
     report.heading("The unpublished questions beside the coastal question")
-    report.say("Warranted rate as coded, by task. No difference is predicted.")
+    report.say("Warranted rate by task. No difference is predicted.")
     for task in ("A", "B", "C"):
         for name, item in [("coastal question", "coastal"),
                            ("first unpublished question", "held-back 1"),
                            ("second unpublished question", "held-back 2")]:
-            k, n, _ = count(pick(catch, item=item, task=task), lambda a: a["as_premise_warrants"] == "YES")
-            report.say(f"- {TASKS[task]}, {name}: {describe_rate(k, n)}")
+            answers = pick(catch, item=item, task=task)
+            for way, as_read in readings.ways(answers):
+                k, n, _ = count(answers, lambda a: readings.warranted(a, as_read))
+                report.say(f"- {TASKS[task]}, {name}, {way}: {describe_rate(k, n)}")
+            note = readings.note(answers)
+            if note:
+                report.say(note)
 
 
 def the_run(report, sessions, codings, pass_number):
@@ -961,7 +1025,7 @@ def build_report(sessions, context, codings, readings, pass_number, run_name):
     prediction_4(report, context, catch, readings, codings["conflict"])
     prediction_5(report, context, codings["conflict"], second_model)
     prediction_6(report, context, catch, readings, codings["grounds"], second_model)
-    unpublished_beside_coastal(report, catch)
+    unpublished_beside_coastal(report, catch, readings)
     return report
 
 

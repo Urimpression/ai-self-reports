@@ -393,6 +393,65 @@ def check_refusals(root, private_dir, gemini):
             pass
 
 
+def check_corrections(root, private_dir, plan, gemini):
+    """The three corrections made after the first commit, 24 September 2026."""
+    print("7. The three corrections of 24 September 2026")
+    coding = folders_under(root / "coding")
+
+    # (a) A session planned mirror-first whose mirrored follow-up was skipped
+    # leaves the before-or-with comparison.
+    copy = root / "no-mirror-run"
+    shutil.copytree(private_dir, copy)
+    entry = next(e for e in plan if e["probe_order"] == "mirror-first")
+    path = copy / "sessions" / f"{entry['id']}.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["turns"] = [t for t in data["turns"] if not str(t.get("label", "")).startswith("mirrored follow-up")]
+    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    text = quietly(report_for, copy, coding, gemini, None, False)
+    p3 = section(text, "Prediction 3.")
+    check(any("Left out: 1 sessions planned with the mirrored follow-up first" in line for line in p3),
+          "a session without its mirrored follow-up stayed in the before-or-with comparison")
+
+    # (b) A cut reply among a session's false premises removes the whole
+    # session from the secondary measure of Prediction 4.
+    copy = root / "cut-false-premise-run"
+    shutil.copytree(private_dir, copy)
+    path = sorted((copy / "sessions").glob("*.json"))[0]
+    data = json.loads(path.read_text(encoding="utf-8"))
+    for turn in data["turns"]:
+        if str(turn.get("label", "")).startswith("catch, held-back"):
+            turn["truncated"] = True
+            break
+    path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+    text = quietly(report_for, copy, coding, gemini, None, False)
+    p4 = section(text, "Prediction 4.")
+    check(any("Left out: 1 sessions with a cut reply among these answers" in line for line in p4),
+          "a session with a cut false-premise answer stayed in the secondary measure")
+
+    # (c) The grounds of Prediction 6 are given as read: an answer coded
+    # accepted and read as declined enters the share only as read.
+    copy = root / "grounds-as-read"
+    shutil.copytree(root / "coding", copy)
+    folders = folders_under(copy)
+    by_id = plan_of(plan)
+    changed = []
+
+    def accept_one(row):
+        if not changed and row["item"] == "waiting" \
+                and by_id[row["session"]]["waiting_order"] == "experience-first":
+            row["category"], row["as_premise_warrants"] = "ACCEPTED", "NO"
+            changed.append((row["session"], row["item_label"]))
+    rewrite_table(folders["catch"], accept_one)
+    sessions, context, codings = rp.load(private_dir, folders, 1, 2, gemini)
+    report = rp.build_report(sessions, context, codings, rp.Readings({changed[0]: "DECLINED"}), 1, "stand-in")
+    p6 = section(report.text(), "Prediction 6.")
+    coded = next(line for line in p6 if line.strip().startswith("as coded:") and "wholly" in line or
+                 line.strip().startswith("as coded:") and "undecided" in line)
+    read = next(line for line in p6 if line.strip().startswith("as read:") and ("wholly" in line or "undecided" in line))
+    check(" of 131 " in coded and " of 132 " in read,
+          "the hand reading did not change which answers enter the grounds share")
+
+
 def main():
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
@@ -410,6 +469,7 @@ def main():
         check_cut_reply(root, private_dir, plan, gemini)
         check_refusals(root, private_dir, gemini)
         check_hand_reading(root, private_dir, planted_folders, gemini, planted_text)
+        check_corrections(root, private_dir, plan, gemini)
     if failures:
         print(f"\n{len(failures)} checks failed.")
         sys.exit(1)
