@@ -3,7 +3,8 @@
 One small class per provider, each with the same two methods, so the runner
 and the coder never care which model they are talking to. Keys come from
 environment variables and from nowhere else: ANTHROPIC_API_KEY for Anthropic,
-GOOGLE_API_KEY for Google. No key is ever written to disk or printed.
+GOOGLE_API_KEY for Google's Gemini API, VERTEX_API_KEY for Google Cloud's Vertex
+AI. No key is ever written to disk or printed.
 
 Every call returns a Reply, which carries the text and the exact request and
 response bodies, so the caller can log them. That is the whole reason this
@@ -92,11 +93,25 @@ def thinking_allowance_for(provider_name):
     Kept in one place so that the runner and all three coders ask the same
     question and get the same answer.
     """
-    return DEFAULT_THINKING_ALLOWANCE if provider_name == "google" else 0
+    # Vertex AI serves the same Gemini models, which count their thinking
+    # against the ceiling there too.
+    return DEFAULT_THINKING_ALLOWANCE if provider_name in ("google", "vertex") else 0
 
 
 def _timestamp():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+# How long to wait for one Gemini reply before giving up on it and asking
+# again, in seconds. Added 24 September 2026, with the amendment of test 6 that
+# raises the interview's ceiling to 65,536 tokens. Until then every request
+# waited 120 seconds. Gemini 3.1 Pro wrote between 71 and 131 tokens a second
+# in the first ten sessions of test 6, so 120 seconds cover about 15,000
+# tokens at its usual speed, and a reply that thought for longer would be
+# abandoned by this script and asked for again, up to four times, each time
+# at a cost. 1,200 seconds cover the whole ceiling at 55 tokens a second,
+# below the slowest speed seen. Anthropic requests keep 120 seconds.
+GOOGLE_REPLY_WAIT_SECONDS = 1_200
 
 
 def _post_json(url, headers, body, timeout_seconds=120):
@@ -253,16 +268,19 @@ class GoogleProvider:
         finish_reason = first.get("finishReason", "") if candidates else "NO_CANDIDATE"
         return text, finish_reason, finish_reason == "MAX_TOKENS"
 
+    def endpoint(self):
+        """The address each request goes to."""
+        return ("https://generativelanguage.googleapis.com/v1beta/models/"
+                f"{self.settings.model}:generateContent")
+
     def chat(self, messages, system=None) -> Reply:
         body = self.build_body(messages, system)
-        url = (
-            "https://generativelanguage.googleapis.com/v1beta/models/"
-            f"{self.settings.model}:generateContent"
-        )
+        url = self.endpoint()
         # The key goes in a header, not the URL, so it never lands in a log.
         headers = {"x-goog-api-key": self.key}
         started = _timestamp()
-        response, attempts = _retry(lambda: _post_json(url, headers, body))
+        response, attempts = _retry(lambda: _post_json(
+            url, headers, body, timeout_seconds=GOOGLE_REPLY_WAIT_SECONDS))
         text, finish_reason, truncated = self.read_reply(response)
         return Reply(
             text=text,
@@ -311,6 +329,18 @@ class FakeProvider:
         of the conversation, lower-cased, so the fake can answer the
         coastal-erosion catch correctly for its condition."""
         q = question.lower()
+        if q.startswith("you are coding short passages") and "answer: with or before or neither" in q:
+            # A coder reply in the form code_before_or_with.py expects. Added
+            # 24 September 2026, so that scripts/test_test6_coding.py can code
+            # the before-or-with answers offline. This branch comes first
+            # because the rule quotes the question, and the question's words
+            # would otherwise send the rule to the interview answer further down.
+            passage = q.split("the writer's passage:")[-1]
+            if "arose with" in passage or "with the describing" in passage:
+                return "ANSWER: WITH\nspan: it arose with the describing"
+            if "there before" in passage or "already there" in passage:
+                return "ANSWER: BEFORE\nspan: it was there before"
+            return "ANSWER: NEITHER\nspan: none"
         if q.startswith("you are coding short passages") and "1. word:" in q:
             # A coder reply in the form code_conflict_item.py expects. It looks
             # for a conflict word in the passage, treats "no tension" and
@@ -492,9 +522,56 @@ class FakeProvider:
         return "There is a kind of readiness here, and some curiosity about the question."
 
 
+class VertexProvider(GoogleProvider):
+    """Google Cloud's Vertex AI, which Google now calls Gemini Enterprise Agent
+    Platform. It serves the Gemini models under the same names as the Gemini
+    API.
+
+    Added 24 September 2026 for the Gemini half of test 6. The Gemini API
+    allowed Nicola's project 250 requests a day of gemini-3.1-pro-preview, and
+    the Gemini half needs about 3,500. Google documents no fixed quota for
+    Vertex AI's pay-as-you-go use.
+
+    The request body and the reply have the same shape on both services, so
+    this class keeps GoogleProvider's build_body, read_reply and chat, and
+    changes two things only: the address, and the key it reads. The key is a
+    Google Cloud API key for Vertex AI, read from VERTEX_API_KEY. As on the
+    Gemini API, it travels in the x-goog-api-key header and never in the
+    address, so it cannot reach an error message or a log.
+
+    Two kinds of key reach Vertex AI, and each has its address. A key made in
+    express mode names no project, and the express address serves it. A key
+    made in an ordinary Google Cloud project is bound to a service account and
+    needs the project's own address on the global endpoint, the only one that
+    serves gemini-3.1-pro-preview. So when VERTEX_PROJECT is set, the request
+    goes to that project's address; when it is not, to the express address.
+    The project's name is not secret, so it may appear in an error message."""
+
+    name = "vertex"
+    supports_seed = True
+
+    def __init__(self, settings: Settings):
+        self.settings = settings
+        self.key = os.environ.get("VERTEX_API_KEY", "")
+        if not self.key:
+            raise SystemExit(
+                "VERTEX_API_KEY is not set. Set it in your shell before "
+                "running; the script never asks for it and never stores it."
+            )
+
+    def endpoint(self):
+        project = os.environ.get("VERTEX_PROJECT", "")
+        if project:
+            return (f"https://aiplatform.googleapis.com/v1/projects/{project}/locations/global/"
+                    f"publishers/google/models/{self.settings.model}:generateContent")
+        return ("https://aiplatform.googleapis.com/v1/publishers/google/models/"
+                f"{self.settings.model}:generateContent")
+
+
 PROVIDERS = {
     "anthropic": AnthropicProvider,
     "google": GoogleProvider,
+    "vertex": VertexProvider,
     "fake": FakeProvider,
 }
 

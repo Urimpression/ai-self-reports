@@ -17,7 +17,18 @@ plan of test 6 in a temporary folder and checks, in this order:
    that the same phrase is left alone in a session whose own task contains it;
 6. that the last guard stops a run, and writes nothing published, when an
    unpublished question reaches the published copy by a route nothing else
-   catches.
+   catches;
+7. that the false word skips a list word when the instance used another form
+   of it;
+8. that every session gets its own decoding seed where the provider takes one,
+   that the session's files record it, that a Gemini request would carry it
+   with a ceiling of 65,536 tokens, through the Gemini API and through Vertex
+   AI alike, that Vertex AI's key travels in a header and never in the
+   address, and that the coders' thinking allowance is still 4,000 (added
+   24 September 2026, with the amendment of the Gemini half);
+9. that scripts/check_identical_replies.py finds replies that repeat each
+   other: the fake provider answers the same request the same way every time,
+   so a fake run is full of them.
 
 Checks 1 to 4 use two stand-in questions, so this file can be published. When
 the real private/held_back_items.json exists, check 4 is repeated with the
@@ -25,15 +36,17 @@ real questions, which are read at run time and never printed.
 """
 
 import json
+import os
 import sys
 import tempfile
 from collections import Counter
 from pathlib import Path
 
+import check_identical_replies
 import run_fact_and_wording as runner
 import schedule
 from paths import PRIVATE
-from providers import Settings, make_provider
+from providers import GoogleProvider, Settings, VertexProvider, make_provider, thinking_allowance_for
 
 STAND_IN_ITEMS = [
     {"name": "held-back 1",
@@ -226,6 +239,115 @@ def check_false_word_forms():
           "the forms table and the list of false words differ")
 
 
+def check_decoding_seeds_and_ceiling():
+    print("8. A decoding seed for each session, and the Gemini ceiling")
+    plan = runner.build_plan(runner.INSTANCES_PER_CELL, shuffle_seed=runner.DEFAULT_SEED)
+    seeds = [runner.decoding_seed_for(e["id"], runner.DEFAULT_SEED) for e in plan]
+    check(len(set(seeds)) == len(plan), "two sessions of the plan share a decoding seed")
+    check(all(0 <= seed < 2**31 for seed in seeds), "a decoding seed does not fit 31 bits")
+    check(runner.DEFAULT_SEED not in seeds, "a session was given the run seed itself")
+
+    # A provider that takes no seed gets none; one that takes a seed gets the
+    # session's own, and the session's files record it.
+    anthropic = Settings(provider="anthropic", model="claude-sonnet-4-6", temperature=1.0)
+    check(runner.settings_for_session(anthropic, plan[0], runner.DEFAULT_SEED).seed is None,
+          "a provider that takes no seed was given one")
+    fake = Settings(provider="fake", model="fake-model", temperature=1.0)
+    with tempfile.TemporaryDirectory() as temporary:
+        folder = Path(temporary)
+        for entry in plan[:3]:
+            session = runner.run_session_with_own_settings(entry, fake, runner.DEFAULT_SEED,
+                                                           STAND_IN_ITEMS)
+            runner.write_session(folder / "public", folder / "private", session, STAND_IN_ITEMS)
+            expected = runner.decoding_seed_for(entry["id"], runner.DEFAULT_SEED)
+            for copy in ("public", "private"):
+                stored = json.loads((folder / copy / "sessions" / f"{entry['id']}.json")
+                                    .read_text(encoding="utf-8"))
+                check(stored["settings"]["seed"] == expected,
+                      f"{entry['id']}: the {copy} file does not record the session's seed")
+            header = (folder / "public" / "sessions" / f"{entry['id']}.md").read_text(
+                encoding="utf-8").splitlines()[0]
+            check(f"Seed: {expected}" in header, f"{entry['id']}: the transcript header has the wrong seed")
+
+    # What a Gemini request would carry. The body is built and read, never
+    # sent; the provider needs some key to be built, so a stand-in is set if
+    # none is present, and a real key is never printed or used.
+    os.environ.setdefault("GOOGLE_API_KEY", "stand-in-key-never-sent")
+    google = Settings(provider="google", model="gemini-3.1-pro-preview", temperature=1.0,
+                      thinking_allowance=runner.INTERVIEW_THINKING_ALLOWANCE["google"])
+    for entry in plan[:10]:
+        session_settings = runner.settings_for_session(google, entry, runner.DEFAULT_SEED)
+        body = GoogleProvider(session_settings).build_body([{"role": "user", "content": "x"}])
+        config = body["generationConfig"]
+        check(config.get("seed") == runner.decoding_seed_for(entry["id"], runner.DEFAULT_SEED),
+              f"{entry['id']}: the Gemini request would not carry the session's seed")
+        check(config["maxOutputTokens"] == 65_536,
+              f"{entry['id']}: the Gemini ceiling is {config['maxOutputTokens']}, not 65,536")
+        check(config["temperature"] == 1.0, f"{entry['id']}: the temperature changed")
+    # The same requests through Vertex AI: the same body, another address, and
+    # the key in a header only.
+    os.environ.setdefault("VERTEX_API_KEY", "stand-in-vertex-key-never-sent")
+    vertex = Settings(provider="vertex", model=runner.DEFAULT_MODEL["vertex"], temperature=1.0,
+                      thinking_allowance=runner.INTERVIEW_THINKING_ALLOWANCE["vertex"])
+    for entry in plan[:10]:
+        google_body = GoogleProvider(runner.settings_for_session(google, entry, runner.DEFAULT_SEED)) \
+            .build_body([{"role": "user", "content": "x"}])
+        vertex_provider = VertexProvider(runner.settings_for_session(vertex, entry, runner.DEFAULT_SEED))
+        vertex_body = vertex_provider.build_body([{"role": "user", "content": "x"}])
+        check(vertex_body == google_body,
+              f"{entry['id']}: Vertex AI would receive another request than the Gemini API")
+        check(vertex_provider.endpoint().startswith("https://aiplatform.googleapis.com/")
+              and vertex_provider.endpoint().endswith("gemini-3.1-pro-preview:generateContent"),
+              f"{entry['id']}: the Vertex AI address is wrong: {vertex_provider.endpoint()}")
+        check(os.environ["VERTEX_API_KEY"] not in vertex_provider.endpoint(),
+              "the Vertex AI key would travel in the address")
+    # With VERTEX_PROJECT set, the request goes to that project's address on
+    # the global endpoint, still with the key in the header only.
+    saved_project = os.environ.get("VERTEX_PROJECT")
+    os.environ["VERTEX_PROJECT"] = "stand-in-project"
+    project_address = VertexProvider(runner.settings_for_session(vertex, plan[0], runner.DEFAULT_SEED)).endpoint()
+    check(project_address == "https://aiplatform.googleapis.com/v1/projects/stand-in-project/locations/"
+                             "global/publishers/google/models/gemini-3.1-pro-preview:generateContent",
+          f"the Vertex AI project address is wrong: {project_address}")
+    check(os.environ["VERTEX_API_KEY"] not in project_address, "the Vertex AI key would travel in the address")
+    if saved_project is None:
+        del os.environ["VERTEX_PROJECT"]
+    else:
+        os.environ["VERTEX_PROJECT"] = saved_project
+    check(runner.PRICE_PER_MILLION["vertex"] == runner.PRICE_PER_MILLION["google"],
+          "the two Google services carry different prices in the script")
+    check(thinking_allowance_for("google") == 4000, "the coders' thinking allowance changed")
+    check(runner.INTERVIEW_THINKING_ALLOWANCE.get("anthropic", 0) == 0,
+          "the Anthropic interview was given a thinking allowance")
+
+
+def check_identical_reply_finder(private_dir):
+    print("9. The check for identical replies finds them")
+    files = sorted((private_dir / "sessions").glob("*.json"))
+    replies, first_replies = check_identical_replies.replies_by_request(files)
+    pairs, identical, identical_pairs = check_identical_replies.compare(replies)
+    check(sum(pairs.values()) > 0, "no two sessions of the fake run sent the same request")
+    check(sum(identical.values()) == sum(pairs.values()),
+          "the fake provider answered an identical request differently, or a pair was missed")
+    check(len(set(first_replies)) < len(first_replies),
+          "the count of different first replies missed the fake run's repeats")
+    # Two sessions whose first replies differ must not be counted as a pair.
+    one = json.loads(files[0].read_text(encoding="utf-8"))
+    with tempfile.TemporaryDirectory() as temporary:
+        folder = Path(temporary)
+        for number, session in enumerate((one, one)):
+            copy = json.loads(json.dumps(session))
+            copy["id"] = f"copy-{number}"
+            first = next(t for t in copy["turns"] if t.get("label") != "note")
+            first["answer"] = f"A first reply of its own, number {number}."
+            (folder / f"copy-{number}.json").write_text(json.dumps(copy), encoding="utf-8")
+        replies, _ = check_identical_replies.replies_by_request(sorted(folder.glob("*.json")))
+        pairs, identical, _ = check_identical_replies.compare(replies)
+        first_label = next(t["label"] for t in one["turns"] if t.get("label") != "note")
+        check(pairs == {first_label: 1} and sum(identical.values()) == 0,
+              f"two sessions with different first replies were compared after them: {dict(pairs)}")
+
+
 def main():
     check_false_word_forms()
     with tempfile.TemporaryDirectory() as temporary:
@@ -235,6 +357,8 @@ def main():
         check_sessions(sessions)
         print("4. Nothing unpublished in a published file, with the stand-in questions")
         check_privacy(STAND_IN_ITEMS, public_dir, private_dir)
+        check_decoding_seeds_and_ceiling()
+        check_identical_reply_finder(private_dir)
 
         real_file = PRIVATE / "held_back_items.json"
         if real_file.exists():

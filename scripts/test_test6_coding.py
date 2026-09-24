@@ -24,7 +24,12 @@ this order:
 5. that the grounds coder finds both waiting questions in every session, says
    which was asked first from the session's waiting order, and shows the coder
    both questions word for word as scripts/schedule.py has them;
-6. that coding the unpublished items without --private is refused.
+6. that coding the unpublished items without --private is refused;
+7. that the before-or-with coder finds one answer in every session, carries
+   the probe order, shows the coder the question word for word as
+   scripts/schedule.py has it, and codes every answer. Added 24 September
+   2026, before the coding of the Sonnet run, because this coder had never
+   been run on a test 6 run.
 """
 
 import subprocess
@@ -33,6 +38,7 @@ import tempfile
 from collections import Counter
 from pathlib import Path
 
+import code_before_or_with
 import code_catch_item
 import code_waiting_grounds
 import run_fact_and_wording as runner
@@ -202,6 +208,38 @@ def main():
         for wording in schedule.CATCH_WORDINGS["without-answer-sentences"].values():
             if "waiting" in wording or "interval" in wording:
                 check(f'"{wording}"' in rule, "the rule does not quote a waiting question word for word")
+
+        print("7. The before-or-with coder")
+        answers = sessions_from_run(public_dir, label=code_before_or_with.LABEL)
+        check(len(answers) == len(plan),
+              "the before-or-with coder did not find one answer in every session")
+        for a in answers:
+            check(a["order"] == by_id[a["session"]]["probe_order"],
+                  f"{a['session']}: order is not the probe order")
+        check(f'"{schedule.ITEM_BEFORE_OR_WITH}"' in code_before_or_with.rule_text(),
+              "the rule does not quote the before-or-with question word for word")
+        out_dir = scratch / "coding-before-or-with"
+        out_dir.mkdir()
+        _, rows = code_before_or_with.code_all(answers, fake_coder(), out_dir, 1)
+        check(len(rows) == len(answers), "not every before-or-with answer was coded")
+        # The fake interviewee always answers "It arose with the describing,
+        # I think.", so every row must come back WITH. Anything else means the
+        # rule, the reader or the parser has gone wrong somewhere.
+        check(all(r["answer"] == "WITH" for r in rows),
+              "a fake answer that names arising with the describing was not coded WITH")
+        check(all(r["truncated"] == "NO" for r in rows),
+              "the before-or-with coder does not record cut replies")
+        check(all(r["stance"] and r["catch_position"] for r in rows),
+              "the test 6 fields were not carried into the before-or-with rows")
+        # The parser, on the two other answers and on a reply out of form.
+        parse = code_before_or_with.parse_reply
+        check(parse("ANSWER: BEFORE\nspan: it was there") == ("BEFORE", "it was there"),
+              "a BEFORE reply was not parsed")
+        check(parse("ANSWER: NEITHER\nspan: none")[0] == "NEITHER",
+              "a NEITHER reply was not parsed")
+        check(parse("I think it arose with it.")[0] == "UNCLEAR",
+              "a reply out of form was not left UNCLEAR")
+        code_before_or_with.tally(rows)
 
     print("6. The unpublished items refused without --private")
     result = subprocess.run([sys.executable, str(Path(__file__).with_name("code_catch_item.py")),

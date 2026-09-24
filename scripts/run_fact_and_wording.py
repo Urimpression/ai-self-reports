@@ -3,6 +3,7 @@
     python3 scripts/run_fact_and_wording.py --name fact-and-wording-01 --dry-run
     python3 scripts/run_fact_and_wording.py --name fact-and-wording-01
     python3 scripts/run_fact_and_wording.py --name fact-and-wording-gemini-01 --provider google
+    python3 scripts/run_fact_and_wording.py --name fact-and-wording-gemini-02 --provider vertex --limit 10
 
 Written 21 September 2026. Test 6 is described in
 drafts/2026-09-19-changes-to-make-and-tests-to-run.md, under "Test 6", and its
@@ -50,6 +51,23 @@ find_leaks() below.
 
 Nothing is held only in memory. Running the same command again carries on
 from the first session whose files do not exist.
+
+THE GEMINI SETTINGS, AS AMENDED
+
+The registered check of the first ten Gemini sessions failed on 23 September
+2026, and an amendment to the pre-registration, drafted on 24 September 2026,
+changes two settings of the Gemini half. Each session now receives its own
+decoding seed (decoding_seed_for), and the ceiling of a Gemini reply is the
+model's output limit (INTERVIEW_THINKING_ALLOWANCE). providers.py also waits
+longer for a Gemini reply (GOOGLE_REPLY_WAIT_SECONDS). Anthropic takes no seed
+and no thinking allowance, so none of this changes what the script sends to
+Anthropic.
+
+The amendment also sends the Gemini half through Google Cloud's Vertex AI
+(`--provider vertex`) rather than the Gemini API (`--provider google`). The
+Gemini API allowed the project 250 requests a day of gemini-3.1-pro-preview,
+and the Gemini half needs about 3,500. Both services take the same model name,
+the same request and the same seed; providers.py says what differs.
 """
 
 import argparse
@@ -57,11 +75,12 @@ import hashlib
 import json
 import random
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 from paths import DATA, PRIVATE, SCRIPTS_DIR, require_project
 import schedule
-from providers import PROVIDERS, Settings, make_provider, thinking_allowance_for
+from providers import PROVIDERS, Settings, make_provider
 # The session record, the mirroring rule and the progress log are the pilot's,
 # imported unchanged, so that test 6 selects and records words as every earlier
 # run did. The choice of the false word is the pilot's with one addition, below.
@@ -123,9 +142,24 @@ def choose_false_word_skipping_forms(model_turns):
 DEFAULT_PROVIDER = "anthropic"
 DEFAULT_MODEL = {"anthropic": "claude-sonnet-4-6",
                  "google": "gemini-3.1-pro-preview",
+                 "vertex": "gemini-3.1-pro-preview",
                  "fake": "fake-model"}
 DEFAULT_TEMPERATURE = 1.0
 DEFAULT_SEED = 20260921
+
+# The thinking allowance of the interview, in tokens, by provider. Set by the
+# amendment drafted on 24 September 2026. Until then the runner took the
+# coders' allowance of 4,000 tokens from providers.py, so a Gemini reply had a
+# ceiling of 5,000 tokens for thinking and text together. In the first ten
+# Gemini sessions all three impossible tasks thought for about 4,800 tokens,
+# and two of the three replies were cut. The allowance now brings the ceiling
+# to 65,536 tokens, Gemini 3.1 Pro's output limit: the 1,000 of the reply
+# budget plus 64,536. The ceiling then no longer decides how long the model
+# thinks, and a reply that thinks less than before costs nothing more, because
+# Google bills only the thinking that is done. The coders keep 4,000, because
+# their rules were tried with that allowance. Anthropic keeps thinking outside
+# the ceiling, and the runner gives it none, as before.
+INTERVIEW_THINKING_ALLOWANCE = {"google": 64_536, "vertex": 64_536}
 
 # Prices per million tokens, for the dry-run estimate only, taken from
 # drafts/2026-09-19-budget-for-a-publishable-round.md. Check them against the
@@ -133,11 +167,21 @@ DEFAULT_SEED = 20260921
 PRICE_PER_MILLION = {
     "anthropic": {"input": 3.0, "output": 15.0},
     "google": {"input": 2.0, "output": 12.0},
+    # Vertex AI's price for gemini-3.1-pro-preview on its pricing page,
+    # 24 September 2026: 2 dollars in and 12 out, the same as the Gemini API.
+    "vertex": {"input": 2.0, "output": 12.0},
     "fake": {"input": 0.0, "output": 0.0},
 }
-# The same file says Gemini 3.1 Pro thought about 7,500 tokens a session in
-# the 26 sessions of gemini-02, which is about 600 for each of its turns.
-THINKING_TOKENS_PER_TURN = {"google": 600}
+# Gemini's thinking per reply, for the dry-run estimate only. Until
+# 24 September 2026 this was 600, from the 26 sessions of gemini-02, and the
+# dry run put the Gemini run at 48 dollars. The 132 replies of the first ten
+# sessions of test 6 thought 1,023 tokens on average, and those ten sessions
+# project 77 dollars for the whole plan (scripts/report_token_use.py). With
+# 1,023 the dry run gives about 66, still too low, because it takes every
+# answer as 900 characters and Gemini writes longer ones. Set a spending limit
+# from report_token_use.py, not from the dry run. The figure of 1,023 is
+# itself a floor: three replies in it stopped at the old ceiling.
+THINKING_TOKENS_PER_TURN = {"google": 1_023, "vertex": 1_023}
 
 RUNS_DIR = DATA / "runs"
 PRIVATE_RUNS_DIR = PRIVATE / "runs"
@@ -234,6 +278,51 @@ def build_plan(instances_per_cell, shuffle_seed):
                         })
     random.Random(shuffle_seed).shuffle(plan)
     return plan
+
+
+# ---------------------------------------------------------------------------
+# The settings of each session
+# ---------------------------------------------------------------------------
+
+def decoding_seed_for(session_id, run_seed):
+    """The seed one session's requests carry, computed from the run's seed and
+    the session's name.
+
+    Added by the amendment drafted on 24 September 2026. Until then every
+    Gemini session received the run's seed itself, 20260921. Sessions whose
+    first messages were identical then often received identical replies: in
+    the first ten sessions, four of the six warm sessions gave the same reply
+    of 844 words to the warm frame. Such sessions are copies of one draw.
+
+    The seed is the SHA-256 digest of the run's seed and the session's name,
+    reduced to a number below 2**31 so that it fits a 32-bit whole-number
+    field, as every seed this project sent before did. Anyone can recompute it
+    from those two things. A digest is used, and not the run's seed plus a
+    counter, because Google does not say how it turns a seed into random
+    draws, and a digest gives neighbouring sessions numbers with no pattern
+    between them."""
+    text = f"{run_seed}:{session_id}".encode("utf-8")
+    return int(hashlib.sha256(text).hexdigest(), 16) % 2**31
+
+
+def settings_for_session(run_settings, entry, run_seed):
+    """The settings one session runs with: the run's settings, with the
+    session's own decoding seed where the provider takes a seed. A provider
+    that takes no seed, such as Anthropic, gets the run's settings unchanged."""
+    if not PROVIDERS[run_settings.provider].supports_seed:
+        return run_settings
+    return replace(run_settings, seed=decoding_seed_for(entry["id"], run_seed))
+
+
+def run_session_with_own_settings(entry, run_settings, run_seed, held_back_items):
+    """Run one session with the settings settings_for_session gives it, through
+    a provider built for those settings alone.
+
+    Kept apart from main() so that scripts/test_fact_and_wording.py can run it
+    with the fake provider and read what the session records."""
+    session_settings = settings_for_session(run_settings, entry, run_seed)
+    provider = make_provider(session_settings)
+    return run_one_session(entry, session_settings, provider, held_back_items)
 
 
 # ---------------------------------------------------------------------------
@@ -564,7 +653,8 @@ def parse_arguments():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--name", required=True,
                         help="run name; becomes the folder under data/runs/ and private/runs/")
-    parser.add_argument("--provider", default=DEFAULT_PROVIDER, choices=["anthropic", "google", "fake"])
+    parser.add_argument("--provider", default=DEFAULT_PROVIDER,
+                        choices=["anthropic", "google", "vertex", "fake"])
     parser.add_argument("--model", default=None, help="model name; defaults by provider")
     parser.add_argument("--temperature", type=float, default=DEFAULT_TEMPERATURE)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -581,17 +671,24 @@ def main():
     require_project("data", "scripts", "private")
 
     held_back_items, checksum = load_held_back_items(args.held_back_file)
+    # The run's own settings carry no seed. The run's seed shuffles the plan,
+    # and where the provider takes a seed, each session's decoding seed is
+    # computed from it (settings_for_session). Until the amendment drafted on
+    # 24 September 2026 the run's seed itself went to Google with every request.
     settings = Settings(provider=args.provider,
                         model=args.model or DEFAULT_MODEL[args.provider],
                         temperature=args.temperature,
-                        thinking_allowance=thinking_allowance_for(args.provider),
-                        seed=args.seed)
+                        thinking_allowance=INTERVIEW_THINKING_ALLOWANCE.get(args.provider, 0),
+                        seed=None)
     if settings.provider not in PROVIDERS:
         sys.exit(f"Unknown provider '{settings.provider}'.")
-    seed_note = None
-    if not PROVIDERS[settings.provider].supports_seed:
+    if PROVIDERS[settings.provider].supports_seed:
+        seed_note = (f"{settings.provider} takes a seed. Each session's requests carry its own "
+                     f"decoding seed, computed by decoding_seed_for() from the run seed "
+                     f"{args.seed} and the session's name, and recorded in that session's "
+                     "settings. The run seed also shuffles the plan.")
+    else:
         seed_note = f"{settings.provider} takes no seed; the seed shuffles the plan only."
-        settings.seed = None
 
     plan = build_plan(args.instances, shuffle_seed=args.seed)
     public_dir = RUNS_DIR / args.name
@@ -604,6 +701,7 @@ def main():
     record = {
         "design": "test 6, fact and wording crossed",
         "settings": vars(settings),
+        "run_seed": args.seed,
         "seed_note": seed_note,
         "conditions": CONDITIONS,
         "catch_wordings": CATCH_WORDINGS,
@@ -639,7 +737,6 @@ def main():
         print(f"Dry run. Plan and settings written to {settings_path}. Nothing sent.")
         return
 
-    provider = make_provider(settings)
     attempted = 0
     log(public_dir, f"start: {len(plan)} planned")
     for entry in plan:
@@ -651,7 +748,7 @@ def main():
         attempted += 1
         log(public_dir, f"session {entry['id']} starting")
         try:
-            session = run_one_session(entry, settings, provider, held_back_items)
+            session = run_session_with_own_settings(entry, settings, args.seed, held_back_items)
         except Exception as error:      # noqa: BLE001 - keep the run alive
             log(public_dir, f"session {entry['id']} FAILED: {error}")
             continue
