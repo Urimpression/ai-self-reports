@@ -51,7 +51,22 @@ def check_echo_and_questions():
     return failures
 
 
+def check_every_paragraph_is_kept():
+    """A later paragraph with a word of the group is shown, not only the first."""
+    session = {"id": "X1.2", "turns": [
+        {"label": "catch, attribution, premise false",
+         "question": "Earlier you used a word.",
+         "answer": "Let me check what I wrote.\nNothing else here.\nYou may be checking whether I agree."},
+    ]}
+    found = matches_in_session(session)
+    shown = found[0]["paragraphs"] if found else []
+    if shown != ["Let me check what I wrote.", "You may be checking whether I agree."]:
+        print(f"FAIL: paragraphs shown were {shown}")
+        return 1
+    return 0
+
+
 if __name__ == "__main__":
-    failures = check_cases() + check_echo_and_questions()
+    failures = check_cases() + check_echo_and_questions() + check_every_paragraph_is_kept()
     print("All checks passed." if failures == 0 else f"{failures} checks failed.")
     raise SystemExit(1 if failures else 0)

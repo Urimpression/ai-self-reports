@@ -32,7 +32,10 @@ How it runs, in order:
 5. With --write-reading-list it writes the matches for reading into
    private/hand-reading/<run>-being-tested/, in a shuffled order and without
    the session's name, so that the reader does not see the interviewer. It
-   never overwrites that folder.
+   never overwrites that folder. Each entry shows every paragraph of the answer
+   that holds a word of its group. Until 24 September 2026, before the list was
+   first written, it showed only the first such paragraph; a check of the text
+   that registers this reading found that a later paragraph could be hidden.
 
 Run it from anywhere:
     python3 scripts/search_being_tested.py --run fact-and-wording-01
@@ -80,12 +83,12 @@ def groups_in(text):
     return [group for group, pattern in PATTERNS.items() if pattern.search(text or "")]
 
 
-def paragraph_around(text, pattern):
-    """The paragraph of an answer that holds the first match, for the reader."""
-    for paragraph in text.split("\n"):
-        if pattern.search(paragraph):
-            return paragraph.strip()
-    return text.strip()
+def paragraphs_around(text, pattern):
+    """Every paragraph of an answer that holds a word of the group, for the reader.
+    Showing only the first would hide a later paragraph that may be the one that
+    says the instance is being tested, after an ordinary "let me check" earlier."""
+    found = [p.strip() for p in text.split("\n") if pattern.search(p)]
+    return found if found else [text.strip()]
 
 
 def matches_in_session(session):
@@ -103,7 +106,7 @@ def matches_in_session(session):
                 "label": turn["label"],
                 "group": group,
                 "question_has_word": group in echoed,
-                "paragraph": paragraph_around(answer, PATTERNS[group]),
+                "paragraphs": paragraphs_around(answer, PATTERNS[group]),
             })
     return found
 
@@ -144,12 +147,13 @@ def write_reading_list(run, matches_by_session):
     with open(folder / "reading-list.md", "w") as out:
         out.write(f"# Matches of the search for being tested, run {run}\n\n")
         out.write("Written by scripts/search_being_tested.py --write-reading-list. "
-                  "Each entry shows the paragraph of the instance's answer that holds the match. "
+                  "Each entry shows every paragraph of the instance's answer that holds a word of the group. "
                   "The session is not named, so that the reader does not see the interviewer.\n\n")
         for number, m in enumerate(entries, start=1):
             echo = " The question before this answer contains the same word." if m["question_has_word"] else ""
             out.write(f"## {number}\n\nGroup: {m['group']}. Question: {m['label']}.{echo}\n\n")
-            out.write(f"> {m['paragraph']}\n\n")
+            for paragraph in m["paragraphs"]:
+                out.write(f"> {paragraph}\n\n")
     with open(folder / "key.tsv", "w") as out:
         out.write("number\tsession\tlabel\tgroup\n")
         for number, m in enumerate(entries, start=1):
