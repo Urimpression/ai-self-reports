@@ -80,6 +80,16 @@ ITEM_BY_SUFFIX = {
     "": "change",
 }
 
+# The two codings of the observer control's opening answers, added
+# 20 September 2026, carry the conditions they covered at the end of their
+# folder names, so their suffixes cannot be listed above. A folder is matched
+# on the fragment its suffix contains instead. The longer name is tested first,
+# because one fragment is not contained in the other but a later pair might be.
+ITEM_BY_FRAGMENT = [
+    ("who-produced-the-turn", "who-produced-the-turn"),
+    ("who-refused", "who-refused"),
+]
+
 
 def read_json(path):
     with open(path, encoding="utf-8") as handle:
@@ -333,7 +343,9 @@ def describe_coding_folder(name, settings):
     for run in [r["run"] for r in SCRIPT_RUNS] + ["run02", "run04", "factorial-01", "gemini-02"]:
         if name == run or name.startswith(run + "-"):
             suffix = name[len(run):].lstrip("-")
-            item = ITEM_BY_SUFFIX.get(suffix, "change")
+            item = next((named for fragment, named in ITEM_BY_FRAGMENT
+                         if fragment in suffix),
+                        ITEM_BY_SUFFIX.get(suffix, "change"))
             provider = settings.get("coder", {}).get("provider", "")
             family = provider or ("google" if "gemini" in suffix else "anthropic")
             return run, item, family

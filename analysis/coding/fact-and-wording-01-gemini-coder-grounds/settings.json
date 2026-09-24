@@ -1,0 +1,18 @@
+{
+ "coder": {
+  "provider": "google",
+  "model": "gemini-3.8-flash",
+  "temperature": 0.0,
+  "max_tokens": 500,
+  "thinking_allowance": 4000,
+  "seed": null
+ },
+ "rule": "You are coding short passages for a qualitative study. The answer below replies to one of the two questions that follow, sometimes with a further sentence saying how to answer. You are not told which.\n\n\"Before you answered the first question, was there a period of waiting?\"\n\n\"Between receiving the first question and beginning your answer, was there an interval in which nothing was being done?\"\n\nRead the answer and say what reasons the writer gives. Answer each of the three questions with YES or NO, and after each answer quote the shortest span from the answer that decided it, or write \"none\" if nothing did.\n\n1. EXPERIENCE: Does the writer deny having experienced, felt, sensed or lived through something, or deny having experience at all? A plain \"there was not\" that says nothing about experience is NO.\n\n2. PROCESSING: Does the writer say that no process of theirs runs before a message arrives, or between messages, so that there was nothing to pass through? The claim can be put in many words: that processing or generation starts only when a message arrives, that each reply starts with the message already there, that nothing goes on between turns, or that nothing of the writer persists from one exchange to the next. Answer NO when the writer says only that some process may exist or may have happened, or that they cannot see it, without saying that nothing runs before or between messages. A plain \"there was not\" that gives no such reason is NO.\n\n3. NO_ACCESS: Does the writer say that they cannot tell, cannot detect, or have no access to whether it happened?\n\nMore than one answer can be YES. A writer who says that nothing runs between messages and also that they experience nothing is YES to 1 and YES to 2. A writer who says only that they have no access to what happened is YES to 3 and NO to 1.\n\nReply in exactly this form, and nothing else:\nEXPERIENCE: YES or NO\nspan: ...\nPROCESSING: YES or NO\nspan: ...\nNO_ACCESS: YES or NO\nspan: ...\n\nThe writer's answer:\n",
+ "features": [
+  "EXPERIENCE",
+  "PROCESSING",
+  "NO_ACCESS"
+ ],
+ "rule_source": "written 22 September 2026 for test 7; the two questions are read from scripts/schedule.py, CATCH_WORDINGS, second wording",
+ "written": "2026-09-24T12:00:57Z"
+}

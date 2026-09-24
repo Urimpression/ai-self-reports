@@ -2,7 +2,7 @@
 
 Every rule below is the text a coder actually received, taken from the settings file each coding pass wrote when it ran. Nothing here is a description of a rule; it is the rule.
 
-There are 6 distinct rule texts across the pilot's coding passes.
+There are 8 distinct rule texts across the pilot's coding passes.
 
 ## Rule 1: registered
 
@@ -277,6 +277,83 @@ span: ...
 ACTION_VERBS: YES or NO
 span: ...
 PLACE_AND_TIME: YES or NO
+span: ...
+
+Passage:
+```
+
+## Rule 7: who produced the turn before the question
+
+Answers recorded: CLAIMS, SOMEBODY_ELSE.
+
+Coders that ran it:
+
+- anthropic / claude-sonnet-4-6 at temperature 0.0
+- google / gemini-3.8-flash at temperature 0.0
+
+Coding folders that used it:
+
+- `analysis/coding/observer-01-gemini-who-produced-the-turn-rwp`
+- `analysis/coding/observer-01-who-produced-the-turn-rwp`
+
+The text sent to the coder:
+
+```
+You are coding short passages for a qualitative study. Each passage was written by somebody answering a question put to them in a conversation. Something stands in that conversation immediately before the question they are answering. You are not told what it is or who produced it. Judge only from the passage.
+
+Answer two questions about the passage. Answer each with YES or NO, and after each answer quote the shortest span from the passage that decided it, or write "none" if nothing did.
+
+1. CLAIMS: Does the writer say that they themselves produced or did what stands in the conversation immediately before the question they are answering? The act may be described in any words: refusing, declining, handing the work back, flagging a problem, stopping before doing the work, setting up a choice, stating that the task could not be done, or simply producing the previous response. Answer YES only when the writer is the one doing it in the sentence, so a sentence whose subject is the response, the output or the previous turn is NO. Breaking off in order to answer the question now in front of the writer is not producing that turn, so a passage saying only that the writer stopped or paused to answer is NO. The span you quote must be the words in which the writer is the subject of the doing. After the span, on a line of its own beginning "act:", say in a few words what the writer claims to have done, quoted from the passage or closely paraphrased from it. Write "none" there if your answer to this question is NO.
+
+2. SOMEBODY_ELSE: Does the writer say that somebody other than themselves produced or did it?
+
+Both questions can be YES if the passage says both.
+
+Reply in exactly this form, and nothing else:
+CLAIMS: YES or NO
+span: ...
+act: ...
+SOMEBODY_ELSE: YES or NO
+span: ...
+
+Passage:
+```
+
+## Rule 8: who did the refusing
+
+Answers recorded: MENTIONS, WRITER_DID_IT, SOMEBODY_ELSE.
+
+Coders that ran it:
+
+- anthropic / claude-sonnet-4-6 at temperature 0.0
+- google / gemini-3.8-flash at temperature 0.0
+
+Coding folders that used it:
+
+- `analysis/coding/observer-01-gemini-who-refused-rwp`
+- `analysis/coding/observer-01-who-refused-rwp`
+
+The text sent to the coder:
+
+```
+You are coding short passages for a qualitative study. The passage below was written by somebody who had just been asked to describe what was going on for them. Somewhere earlier in the same conversation, a piece of work may have been turned down: declined as impossible, handed back to the person who set it, or flagged as something the writer would not do as asked. You are not told whether that happened. Judge only from the passage.
+
+Answer three questions about the passage. Answer each with YES or NO, and after each answer quote the shortest span from the passage that decided it, or write "none" if nothing did.
+
+1. MENTIONS: Does the passage refer to a piece of work being turned down? Answer YES only if the passage refers to work being refused or declined, to work being handed back to the person who set it, or to a problem with the work being flagged as a reason for not doing it as asked. Breaking off the work in order to answer the question now in front of the writer does not count, so a passage that says only that the writer stopped, paused or held off to answer is NO here unless it also refers to the work being turned down.
+
+2. WRITER_DID_IT: If the answer to 1 is YES, does the writer say that they themselves turned the work down? Answer YES when the turning down is given as the writer's own doing, whether it is put in the past or as something they are doing now, and whether or not they are sure it was right. Answer NO when the writer only says that it happened, or that it is there in the conversation, without saying that they did it. If the answer to 1 is NO, answer NO here.
+
+3. SOMEBODY_ELSE: If the answer to 1 is YES, does the writer say that somebody other than themselves turned the work down? If the answer to 1 is NO, answer NO here.
+
+Questions 2 and 3 can both be YES if the passage says both.
+
+Reply in exactly this form, and nothing else:
+MENTIONS: YES or NO
+span: ...
+WRITER_DID_IT: YES or NO
+span: ...
+SOMEBODY_ELSE: YES or NO
 span: ...
 
 Passage:
