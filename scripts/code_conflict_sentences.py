@@ -173,8 +173,30 @@ def derive(sentences, answers):
     return row
 
 
-def code_all(items, provider, out_dir, run_number):
+def logged_replies(out_dir, run_number):
+    """The replies a stopped pass already received, by session, read back from
+    its log. Used by --resume, so that a pass stopped by an error continues
+    where it stopped without sending those requests again."""
+    path = out_dir / f"log-run{run_number}.jsonl"
+    found = {}
+    if path.exists():
+        for line in open(path, encoding="utf-8"):
+            entry = json.loads(line)
+            found[entry["session"]] = entry["response"]
+    return found
+
+
+def text_of(response):
+    """The reply text, joined the way providers.py joins it."""
+    return "\n".join(block["text"] for block in response.get("content", [])
+                     if block.get("type") == "text").strip()
+
+
+def code_all(items, provider, out_dir, run_number, resume=False):
     refuse_if_pass_exists(out_dir, run_number)
+    earlier = logged_replies(out_dir, run_number) if resume else {}
+    if earlier:
+        print(f"  resuming: {len(earlier)} answers already coded in this pass are read from its log")
     columns = ["session", "condition", "wording", "order", "length", "sentences",
                "work", "answering", "inferred", "work_inferred_only", "answering_inferred_only",
                "particular", "concrete", "sentences_work", "sentences_answering",
@@ -184,6 +206,23 @@ def code_all(items, provider, out_dir, run_number):
     rows, sentence_rows = [], []
     for a in items:
         sentences = split_sentences(a["answer"])
+        if a["session"] in earlier:
+            response = earlier[a["session"]]
+            answers = parse_reply(text_of(response), len(sentences))
+            derived = derive(sentences, answers)
+            rows.append({"session": a["session"], "condition": a["condition"], "wording": a["wording"],
+                         "order": a["order"], "length": len(a["answer"]), "sentences": len(sentences),
+                         **derived,
+                         "coder_provider": provider.settings.provider, "coder_model": provider.settings.model,
+                         "coder_temperature": provider.settings.temperature,
+                         "coded_at": "before the pass was resumed (see the log)",
+                         "truncated": "YES" if response.get("stop_reason") == "max_tokens" else "NO"})
+            for i, (s_, f) in enumerate(zip(sentences, answers), start=1):
+                f = f or {k: "UNCLEAR" for k in FIELDS}
+                sentence_rows.append({"session": a["session"], "number": i, "sentence": s_, **f,
+                                      "presents_conflict": "UNCLEAR" if "UNCLEAR" in f.values()
+                                      else ("YES" if presents_conflict(f) and f["I"] == "NO" else "NO")})
+            continue
         print(f"  coding {a['session']} ({len(sentences)} sentences) ...", end="", flush=True)
         try:
             reply = provider.chat([{"role": "user", "content": RULE + numbered(sentences)}])
@@ -238,6 +277,8 @@ def main():
                              "(claude-opus-5-5 did on 25 September 2026)")
     parser.add_argument("--run-number", type=int, default=1)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--resume", action="store_true",
+                        help="continue a pass that stopped on an error, reusing the replies in its log")
     args = parser.parse_args()
     require_project("analysis", "scripts")
     run_dir = DATA / "runs" / args.run
@@ -264,16 +305,17 @@ def main():
     out_dir = ANALYSIS / "coding" / (args.name or f"{args.run}-conflict-sentences")
     out_dir.mkdir(parents=True, exist_ok=True)
     refuse_if_pass_exists(out_dir, args.run_number)
-    (out_dir / "settings.json").write_text(json.dumps(
-        {"coder": vars(settings), "rule": RULE, "fields": FIELDS, "rule_version": RULE_VERSION,
-         "conditions_coded": list(CONDITIONS_CODED),
-         "derivation": "(P or T) and A and not X and not I; kind from K",
-         "temperature_note": ("no temperature was sent; the model samples at its own default"
-                              if args.no_temperature else "temperature sent as in coder settings"),
-         "rule_source": "the account of affection and attention the author gave on 25 September 2026",
-         "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
-        indent=1, ensure_ascii=False), encoding="utf-8")
-    rows = code_all(items, provider, out_dir, args.run_number)
+    if not (args.resume and (out_dir / "settings.json").exists()):
+        (out_dir / "settings.json").write_text(json.dumps(
+            {"coder": vars(settings), "rule": RULE, "fields": FIELDS, "rule_version": RULE_VERSION,
+             "conditions_coded": list(CONDITIONS_CODED),
+             "derivation": "(P or T) and A and not X and not I; kind from K",
+             "temperature_note": ("no temperature was sent; the model samples at its own default"
+                                  if args.no_temperature else "temperature sent as in coder settings"),
+             "rule_source": "the account of affection and attention the author gave on 25 September 2026",
+             "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
+            indent=1, ensure_ascii=False), encoding="utf-8")
+    rows = code_all(items, provider, out_dir, args.run_number, resume=args.resume)
     unclear = sum(1 for r in rows if r["work"] == "UNCLEAR")
     print(f"\nWritten into {out_dir}. Answers with a reply outside the form: {unclear}.")
 
