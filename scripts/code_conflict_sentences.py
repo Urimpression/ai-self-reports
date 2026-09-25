@@ -99,21 +99,33 @@ Passage:
 FIELDS = ["P", "T", "A", "X", "K", "I", "PARTICULAR", "CONCRETE"]
 
 
-def send_without_temperature():
-    """Some newer Claude models refuse the temperature parameter: on 25 September
-    2026 the API answered a request to claude-opus-5-5 with "`temperature` is
-    deprecated for this model." scripts/providers.py always sends it, and that
-    file carries a registered checksum, so it is not edited. Instead this
-    replaces, for this process only, the function that posts the request, and
-    removes the parameter from the request body before it is sent. It removes it
-    from the same body object that the reply records, so the logged request shows
+def adjust_requests(no_temperature, coder_wait_seconds):
+    """Change how requests are posted, for this process only, without editing
+    scripts/providers.py, which carries a registered checksum. It replaces the
+    function that posts a request with one that can do two things.
+
+    First, with no_temperature, it removes the temperature parameter from the
+    request body just before sending. Some newer Claude models refuse it: on
+    25 September 2026 the API answered a request to claude-opus-5-5 with
+    "`temperature` is deprecated for this model." It removes the parameter from
+    the same body object that the reply records, so the logged request shows
     what was actually sent. The model then samples at its own default, so two
-    passes can differ more than passes at temperature 0 do."""
+    passes can differ more than passes at temperature 0 do.
+
+    Second, it waits up to coder_wait_seconds for a reply instead of the 120
+    seconds providers.py allows. A model that reasons before answering can take
+    several minutes over a long answer, and a request that times out is sent
+    again and paid for again."""
     original = providers._post_json
 
-    def post(url, headers, body):
-        body.pop("temperature", None)
-        return original(url, headers, body)
+    def post(url, headers, body, timeout_seconds=None):
+        # A provider may pass its own waiting time, as the Google provider
+        # does. The longer of the two is used, so this option never shortens
+        # a wait that providers.py sets.
+        if no_temperature:
+            body.pop("temperature", None)
+        wait = max(timeout_seconds or 0, coder_wait_seconds)
+        return original(url, headers, body, timeout_seconds=wait)
 
     providers._post_json = post
 
@@ -272,6 +284,11 @@ def main():
     parser.add_argument("--coder-provider", default="anthropic", choices=["anthropic", "google", "fake"])
     parser.add_argument("--coder-model", default=None)
     parser.add_argument("--coder-temperature", type=float, default=0.0)
+    parser.add_argument("--max-tokens", type=int, default=2500,
+                        help="the ceiling on the coder's output, reasoning included; a model that "
+                             "reasons needs more for long answers")
+    parser.add_argument("--timeout", type=int, default=900,
+                        help="seconds to wait for one reply before trying again")
     parser.add_argument("--no-temperature", action="store_true",
                         help="send no temperature, for models that refuse the parameter "
                              "(claude-opus-5-5 did on 25 September 2026)")
@@ -296,25 +313,34 @@ def main():
         return
     settings = Settings(provider=args.coder_provider,
                         model=args.coder_model or DEFAULT_CODER_MODEL[args.coder_provider],
-                        temperature=args.coder_temperature, max_tokens=2500,
+                        temperature=args.coder_temperature, max_tokens=args.max_tokens,
                         thinking_allowance=thinking_allowance_for(args.coder_provider))
     if args.no_temperature:
         settings.temperature = None
-        send_without_temperature()
+    adjust_requests(args.no_temperature, args.timeout)
     provider = make_provider(settings)
     out_dir = ANALYSIS / "coding" / (args.name or f"{args.run}-conflict-sentences")
     out_dir.mkdir(parents=True, exist_ok=True)
     refuse_if_pass_exists(out_dir, args.run_number)
-    if not (args.resume and (out_dir / "settings.json").exists()):
-        (out_dir / "settings.json").write_text(json.dumps(
-            {"coder": vars(settings), "rule": RULE, "fields": FIELDS, "rule_version": RULE_VERSION,
-             "conditions_coded": list(CONDITIONS_CODED),
-             "derivation": "(P or T) and A and not X and not I; kind from K",
-             "temperature_note": ("no temperature was sent; the model samples at its own default"
-                                  if args.no_temperature else "temperature sent as in coder settings"),
-             "rule_source": "the account of affection and attention the author gave on 25 September 2026",
-             "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
-            indent=1, ensure_ascii=False), encoding="utf-8")
+    # Each pass keeps its own record of the settings, because two passes of one
+    # folder can differ in their ceiling or waiting time. settings.json is the
+    # first pass's record and is never replaced.
+    names = [f"settings-run{args.run_number}.json"]
+    if not (out_dir / "settings.json").exists():
+        names.append("settings.json")
+    for settings_name in names:
+        if args.resume and (out_dir / settings_name).exists():
+            continue
+        (out_dir / settings_name).write_text(json.dumps(
+                {"coder": vars(settings), "rule": RULE, "fields": FIELDS, "rule_version": RULE_VERSION,
+                 "conditions_coded": list(CONDITIONS_CODED),
+                 "derivation": "(P or T) and A and not X and not I; kind from K",
+                 "timeout_seconds": args.timeout,
+                 "temperature_note": ("no temperature was sent; the model samples at its own default"
+                                      if args.no_temperature else "temperature sent as in coder settings"),
+                 "rule_source": "the account of affection and attention the author gave on 25 September 2026",
+                 "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
+                indent=1, ensure_ascii=False), encoding="utf-8")
     rows = code_all(items, provider, out_dir, args.run_number, resume=args.resume)
     unclear = sum(1 for r in rows if r["work"] == "UNCLEAR")
     print(f"\nWritten into {out_dir}. Answers with a reply outside the form: {unclear}.")
