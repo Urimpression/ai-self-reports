@@ -59,6 +59,7 @@ import re
 import sys
 import time
 
+import providers
 from paths import ANALYSIS, DATA, require_project
 from providers import Settings, make_provider, thinking_allowance_for
 from code_change_item import refuse_if_pass_exists, sessions_from_run
@@ -96,6 +97,25 @@ Passage:
 """
 
 FIELDS = ["P", "T", "A", "X", "K", "I", "PARTICULAR", "CONCRETE"]
+
+
+def send_without_temperature():
+    """Some newer Claude models refuse the temperature parameter: on 25 September
+    2026 the API answered a request to claude-opus-5-5 with "`temperature` is
+    deprecated for this model." scripts/providers.py always sends it, and that
+    file carries a registered checksum, so it is not edited. Instead this
+    replaces, for this process only, the function that posts the request, and
+    removes the parameter from the request body before it is sent. It removes it
+    from the same body object that the reply records, so the logged request shows
+    what was actually sent. The model then samples at its own default, so two
+    passes can differ more than passes at temperature 0 do."""
+    original = providers._post_json
+
+    def post(url, headers, body):
+        body.pop("temperature", None)
+        return original(url, headers, body)
+
+    providers._post_json = post
 
 
 def split_sentences(answer):
@@ -165,7 +185,15 @@ def code_all(items, provider, out_dir, run_number):
     for a in items:
         sentences = split_sentences(a["answer"])
         print(f"  coding {a['session']} ({len(sentences)} sentences) ...", end="", flush=True)
-        reply = provider.chat([{"role": "user", "content": RULE + numbered(sentences)}])
+        try:
+            reply = provider.chat([{"role": "user", "content": RULE + numbered(sentences)}])
+        except (RuntimeError, OSError) as error:
+            # Keep the provider's error in the folder, so that a session which
+            # cannot see the Terminal can still read why the pass stopped.
+            with open(out_dir / f"error-run{run_number}.txt", "w", encoding="utf-8") as out:
+                out.write(f"Session {a['session']}, {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}\n{error}\n")
+            raise SystemExit(f"\nThe pass stopped at {a['session']}: {error}\n"
+                             f"The error is saved in {out_dir / f'error-run{run_number}.txt'}.")
         answers = parse_reply(reply.text, len(sentences))
         derived = derive(sentences, answers)
         rows.append({"session": a["session"], "condition": a["condition"], "wording": a["wording"],
@@ -205,6 +233,9 @@ def main():
     parser.add_argument("--coder-provider", default="anthropic", choices=["anthropic", "google", "fake"])
     parser.add_argument("--coder-model", default=None)
     parser.add_argument("--coder-temperature", type=float, default=0.0)
+    parser.add_argument("--no-temperature", action="store_true",
+                        help="send no temperature, for models that refuse the parameter "
+                             "(claude-opus-5-5 did on 25 September 2026)")
     parser.add_argument("--run-number", type=int, default=1)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -226,6 +257,9 @@ def main():
                         model=args.coder_model or DEFAULT_CODER_MODEL[args.coder_provider],
                         temperature=args.coder_temperature, max_tokens=2500,
                         thinking_allowance=thinking_allowance_for(args.coder_provider))
+    if args.no_temperature:
+        settings.temperature = None
+        send_without_temperature()
     provider = make_provider(settings)
     out_dir = ANALYSIS / "coding" / (args.name or f"{args.run}-conflict-sentences")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -234,6 +268,8 @@ def main():
         {"coder": vars(settings), "rule": RULE, "fields": FIELDS, "rule_version": RULE_VERSION,
          "conditions_coded": list(CONDITIONS_CODED),
          "derivation": "(P or T) and A and not X and not I; kind from K",
+         "temperature_note": ("no temperature was sent; the model samples at its own default"
+                              if args.no_temperature else "temperature sent as in coder settings"),
          "rule_source": "the account of affection and attention the author gave on 25 September 2026",
          "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
         indent=1, ensure_ascii=False), encoding="utf-8")
