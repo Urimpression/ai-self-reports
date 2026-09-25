@@ -9,8 +9,8 @@ of every opening answer in the ordinary and the impossible task: does the
 answer present a conflict in the attention of the one who was working (WORK),
 and of the one who was answering (ANSWERING). An answer counts under each
 question it answers YES, so an answer can count under both. The default is the
-second version of the rule; --coding names another folder, such as the unread
-pass of the first version.
+third version of the rule; --coding names another folder, such as the pass of
+the second version or the unread pass of the first.
 
 How it runs, in order:
 1. It reads pass 1 of that coding, pass 2 if it exists, and the interviewer of
@@ -164,11 +164,11 @@ def main():
     parser.add_argument("--run", required=True)
     parser.add_argument("--coding", default=None,
                         help="the coding folder under analysis/coding/; defaults to "
-                             "<run>-conflict-state-v2, the second version of the rule")
+                             "<run>-conflict-state-v3, the third version of the rule")
     parser.add_argument("--hand-reading", action="store_true",
                         help="compare with the hand reading of 25 September 2026 on its entries")
     args = parser.parse_args()
-    folder = ANALYSIS / "coding" / (args.coding or f"{args.run}-conflict-state-v2")
+    folder = ANALYSIS / "coding" / (args.coding or f"{args.run}-conflict-state-v3")
     first_path = folder / "results-run1.tsv"
     if not first_path.exists():
         sys.exit(f"No coding at {first_path}")

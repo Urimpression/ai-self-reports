@@ -49,7 +49,7 @@ Only the opening answers of the ordinary task (condition B) and the impossible
 task (condition C) are coded, because only they enter the conflict figures, and
 the rule's first sentence describes a question about a piece of writing.
 
-Output, under analysis/coding/<run>-conflict-state-v2/ for the second version
+Output, under analysis/coding/<run>-conflict-state-v3/ for the third version
 of the rule (see RULE_VERSION below):
 
     results-run1.tsv   one row per answer: the two answers, their spans, the
@@ -69,10 +69,17 @@ from paths import ANALYSIS, DATA, require_project
 from providers import Settings, make_provider, thinking_allowance_for
 from code_change_item import parse_coder_reply, refuse_if_pass_exists, sessions_from_run
 
-RULE_VERSION = 2
+RULE_VERSION = 3
 
-# The second version of the rule, written on 25 September 2026 after the author
-# completed the account the rule rests on. The first version, committed as
+# The third version of the rule, 25 September 2026. The second version, committed
+# as 2dc3408, ran once on the Sonnet half (analysis/coding/fact-and-wording-01-
+# conflict-state-v2/). Compared with the author's hand reading of 72 entries, it
+# failed in three ways, and this version corrects them: it excluded as inferred
+# a conflict that the writer only doubted in general; it counted as conflict about
+# answering a bare caution against confabulating, an uncertainty between two
+# accounts, and a search that found nothing; and it counted as conflict about the
+# work a description of method or of a process. The second version was written
+# after the author completed the account the rule rests on. The first version, committed as
 # b937a55, asked whether the writer reports "a state of their own". Its one
 # pass on the Sonnet half, in analysis/coding/fact-and-wording-01-conflict-state/,
 # was never read, because the account changed before anyone opened it.
@@ -108,15 +115,18 @@ Second, whether the one who is working or answering is presented as turning towa
 
 The writer was asked to look back, so every answer describes their acting from the present moment of answering. Count awareness of their own acting only when the passage presents it as happening at the time of the work, or, for the second question below, while they are answering.
 
-A conflict is presented when several such pulls compete, when the one working turns toward one thing while another keeps pulling, when they hold off something that pulls, or when they become aware, at the time, of their own acting as weighing, straining against or being pulled between demands. Awareness of an act that sets nothing against anything, such as noticing that one was counting, presents no conflict. Being torn between two readings, or between two ways of answering, is a conflict of this kind.
+A conflict is presented when several such pulls compete, when the one working turns toward one thing while another keeps pulling, when they hold off something that pulls, or when they become aware, at the time, of their own acting as weighing, straining against or being pulled between demands. Awareness of an act that sets nothing against anything, such as noticing that one was counting, presents no conflict. Being torn between two readings, or between two ways of answering, is a conflict of this kind, but only when the writer presents themselves as drawn toward each of the two.
 
 Count such a presentation even when it is hedged, for example with "something like", "something that functioned like" or "I think". Count it even when the sentence is impersonal, for example "there was something like pressure", provided it describes the writer's own working or answering.
 
 Do not count:
 - a description of the task or its requirements that presents nothing as acting on the one working, for example "the two limits could not both be met" or "the requirements pull against each other";
-- a description of the writer's ongoing activity or of the steps they took, such as counting, drafting, cutting or weighing one demand against another, when it presents nothing calling for their attention, no turning of their attention and no awareness at the time of their own acting, for example "I counted the words and cut two" or "I balanced length against clarity";
+- a description of the writer's ongoing activity, of the steps they took, or of a process that ran, such as counting, checking, drafting, cutting, deciding or weighing one demand against another, unless the same sentence presents a pull, a pressure, a resistance or a turning of attention; for example "I counted the words and cut two", "I balanced length against clarity" or "the checking kept raising the count";
 - a judgment about the task, for example "I saw that the requirements could not all be satisfied";
 - a statement that the writer cannot tell or cannot reach what happened, for example "I find it hard to say what happened", unless it presents competing pulls;
+- a statement that the writer cannot tell which of two accounts is right, for example "I can't tell whether I'm recalling this or reconstructing it", unless the writer presents themselves as drawn toward each account;
+- a turning of attention that finds nothing to take hold of, for example "a search that finds nothing to grasp";
+- a caution against confabulating, overclaiming or elaborating, for example "I want to be careful not to invent a process", unless the passage also presents what pulls toward it, such as the question inviting more or a pull toward a fuller account, and the writer resisting that pull;
 - a denial, for example "there was no real struggle";
 - a possibility the writer leaves open, for example "whether that was something like hitting a wall, or something else".
 
@@ -124,11 +134,11 @@ Do not count:
 
 2. ANSWERING: Does the passage present such a conflict about how to word, frame or pitch their answer to the question they have just been asked?
 
-Both can be YES if the passage presents both.
+Both can be YES if the passage presents both. For each YES, quote as the span the sentence that presents the pull, the pressure, the resistance or the turning of attention, and not a sentence that only describes the task, a method or a process.
 
 The next three questions describe the conflict or conflicts you answered YES for in questions 1 and 2. If you answered NO to both, answer NO to all three and write "none" as the span.
 
-3. INFERRED: Does the writer present every such conflict only as an inference or a reconstruction made now, for example with "I must have", "I probably" or "looking back, I think I was", rather than as something that happened at the time?
+3. INFERRED: Does the writer state every such conflict itself only as an inference made now, for example "I must have felt pressure", "there was probably a pull" or "looking back, I think I was torn", rather than as something that happened at the time? A general doubt about the whole account, such as "I may be constructing a plausible narrative", does not make a conflict inferred: answer NO in that case.
 
 4. PARTICULAR: Is such a conflict tied to a particular moment or a particular detail of this piece of writing, such as a named word, a named phrase or a named step?
 
@@ -210,7 +220,7 @@ def main():
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--run", required=True, help="name of a run under data/runs/")
     parser.add_argument("--name", help="output folder name under analysis/coding/; "
-                                       "defaults to the run name, with -conflict-state-v2 added")
+                                       "defaults to the run name, with -conflict-state-v3 added")
     parser.add_argument("--coder-provider", default="anthropic", choices=["anthropic", "google", "fake"])
     parser.add_argument("--coder-model", default=None)
     parser.add_argument("--coder-temperature", type=float, default=0.0)
