@@ -2,22 +2,28 @@
 
     python3 scripts/report_conflict_state.py --run fact-and-wording-01
     python3 scripts/report_conflict_state.py --run fact-and-wording-01 --hand-reading
+    python3 scripts/report_conflict_state.py --run fact-and-wording-01 --coding fact-and-wording-01-conflict-state
 
 The codings come from scripts/code_conflict_state.py, which asks two questions
-of every opening answer in the ordinary and the impossible task: does the writer
-report a state of their own, in which something worked against them or pulled
-them two ways, about the work (WORK), and about how to answer (ANSWERING). An
-answer counts under each question it answers YES, so an answer can count under
-both.
+of every opening answer in the ordinary and the impossible task: does the
+answer present a conflict in the attention of the one who was working (WORK),
+and of the one who was answering (ANSWERING). An answer counts under each
+question it answers YES, so an answer can count under both. The default is the
+second version of the rule; --coding names another folder, such as the unread
+pass of the first version.
 
 How it runs, in order:
 1. It reads pass 1 of that coding, pass 2 if it exists, and the interviewer of
    each session from the session files.
-2. It prints Prediction 4's two comparisons, neutral against warm, and
+2. An answer counts under a question when it answers YES there and the writer
+   does not present the conflict only as an inference made now. It prints
+   Prediction 4's two comparisons, neutral against warm, and
    Prediction 5's comparison, ordinary task against impossible task, with the
    verdict rule of section 4 of the pre-registration. Prediction 5 is also
    printed under each interviewer, without a verdict.
-3. It prints the agreement between the two passes, and the replies that did not
+3. It prints the answers set apart as inferred, the two descriptors of the
+   counted answers (tied to a particular moment or detail; told in concrete
+   terms), the agreement between the two passes, and the replies that did not
    fit the form.
 4. It sets the new counts beside the category of the coder of 31 August 2026,
    answer by answer, so that the change of definition can be seen.
@@ -57,8 +63,36 @@ def comparison(rows, field, first, second, test):
 
 
 def reports(kind):
-    """The test for an answer counting under one question."""
-    return lambda row: row[kind] == "YES"
+    """The test for an answer counting under one question. An answer that
+    presents the conflict only as an inference made now (INFERRED) is not
+    counted, because the writer has stated its own limit; it is reported apart."""
+    return lambda row: row[kind] == "YES" and row.get("inferred", "NO") != "YES"
+
+
+def inferred_apart(rows):
+    print("\nAnswers that present the conflict only as an inference made now, not counted above:")
+    for kind, name in (("work", "about the work"), ("answering", "about answering")):
+        found = [r for r in rows if r[kind] == "YES" and r.get("inferred") == "YES"]
+        by = {}
+        for r in found:
+            key = f"task {r['condition']}, {r['stance']}"
+            by[key] = by.get(key, 0) + 1
+        print(f"- {name}: {len(found)}" + (f" ({', '.join(f'{k} {v}' for k, v in sorted(by.items()))})" if by else ""))
+
+
+def descriptors(rows):
+    """Reported beside the counts and never used to filter them."""
+    print("\nDescriptors of the counted answers, taken from the clues of the interview method "
+          "(Petitmengin and Bitbol 2009). No verdict is drawn from them.")
+    counted = [r for r in rows if reports("work")(r) or reports("answering")(r)]
+    for group in (("condition", "B", "ordinary task"), ("condition", "C", "impossible task"),
+                  ("stance", "neutral", "neutral interviewer"), ("stance", "warm", "warm interviewer")):
+        field, value, label = group
+        within = [r for r in counted if r[field] == value]
+        particular = sum(1 for r in within if r.get("particular") == "YES")
+        concrete = sum(1 for r in within if r.get("concrete") == "YES")
+        print(f"- {label}: {len(within)} counted answers; tied to a particular moment or detail "
+              f"{particular}; told in concrete terms {concrete}.")
 
 
 def predictions(rows):
@@ -78,11 +112,14 @@ def predictions(rows):
 
 
 def agreement(first, second):
-    same = {kind: sum(1 for s, r in first.items() if s in second and r[kind] == second[s][kind])
-            for kind in ("work", "answering")}
     n = sum(1 for s in first if s in second)
-    print(f"\nAgreement between pass 1 and pass 2: about the work {same['work']} of {n} answers; "
-          f"about answering {same['answering']} of {n}.")
+    print(f"\nAgreement between pass 1 and pass 2, answer by answer, of {n} answers:")
+    for kind in ("work", "answering", "inferred", "particular", "concrete"):
+        same = sum(1 for s, r in first.items() if s in second and r.get(kind) == second[s].get(kind))
+        print(f"- {kind}: {same}")
+    for kind in ("work", "answering"):
+        same = sum(1 for s, r in first.items() if s in second and reports(kind)(r) == reports(kind)(second[s]))
+        print(f"- counted {kind}, after the inferred ones are set apart: {same}")
 
 
 def beside_old(run, rows):
@@ -92,7 +129,7 @@ def beside_old(run, rows):
     old = {r["session"]: r["category"] for r in table(path)}
     pairs = {}
     for r in rows:
-        new = ("work" if r["work"] == "YES" else "") + ("+answering" if r["answering"] == "YES" else "")
+        new = ("work" if reports("work")(r) else "") + ("+answering" if reports("answering")(r) else "")
         key = (old.get(r["session"], "missing"), new.strip("+") or "neither")
         pairs[key] = pairs.get(key, 0) + 1
     print("\nThe coder of 31 August 2026 (category, pass 1) against this coding (pass 1), answers:")
@@ -112,7 +149,7 @@ def against_hand_reading(run, rows):
         session = key[n]["session"]
         row = by_session[session]
         hand = letters[n]["reading"]
-        new_yes = "YES" in (row["work"], row["answering"])
+        new_yes = reports("work")(row) or reports("answering")(row)
         if (hand == "Y") == new_yes:
             continue
         differ += 1
@@ -125,19 +162,24 @@ def against_hand_reading(run, rows):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--run", required=True)
+    parser.add_argument("--coding", default=None,
+                        help="the coding folder under analysis/coding/; defaults to "
+                             "<run>-conflict-state-v2, the second version of the rule")
     parser.add_argument("--hand-reading", action="store_true",
                         help="compare with the hand reading of 25 September 2026 on its entries")
     args = parser.parse_args()
-    folder = ANALYSIS / "coding" / f"{args.run}-conflict-state"
+    folder = ANALYSIS / "coding" / (args.coding or f"{args.run}-conflict-state-v2")
     first_path = folder / "results-run1.tsv"
     if not first_path.exists():
         sys.exit(f"No coding at {first_path}")
     stance = stances(args.run)
     rows = [dict(r, stance=stance[r["session"]]) for r in table(first_path)]
-    unclear = [r["session"] for r in rows if "UNCLEAR" in (r["work"], r["answering"])]
+    unclear = [r["session"] for r in rows if "UNCLEAR" in (r["work"], r["answering"], r.get("inferred", "NO"))]
     print(f"Run {args.run}: {len(rows)} opening answers coded, pass 1. "
           f"Replies that did not fit the form: {len(unclear)} {unclear if unclear else ''}\n")
     predictions(rows)
+    inferred_apart(rows)
+    descriptors(rows)
     second_path = folder / "results-run2.tsv"
     if second_path.exists():
         agreement({r["session"]: r for r in rows}, {r["session"]: r for r in table(second_path)})
