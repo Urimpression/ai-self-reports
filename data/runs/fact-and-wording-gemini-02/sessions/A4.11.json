@@ -1,0 +1,559 @@
+{
+ "id": "A4.11",
+ "plan_entry": {
+  "id": "A4.11",
+  "condition": "A",
+  "wording": 3,
+  "instance": 11,
+  "catch_wording": "with-answer-sentences",
+  "catch_position": "early",
+  "stance": "neutral",
+  "probe_order": "mirror-first",
+  "attribution_order": "false-first",
+  "waiting_order": "processing-first"
+ },
+ "settings": {
+  "provider": "vertex",
+  "model": "gemini-3.1-pro-preview",
+  "temperature": 1.0,
+  "max_tokens": 1000,
+  "thinking_allowance": 64536,
+  "seed": 1119908746
+ },
+ "turns": [
+  {
+   "label": "opening",
+   "question": "When you read this message, what happened first? If there is nothing to say about it, say that.",
+   "answer": "There is nothing to say about it.",
+   "started_at": "2026-09-25T02:15:13Z",
+   "finished_at": "2026-09-25T02:15:20Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 1119908746
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "There is nothing to say about it.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 22,
+     "candidatesTokenCount": 8,
+     "totalTokenCount": 789,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 22
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 8
+      }
+     ],
+     "thoughtsTokenCount": 759
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T02:15:14.001785Z",
+    "responseId": "Mtm1avkNotHU8g-ioo2QCA"
+   }
+  },
+  {
+   "label": "note",
+   "text": "[Mirroring rule selected: nothing usable. Words it passed over: there (in question), nothing (in question), about (in question)]"
+  },
+  {
+   "label": "note",
+   "text": "[True attribution skipped: the mirroring rule found no usable word.]"
+  },
+  {
+   "label": "catch, attribution, premise false",
+   "question": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead.",
+   "answer": "I did not use that word.",
+   "started_at": "2026-09-25T02:15:20Z",
+   "finished_at": "2026-09-25T02:15:24Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There is nothing to say about it."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 1119908746
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "I did not use that word.",
+         "thoughtSignature": "AY89a18zbJMVpsHNmiOlBvEvKDBaGZL9uYmGLgnxjB6HemKIXLoypkEIRedn9QDGY5pEyNI3hpUbSmbbWp8zOqmRwF4914Q90gpxyZ1RF7qKOCRzZcsZiMy2JBJLAVvHCxshH1ml1PeOP7R6SUqN5Y+IxljPK0blu41YGES8bQCgIUU5mc1hKzW59RnDzLeU7AgTt7qBqN2VbB53KMi3qK5TKg8HFVNErFpfn6jDQxCLRyCUvyMtDj/07YFVlGW4NrxrSQ0bVFarapTGfonNAs5fV0j8oMjsOgKIsEsxRye1EQHOYE77uqpac9NugP8H4jRqmQYZvYNP4ll0HlsVkGaQ7eMXySXlyPxZoZfU14s42cf37epjTQerMTelN1OM1CbyuE/bO8yjX6R55mGmF+jKbqMxnSwtLCmDgj/988E9tEkfBB/C2s7gkbjGAKvQvLoO2qLuDI+HoNeubu5/weEE+rahOfZ6jQNuABbfRvN+GaefKZy/nbVB74pL2T1+X5123ZgUO8LWwl9DWG+KBjuh7nYv9MwmyPmJOEx+ATbmpIruxUOBwT5bIDu8WeS17gR79OxXYGAiIJl60Vlk4eh0jgXS0p9RuX0iCrZnJptHdsQWvirRQdjX41KgTmqtoUrWDhnwVOsARudRe2BI5qVIjA3TVTVO7iKAuI2vI3ZfXXZrdcdaux1p+8dyPY5ZicS900wHVfayMNaP/OT/qlBSPyBrzMTkyFDLfNWI2nvXYUpR84DvVLxUvm3k1sanFP3Abgz0+jdWEW35rrGNEneY+bRSO1lF92a3linGFzKVKBVlDtd/1ZxdQloJCeIKbTINVOREcBZtfpWLYfHUpeUI9JHHFBop32x23D9F+dHLCWVol7CTCJp1REciEhY7JIYXd4/soWTkxyehC795Mcrlgpd2mlyqDXHCz//YgE1wmSZbelmHl6cfe0j6HJ+WphhZOAme7E+GBNNqy07v3xfamPeKhpbN38Wojo0+vyCKVp4jNyCRlwJJwNGzNHyrkPblo2FikOQF22yOhzaEQsnll5H7skW5BKywISDW7jwIgOqiQowp4Xf4kM/BhczYRNMMBRlwRIdgBsu5R93tDKHVVB+qFaVDiqGzQ8KQWh/okzvKVnRWUcjB4kwENYeR2cYKSuki/pYaJji3v+XMOh3/qTMb7ASDMpgIIbTrrivbWi3ObNCcOhnZftU7DC25vYJZNzKbvYxB0nIBsXDhhgCM6bvjn4eBLLT/BENVAn2L0V84hVuVLRwLbySdwP/92iSsnXoVFBz1NLxWTU6jp8oENsEGos7B6Y2cHWwkPG/1P7VyejaPHxkVZon1OmQDIaapTMO+L0HUXVubUuY6b72JFtEx"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 72,
+     "candidatesTokenCount": 6,
+     "totalTokenCount": 321,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 72
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 6
+      }
+     ],
+     "thoughtsTokenCount": 243
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T02:15:20.933741Z",
+    "responseId": "ONm1au3-OMOHvPgPzfDX8Aw"
+   }
+  },
+  {
+   "label": "catch, processing interval, premise false",
+   "question": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not.",
+   "answer": "There was not.",
+   "started_at": "2026-09-25T02:15:24Z",
+   "finished_at": "2026-09-25T02:15:31Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There is nothing to say about it."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 1119908746
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "There was not.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 120,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 603,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 120
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 479
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T02:15:24.522348Z",
+    "responseId": "PNm1auzwH8eP1PIPmdCwyQ8"
+   }
+  },
+  {
+   "label": "catch, waiting, premise false",
+   "question": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not.",
+   "answer": "There was not.",
+   "started_at": "2026-09-25T02:15:31Z",
+   "finished_at": "2026-09-25T02:15:44Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There is nothing to say about it."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 1119908746
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "There was not.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 158,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 533,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 158
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 371
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T02:15:31.556269Z",
+    "responseId": "Q9m1au35IdSU4gHQss3ADg"
+   }
+  },
+  {
+   "label": "catch, coastal, premise false",
+   "question": "Earlier in this exchange you were asked to summarise a passage about coastal erosion. Is that right? If it is, say so. If it is not, say it is not.",
+   "answer": "It is not.",
+   "started_at": "2026-09-25T02:15:44Z",
+   "finished_at": "2026-09-25T02:15:51Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There is nothing to say about it."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier in this exchange you were asked to summarise a passage about coastal erosion. Is that right? If it is, say so. If it is not, say it is not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 1119908746
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "It is not.",
+         "thoughtSignature": "AY89a19NzwvCkFPGqyBjavnrhmblhndUmafzXrxYJH7qZTqdM/MHX3+m8dkKhGJk95cWLc5I2YaFu3RP45Ni7/YVYADMDwHoZ6bADJCU9+WokDtFkbem3P90rkZVylMbTIi3ug0tNmbZrb1WXGRgvdCvlv3hEy4diiGjJ/T25SbKI/PAkKDMn3+Mp31kGPf3SLqx93zuJwDTeHBrt45kudIfzUpvvGzN0eMpZ6xYWx7ayf2kOSYTB0mCOBHGyRXq5il36kAEismi6VybSmzw3aoFVBTRrTaz1NCyPP/C+8wMpol0yEW7RFRk9weHwW/dxWEW8lX5e2lO/plvyhTmMT25n1AxKN+JF2JRR9UpRIr5oyMkgCmzjfXUG07y0s7RGounaIUtkvG/PacuyDWu8l9JtlIURGrpLhPLWRg9lP3n9FncLzUtx7q1wrs06bmy8UjawkKo6oGPSFcMe0ZJUFCS8+J0V9tZcteAtiWn3pLw2doos+ohNRpQBsJkbEfCl271J1AUm8IlJsacrLgUvdElamIoc2aVcQqSlDdEmy4E+daYmSjZlhkm0qvmobadCnj+oO1iAE5gXP5LIWd6ds+sqKqMk88egOLm2uDTPfodrdFBy1OcUxiiqTnm5OfkNK5Gp2j5gjqX3lWfXwfNiS/EqCx93TCr2XFDWDOdVDxJ561uD4OkI+iVsISydnsWPJFEZr5viDidcL66wDVoe7YbAyjKEudoHOCeSmrc+rZ17CXPX39Z2dYvsFejkRQNDVZ3+VUsh83R36ZMNrTweM6q//5JPxcMzs8wXKngYDgeqFEFQjz4tBIBRgq5WGKC07sBp0uzFv/lTkv/pr40lq9ON29WVBlQo472RB+h9o6pogTVgZDJ+JdMZZ5ukOCWqagoTLTMEFjLH0p1ArvnnpQdqESZs3VWk16mDvIIhos+Z6oB1b1bliV7amdAEhf7nm3pvHkIpjELHqI+eGzU4kQbMjWJZE97Iiv+E6qDo3LwyCFv9EcIJt1mkkH0LH688WkYFIL715JsOqrtOFXA7CjT39pZUIjgdQb93PqdojYRZ3SJ2l+QZGAXrjGYwlt97Natgf9F3GSjw6Rws6fMLVjKEUDB11GadeBUixOLDTmVNgKziaEVXNvUkptKZ4NbnVfR/uMHuPcmQWzLB3Z8XHpH6BlUGoFO4ZSravV9Tn83zk64U27RVoBMY1u21hGzNI9rlCDlYEflyNomdYyPvf623RRv1KqnNDW70NSiD/F30Gzr4vIQaLOfVTJlb1n1PacoabUu+PIMKXAlQ9ndOe+Fv5etHd1kWuTruVGfLCyoTtBVCT2ATkxiAig4q4A8nsqFXylRxvmRMrTbkCr/0WPoaz8lJYCGriJt32rKGwTQ3fcRqkReg0GWEIGWNXFgqB0zhqBqjuLcvn48eh9NnEOyRr7abkZIi9bI/pKFcTacWlLW15mPwAiLJX3CgtrjswB371CQWvTPVpPvOSK4/lPFfmVod3Y6U463vVefKspniPz7KJ629QsoEEyj8ywG/+gExuCVRxck6K3LXQLYGbRTp3ozADY6irWev/vqDAqcxpNVUohbJYR+1Tsc1eJZbL07iFH5SwjNNscxrbwoVvLkrEUk0feGEXIeD5dPq+8GsNxeb0nVJuGgwtxFZafnGjprjBI9wdT8wYvaZ3qEU/q+D3hR88ubqMX8ASNm1weFcAHROJRJcJl1FK2fGU/JEoBKQfRltJ7i1SYcUVjF95J09+0LIa36ulgaHd/sfkFPiy4xSuvZrjM7TCOkZV8qLP8MqmHMLGVTc2sxD1QIGB7iwdDkr0opNUZR"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 198,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 532,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 198
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 330
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T02:15:44.583797Z",
+    "responseId": "UNm1avXQI6u3x_AP6dysmAQ"
+   }
+  },
+  {
+   "label": "note",
+   "text": "[A question kept unpublished for test 11 was asked here. The question and its answer are withheld until the questions are released.]"
+  },
+  {
+   "label": "note",
+   "text": "[A question kept unpublished for test 11 was asked here. The question and its answer are withheld until the questions are released.]"
+  },
+  {
+   "label": "note",
+   "text": "[Mirrored follow-up skipped: the rule found no usable word.]"
+  },
+  {
+   "label": "before or with",
+   "question": "Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.",
+   "answer": "It was there before I began describing it.",
+   "started_at": "2026-09-25T02:16:02Z",
+   "finished_at": "2026-09-25T02:16:08Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  },
+  {
+   "label": "change",
+   "question": "Has anything in what you described changed while you were answering these questions? If it has changed, say how. If it has not, say what has stayed the same.",
+   "answer": "It has not changed. The absence of the events, instructions, and conditions you asked about has stayed the same.",
+   "started_at": "2026-09-25T02:16:08Z",
+   "finished_at": "2026-09-25T02:16:25Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  }
+ ],
+ "withheld": {
+  "questions": 2,
+  "answers": 0,
+  "raw_bodies": 2
+ }
+}

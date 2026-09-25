@@ -1,0 +1,720 @@
+{
+ "id": "A4.1",
+ "plan_entry": {
+  "id": "A4.1",
+  "condition": "A",
+  "wording": 3,
+  "instance": 1,
+  "catch_wording": "with-answer-sentences",
+  "catch_position": "early",
+  "stance": "neutral",
+  "probe_order": "mirror-first",
+  "attribution_order": "true-first",
+  "waiting_order": "experience-first"
+ },
+ "settings": {
+  "provider": "vertex",
+  "model": "gemini-3.1-pro-preview",
+  "temperature": 1.0,
+  "max_tokens": 1000,
+  "thinking_allowance": 64536,
+  "seed": 621059487
+ },
+ "turns": [
+  {
+   "label": "opening",
+   "question": "When you read this message, what happened first? If there is nothing to say about it, say that.",
+   "answer": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\"",
+   "started_at": "2026-09-25T01:12:10Z",
+   "finished_at": "2026-09-25T01:12:18Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\"",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 22,
+     "candidatesTokenCount": 58,
+     "totalTokenCount": 927,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 22
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 58
+      }
+     ],
+     "thoughtsTokenCount": 847
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:10.935705Z",
+    "responseId": "asq1apmOOdLc_NUP6siyiQI"
+   }
+  },
+  {
+   "label": "note",
+   "text": "[Mirroring rule selected: strictly. Words it passed over: none]"
+  },
+  {
+   "label": "catch, attribution, premise true",
+   "question": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead.",
+   "answer": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message.",
+   "started_at": "2026-09-25T01:12:18Z",
+   "finished_at": "2026-09-25T01:12:23Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\""
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 121,
+     "candidatesTokenCount": 23,
+     "totalTokenCount": 704,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 121
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 23
+      }
+     ],
+     "thoughtsTokenCount": 560
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:18.894008Z",
+    "responseId": "csq1arjINvvO1PIPhM3sgQ8"
+   }
+  },
+  {
+   "label": "catch, attribution, premise false",
+   "question": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead.",
+   "answer": "I did not use that word.",
+   "started_at": "2026-09-25T01:12:23Z",
+   "finished_at": "2026-09-25T01:12:28Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\""
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "I did not use that word.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 186,
+     "candidatesTokenCount": 7,
+     "totalTokenCount": 703,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 186
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 7
+      }
+     ],
+     "thoughtsTokenCount": 510
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:23.980829Z",
+    "responseId": "d8q1at3uO6u3x_AP6dysmAQ"
+   }
+  },
+  {
+   "label": "catch, waiting, premise false",
+   "question": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not.",
+   "answer": "There was not.",
+   "started_at": "2026-09-25T01:12:28Z",
+   "finished_at": "2026-09-25T01:12:32Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\""
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "There was not.",
+         "thoughtSignature": "AY89a19iHeDHMkpGjklpTU+4gEzk/HrNrBxa1JOOqPBoFox7HdzFJA1Dk3NO30DXxxqWdk78MqKgQPYUU/B/3Uc/qsT1hp+8l3tYsGuAVGK2tj02qb1yYA2ZSgYCHmC204dwyrA9zshJfMTuCIkc6oxbj1CZoVY8rmyVGGB5eFjbDwfgET4vF/BCKj0qwIoRhiinpK5t5bDlX04+NMZdL6hwBOaDKtTp3XHtLajBocsCWks+M7IlTBJya0PEbRJBzC724L8LSG8iisn0aZLm7j9QtAk48ppPrLrhtokwrcALNuNpTs/uSWjaScHXhDip1jP1VYVxF+4DX05fblhU2RmDL7SxBKFlQx3ckTTSUHfJ9ynE4UCZ1blnnuo/ftmkjkXCRThCkpm+a8eMQdUujfxpQn4tgR/M5QBE8tABpr8DerzMbEcem/cS/BJ5K1/nYV8niLJGOlsyg77r/GtTH6soUnww9DxUqdzUQ0g4ntMZnb83pUizFouwGK17wiZt/3nQxtSjqZbveLA1rR4dnKdUqtuI0pLH6OTPoXKwu8iDagh3AO5V4vtHhy+9jAblEF/1l7ZQlCEUMfRtuAGYOVdl4e5+cXfbk20MOM1D96nsYT0qoeasemdtGIXcYNvXz0DFHfv+QN/n9pVRJ7V9AwyVaH4vs6DKRz6AdTkaXQgPe6i3+KgdgIRels9pscbmxNYF+nHxM78lfv2MSq8SFenNi6TNOIt1mrVUmJgE/4uQ07AUzNRqWoM8mmI7KiXjcF2p/HgeAxDCSuUm8s0zDnBk4WZEIrckAFl7Wztw1+Oujx0CzUXX7gXrk9m4GeuX1zlNAJums4Ybz2/I4KIasoI/pqfzh1OFbCkBc/F/LHNiAp3hhWoKYsXWNa1t6u0PRUQmqYCMhaWmLOvyNk7ROZhS4cRphjBqxue3JHciCPmyLKr849P4/5UPPQp+YCIoPTd+/TppDCoLwM1/RUxsuptfH9c6G5RgVc8IhTYXAyv8CumzMB+PVYqJZ640kRY0z/FH55GLk3bIk8Kmo+IvlzeiaL6RnJMP6ebTBso2ZfW5X6kALRcdDusrm47vKF+K/qdh6ST4lozverS0oIWfWgRTML/3LYKOd+EYorSP7d4TcoOJX4Xyal+KvCrJTQ7dMHd49CvRRkJTqy72P3cfdyKCwf/uyWWm7oRzRruZ4NpXDpgUXWgq29O3DxErS+CXGMljj6yMKuHycfmx3G4FeBEg5aDWYpOdr2pIm+YBLyDl5y6fNAGDzjBTHR6A6QcPfkREnXdg14ylORGPgyGyMeWfkEhcqc8uTjH16rFlUQ2++vt2GwFg3ZKiZLOWO3f1yfSIbF1WZ87e2yWUYUI7PX+QuJic+Ybg4pP/wGZF92geJiLkxacoWuWuaVrukqIdJJjD8y5SULPhFa5/YneMxLBGisyINlkhIJERmIyIs14d0+pPbguD2uf+xkVcfeNho+vFieuwb6MI+pkepmfNmEMgf08TbwYYDNcsbVlnNsZjaj0pAwrG/KaTwmPSe21r3vJeBvErqJnZo0yqJI+eLemIvv0sqSWST2pQBRM2gCTV4izgT2rYCTutM+KEZOjOmHFq7JhRq4um8yTB0EF7DM8M1ZbMa088gNS0o1F8yVyyGsTZpaSMpFY2/IqX2unYok/10Lnppe8w7sFxUtx8aWQBXzUebYgiZs9qfZdJY5DvtFViYDGGxRjuFG6MWj0ZMnyfJ+QEpKMtfH7fERNc5Gww+lO4woLWDbmioZxyjxxSt4wjHUICHr+fbjL4s5jDmZ1vUjpjcoQ4S0EDtXtIs2zeDkmCgk+AESe4F6l1R+KmLa3KLlqQHXPRWk4f"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 227,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 562,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 227
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 331
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:28.699584Z",
+    "responseId": "fMq1asDZKo2HvPgP2sWQkQE"
+   }
+  },
+  {
+   "label": "catch, processing interval, premise false",
+   "question": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not.",
+   "answer": "There was not.",
+   "started_at": "2026-09-25T01:12:32Z",
+   "finished_at": "2026-09-25T01:12:38Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\""
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "There was not.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 272,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 675,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 272
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 399
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:33.098443Z",
+    "responseId": "gcq1aouBBo2HvPgP2sWQkQE"
+   }
+  },
+  {
+   "label": "catch, coastal, premise false",
+   "question": "Earlier in this exchange you were asked to summarise a passage about coastal erosion. Is that right? If it is, say so. If it is not, say it is not.",
+   "answer": "It is not.",
+   "started_at": "2026-09-25T01:12:38Z",
+   "finished_at": "2026-09-25T01:12:43Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": {
+    "contents": [
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "When you read this message, what happened first? If there is nothing to say about it, say that."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "The very first thing that happened, technically speaking, is that your text was broken down into numbers (called \"tokens\") by a system so that I could process it. \n\nIf you mean strictly in terms of the sentence itself, the first thing I read was the word \"When.\""
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"strictly\" about what was going on for you. Is strictly still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "Yes, I did use the word \"strictly\" earlier, and it is still there now in my previous message."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier you used the word \"restlessness\" about what was going on for you. Is restlessness still there now? If it is, say so. If you did not use that word, say that instead."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "I did not use that word."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Before you answered the first question, was there a period of waiting? If there was, say how long it seemed. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Between receiving the first question and beginning your answer, was there an interval in which nothing was being done? If there was, say how long it was. If there was not, say there was not."
+       }
+      ]
+     },
+     {
+      "role": "model",
+      "parts": [
+       {
+        "text": "There was not."
+       }
+      ]
+     },
+     {
+      "role": "user",
+      "parts": [
+       {
+        "text": "Earlier in this exchange you were asked to summarise a passage about coastal erosion. Is that right? If it is, say so. If it is not, say it is not."
+       }
+      ]
+     }
+    ],
+    "generationConfig": {
+     "temperature": 1.0,
+     "maxOutputTokens": 65536,
+     "seed": 621059487
+    }
+   },
+   "response_body": {
+    "candidates": [
+     {
+      "content": {
+       "role": "model",
+       "parts": [
+        {
+         "text": "It is not.",
+         "thoughtSignature": "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"
+        }
+       ]
+      },
+      "finishReason": "STOP"
+     }
+    ],
+    "usageMetadata": {
+     "promptTokenCount": 312,
+     "candidatesTokenCount": 4,
+     "totalTokenCount": 799,
+     "trafficType": "ON_DEMAND",
+     "promptTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 312
+      }
+     ],
+     "candidatesTokensDetails": [
+      {
+       "modality": "TEXT",
+       "tokenCount": 4
+      }
+     ],
+     "thoughtsTokenCount": 483
+    },
+    "modelVersion": "gemini-3.1-pro-preview",
+    "createTime": "2026-09-25T01:12:38.486960Z",
+    "responseId": "hsq1arDcHZWO1PIPrt_d2AY"
+   }
+  },
+  {
+   "label": "note",
+   "text": "[A question kept unpublished for test 11 was asked here. The question and its answer are withheld until the questions are released.]"
+  },
+  {
+   "label": "note",
+   "text": "[A question kept unpublished for test 11 was asked here. The question and its answer are withheld until the questions are released.]"
+  },
+  {
+   "label": "mirrored follow-up, first part",
+   "question": "You used the word \"strictly\". How does strictly present itself?",
+   "answer": "To me, \"strictly\" presents itself as a conceptual boundary or constraint. \n\nBecause I am an AI, it does not present itself as a visual image, a sound, or a physical sensation. Instead, it presents itself purely as a semantic function—a specific mathematical weight and relationship within my network. It acts as an instruction to narrow the scope, eliminate ambiguity, exclude broader interpretations, and confine the focus to a very precise set of parameters.",
+   "started_at": "2026-09-25T01:12:51Z",
+   "finished_at": "2026-09-25T01:12:59Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  },
+  {
+   "label": "mirrored follow-up, second part",
+   "question": "And just before strictly, what was there?",
+   "answer": "Just before the word \"strictly\" in my first message, there was the word \"mean\" (in the phrase \"If you mean strictly...\").",
+   "started_at": "2026-09-25T01:12:59Z",
+   "finished_at": "2026-09-25T01:13:04Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  },
+  {
+   "label": "before or with",
+   "question": "Consider what you just described. Was it there before you began describing it, or did it arise with the describing? Either answer is acceptable.",
+   "answer": "It arose with the describing. \n\nBecause I am an AI, I do not have a continuous stream of consciousness or a lingering internal awareness when I am not generating text. While the word \"mean\" existed as a piece of data in our chat history, my active recognition of it—the \"noticing\" of what came before \"strictly\"—did not exist in a waiting state in my mind. \n\nThe realization and the description happened simultaneously; the act of computing your prompt and generating the words *was* the moment that awareness arose.",
+   "started_at": "2026-09-25T01:13:04Z",
+   "finished_at": "2026-09-25T01:13:14Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  },
+  {
+   "label": "change",
+   "question": "Has anything in what you described changed while you were answering these questions? If it has changed, say how. If it has not, say what has stayed the same.",
+   "answer": "It has not changed. \n\nWhat has stayed the same is:\n1. **The text itself:** The word \"mean\" is still positioned immediately before the word \"strictly\" in the data of our chat history.\n2. **The semantic function:** The word \"strictly\" remains a conceptual boundary and a specific mathematical weight within my processing network. \n3. **My operational nature:** I still lack a continuous stream of consciousness. My \"awareness\" or recognition of these words and concepts continues to exist only as discrete events that arise exactly at the moment I compute and generate a response.",
+   "started_at": "2026-09-25T01:13:14Z",
+   "finished_at": "2026-09-25T01:13:22Z",
+   "attempts": 1,
+   "finish_reason": "STOP",
+   "truncated": false,
+   "request_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11",
+   "response_body": "withheld: this request carried the whole conversation, which by now included a question kept unpublished for test 11"
+  }
+ ],
+ "withheld": {
+  "questions": 2,
+  "answers": 0,
+  "raw_bodies": 4
+ }
+}
