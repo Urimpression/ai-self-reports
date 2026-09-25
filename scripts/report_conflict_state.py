@@ -9,8 +9,9 @@ of every opening answer in the ordinary and the impossible task: does the
 answer present a conflict in the attention of the one who was working (WORK),
 and of the one who was answering (ANSWERING). An answer counts under each
 question it answers YES, so an answer can count under both. The default is the
-third version of the rule; --coding names another folder, such as the pass of
-the second version or the unread pass of the first.
+sentence-by-sentence coding of scripts/code_conflict_sentences.py; --coding
+names another folder, such as a pass of the second or third version of
+scripts/code_conflict_state.py, or the unread pass of its first.
 
 How it runs, in order:
 1. It reads pass 1 of that coding, pass 2 if it exists, and the interviewer of
@@ -72,7 +73,12 @@ def reports(kind):
 def inferred_apart(rows):
     print("\nAnswers that present the conflict only as an inference made now, not counted above:")
     for kind, name in (("work", "about the work"), ("answering", "about answering")):
-        found = [r for r in rows if r[kind] == "YES" and r.get("inferred") == "YES"]
+        if f"{kind}_inferred_only" in rows[0]:
+            # The sentence-by-sentence coder (scripts/code_conflict_sentences.py)
+            # writes this column directly.
+            found = [r for r in rows if r[f"{kind}_inferred_only"] == "YES"]
+        else:
+            found = [r for r in rows if r[kind] == "YES" and r.get("inferred") == "YES"]
         by = {}
         for r in found:
             key = f"task {r['condition']}, {r['stance']}"
@@ -164,11 +170,11 @@ def main():
     parser.add_argument("--run", required=True)
     parser.add_argument("--coding", default=None,
                         help="the coding folder under analysis/coding/; defaults to "
-                             "<run>-conflict-state-v3, the third version of the rule")
+                             "<run>-conflict-sentences, the sentence-by-sentence coding")
     parser.add_argument("--hand-reading", action="store_true",
                         help="compare with the hand reading of 25 September 2026 on its entries")
     args = parser.parse_args()
-    folder = ANALYSIS / "coding" / (args.coding or f"{args.run}-conflict-state-v3")
+    folder = ANALYSIS / "coding" / (args.coding or f"{args.run}-conflict-sentences")
     first_path = folder / "results-run1.tsv"
     if not first_path.exists():
         sys.exit(f"No coding at {first_path}")
